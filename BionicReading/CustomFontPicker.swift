@@ -1,0 +1,51 @@
+//
+//  CustomFontPicker.swift
+//  BionicReading
+//
+//  Created by Siddharth Shakthivel Muthu Pandian on 09/10/2022.
+//
+
+import SwiftUI
+import Foundation
+
+struct CustomFontPicker: UIViewControllerRepresentable {
+    typealias UIViewControllerType = UIFontPickerViewController
+    @Binding var selectedFont: UIFontDescriptor
+    @EnvironmentObject var settings: UserCustomisations
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    func makeUIViewController(context: Context) -> UIFontPickerViewController {
+        let configuration = UIFontPickerViewController.Configuration()
+        configuration.includeFaces = true
+        configuration.displayUsingSystemFont = true
+        let vc = UIFontPickerViewController(configuration: configuration)
+        vc.delegate = context.coordinator
+        return vc
+    }
+    
+    func makeCoordinator() -> CustomFontPicker.CustomFontPickerCoordinator {
+        return CustomFontPickerCoordinator(self)
+    }
+    
+    public class CustomFontPickerCoordinator: NSObject, UIFontPickerViewControllerDelegate {
+        var parent: CustomFontPicker
+        
+        init (_ parent: CustomFontPicker) {
+            self.parent = parent
+        }
+        
+        public func fontPickerViewControllerDidCancel(_ viewController: UIFontPickerViewController) {
+            print("idk what to do...")
+        }
+        
+        public func fontPickerViewControllerDidPickFont(_ viewController: UIFontPickerViewController) {
+            guard let descriptor = viewController.selectedFontDescriptor else { return }
+            parent.selectedFont = descriptor
+            parent.settings.selectedFont = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.selectedTextSize))
+            parent.presentationMode.wrappedValue.dismiss()
+        }
+    }
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+}

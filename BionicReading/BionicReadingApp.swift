@@ -13,7 +13,7 @@ struct BionicReadingApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(selectedFont: UIFontDescriptor(name: "CourierNewPSMT", size: 20))
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
