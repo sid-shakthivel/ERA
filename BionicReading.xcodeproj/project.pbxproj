@@ -14,6 +14,7 @@
 		356A455928E5C47E0067999E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455828E5C47E0067999E /* Persistence.swift */; };
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
+		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
 		35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B828F33CFC00CA578D /* Scan.swift */; };
@@ -29,6 +30,7 @@
 		356A455828E5C47E0067999E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BionicReading.xcdatamodel; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
+		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 		356A454E28E5C47B0067999E /* BionicReading */ = {
 			isa = PBXGroup;
 			children = (
+				35805C4B28FB5DE900217169 /* views */,
 				35B36E9728E639B2009DF703 /* Info.plist */,
 				356A454F28E5C47B0067999E /* BionicReadingApp.swift */,
 				356A455128E5C47B0067999E /* ContentView.swift */,
@@ -73,9 +76,6 @@
 				356A455828E5C47E0067999E /* Persistence.swift */,
 				356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */,
 				356A455528E5C47E0067999E /* Preview Content */,
-				356A456428E5C61A0067999E /* DocumentCameraView.swift */,
-				35D3B9B428F327E800CA578D /* Settings.swift */,
-				35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */,
 				35D3B9B828F33CFC00CA578D /* Scan.swift */,
 				35F0A47C28F4BBB900A95D17 /* CustomPDFView.swift */,
 			);
@@ -88,6 +88,17 @@
 				356A455628E5C47E0067999E /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		35805C4B28FB5DE900217169 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */,
+				356A456428E5C61A0067999E /* DocumentCameraView.swift */,
+				35D3B9B428F327E800CA578D /* Settings.swift */,
+				35805C4C28FB5E0300217169 /* Home.swift */,
+			);
+			path = views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,6 +173,7 @@
 			files = (
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
+				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
 				35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */,
 				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,

@@ -10,7 +10,6 @@ import Foundation
 
 struct CustomFontPicker: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIFontPickerViewController
-    @Binding var selectedFont: UIFontDescriptor
     @EnvironmentObject var settings: UserCustomisations
     
     @Environment(\.presentationMode) var presentationMode
@@ -41,8 +40,8 @@ struct CustomFontPicker: UIViewControllerRepresentable {
         
         public func fontPickerViewControllerDidPickFont(_ viewController: UIFontPickerViewController) {
             guard let descriptor = viewController.selectedFontDescriptor else { return }
-            parent.selectedFont = descriptor
-            parent.settings.selectedFont = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.selectedTextSize))
+            parent.settings.font = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.fontSize))
+            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.fontSize) * 1.5))
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
