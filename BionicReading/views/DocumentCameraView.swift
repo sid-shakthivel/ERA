@@ -8,7 +8,7 @@
 import SwiftUI
 import VisionKit
 import Vision
-import PDFKit
+import AVFoundation
 
 /*
  To implement a view controller in swiftui, it must be wrapped inside a UIViewControllerRepresentable
@@ -200,6 +200,17 @@ struct DocumentCameraView: UIViewControllerRepresentable {
             }
             
             parent.scanResult.scannedTextList = paragraphs
+            
+            // Setup text to speech
+            
+            var scanText = ""
+            for line in paragraphs {
+                scanText += line.joined(separator: "")
+            }
+            parent.scanResult.scannedText = scanText
+            
+            parent.scanResult.utterance = AVSpeechUtterance(string: scanText)
+//            parent.scanResult.utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
             
             print("We have this many paragraphs?")
             print(paragraphs.count)

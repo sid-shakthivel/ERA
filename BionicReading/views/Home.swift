@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 extension Color {
     init(hex: UInt, alpha: Double = 1) {
@@ -23,12 +24,16 @@ extension Color {
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [[String]] = []
     @Published var scannedText: String = "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+    @Published var utterance = AVSpeechUtterance(string: "hello world")
 }
 
 struct Home: View {
     @State var showDocumentCameraView = false
     @StateObject var userSettings = UserCustomisations()
     @StateObject var scanResult = ScanResult()
+    @State var isPlaying: Bool = false
+    
+    let synth = AVSpeechSynthesizer()
     
     // Converts text to bionic reading format by bolding the first half of every word
     func convertToBionic(text: String) -> String {
@@ -39,8 +44,6 @@ struct Home: View {
         
         modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 1))
         modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 2))
-        
-        print(boldIndex)
         
         return modifiedText
     }
@@ -59,6 +62,13 @@ struct Home: View {
         
         return LocalizedStringKey(text)
     }
+    
+    func text2speech() {
+        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
+        self.synth.speak(utterance)
+    }
+    
     
     var body: some View {
         NavigationView {
@@ -109,7 +119,27 @@ struct Home: View {
                             }
                         }
                         
-                        
+                        if isPlaying {
+                            Button(action: {
+                                isPlaying.toggle()
+                                synth.stopSpeaking(at: AVSpeechBoundary.immediate)
+                            }, label: {
+                                Image(systemName: "pause.fill")
+                            })
+                                .padding()
+                                .foregroundColor(Color(hex: 0xDF4D0F, alpha: 1))
+                                .font(.system(size: 24))
+                        } else {
+                            Button(action: {
+                                isPlaying.toggle()
+                                text2speech()
+                            }, label: {
+                                Image(systemName: "play.fill")
+                            })
+                                .padding()
+                                .foregroundColor(Color(hex: 0xDF4D0F, alpha: 1))
+                                .font(.system(size: 24))
+                        }
                     }
                     .padding()
                     .background(userSettings.backgroundColor)
