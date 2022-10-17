@@ -16,7 +16,7 @@ class UserCustomisations: ObservableObject {
     @Published var font: UIFont = UIFont.systemFont(ofSize: 16)
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
     
-    @Published var backgroundColor: Color = Color(hex: 0xFFF9F0, alpha: 1)
+    @Published var backgroundColour: Color = Color(hex: 0xFFF9F0, alpha: 1)
 }
 
 struct Settings: View {
@@ -153,9 +153,9 @@ struct Settings: View {
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
     
-                        ColorPicker(selection: $settings.backgroundColor) {
+                        ColorPicker(selection: $settings.backgroundColour) {
                             RoundedRectangle(cornerRadius: 5, style: .circular)
-                                .fill(settings.backgroundColor)
+                                .fill(settings.backgroundColour)
                                 .frame(width: 20, height: 20)
                         }
                             .padding()
@@ -165,7 +165,14 @@ struct Settings: View {
                     }
     
                     Button(action: {
-    
+                        // Resets settings back to default
+                        
+                        settings.fontSize = 16;
+                        settings.fontColour = .black
+                        settings.isBionicReading = false
+                        settings.font = UIFont.systemFont(ofSize: 16)
+                        settings.headingFont = UIFont.systemFont(ofSize: 24)
+                        settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)
                     }, label: {
                         Text("Reset")
                             .textCase(.uppercase)

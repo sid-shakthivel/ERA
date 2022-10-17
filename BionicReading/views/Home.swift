@@ -23,7 +23,7 @@ extension Color {
 
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [[String]] = []
-    @Published var scannedText: String = "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet."
+    @Published var scannedText: String = "Hello world. This is an example document for the amazing lookup view"
     @Published var utterance = AVSpeechUtterance(string: "hello world")
 }
 
@@ -32,6 +32,8 @@ struct Home: View {
     @StateObject var userSettings = UserCustomisations()
     @StateObject var scanResult = ScanResult()
     @State var isPlaying: Bool = false
+    @State var showLookupView: Bool = false
+    @State var lookupWord: String = "go"
     
     let synth = AVSpeechSynthesizer()
     
@@ -69,7 +71,6 @@ struct Home: View {
         self.synth.speak(utterance)
     }
     
-    
     var body: some View {
         NavigationView {
             VStack {
@@ -101,6 +102,14 @@ struct Home: View {
                                 .foregroundColor(userSettings.fontColour)
                                 .font(Font(userSettings.font))
                                 .lineSpacing(10)
+                                .contextMenu {
+                                    Button(action: {
+                                        showLookupView.toggle()
+                                        lookupWord = "go"
+                                    }, label: {
+                                        Text("Lookup")
+                                    })
+                                }
                         } else {
                             //  Check whether text is a paragraph or heading by analysing paragraph line length
                             ForEach(scanResult.scannedTextList, id: \.self) { paragraph in
@@ -108,6 +117,7 @@ struct Home: View {
                                     Text(modifyText(text: paragraph.joined(separator: " ")))
                                         .foregroundColor(userSettings.fontColour)
                                         .font(Font(userSettings.headingFont))
+//                                    Testing(paragraph: paragraph)
                                 } else {
                                     Text(modifyText(text: paragraph[0]))
                                         .foregroundColor(userSettings.fontColour)
@@ -142,7 +152,7 @@ struct Home: View {
                         }
                     }
                     .padding()
-                    .background(userSettings.backgroundColor)
+                    .background(userSettings.backgroundColour)
                 }
                 .padding()
                 
@@ -201,6 +211,10 @@ struct Home: View {
             .navigationBarHidden(true)
             .sheet(isPresented: $showDocumentCameraView, content: {
                 DocumentCameraView(settings: userSettings, scanResult: scanResult)
+            })
+            .sheet(isPresented: $showLookupView, content: {
+                Lookup(word: "copy", wordData: nil, state: .Fetching)
+                    .environmentObject(userSettings)
             })
     }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35051C5028FD551200315407 /* Lookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* Lookup.swift */; };
 		356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* BionicReadingApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
 		356A455428E5C47E0067999E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455328E5C47E0067999E /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
+		35B04B0328FDCFA40016EA76 /* Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B04B0228FDCFA40016EA76 /* Testing.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
 		35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B828F33CFC00CA578D /* Scan.swift */; };
@@ -22,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		35051C4F28FD551200315407 /* Lookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lookup.swift; sourceTree = "<group>"; };
 		356A454C28E5C47B0067999E /* BionicReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BionicReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356A454F28E5C47B0067999E /* BionicReadingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BionicReadingApp.swift; sourceTree = "<group>"; };
 		356A455128E5C47B0067999E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -31,6 +34,7 @@
 		356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BionicReading.xcdatamodel; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		35B04B0228FDCFA40016EA76 /* Testing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Testing.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 				356A456428E5C61A0067999E /* DocumentCameraView.swift */,
 				35D3B9B428F327E800CA578D /* Settings.swift */,
 				35805C4C28FB5E0300217169 /* Home.swift */,
+				35051C4F28FD551200315407 /* Lookup.swift */,
+				35B04B0228FDCFA40016EA76 /* Testing.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -171,11 +177,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35051C5028FD551200315407 /* Lookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
 				35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */,
 				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
+				35B04B0328FDCFA40016EA76 /* Testing.swift in Sources */,
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */,
