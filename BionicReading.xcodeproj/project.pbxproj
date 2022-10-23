@@ -17,6 +17,7 @@
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
+		35C5FA5C2905E9B20007ABEB /* optionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* optionView.swift */; };
 		35CF1D5F2900A1CC004176DB /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 35CF1D5E2900A1CC004176DB /* WrappingHStack */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
@@ -37,6 +38,7 @@
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		35C5FA5B2905E9B20007ABEB /* optionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = optionView.swift; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
 		35D3B9B828F33CFC00CA578D /* Scan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				35805C4C28FB5E0300217169 /* Home.swift */,
 				35051C4F28FD551200315407 /* Lookup.swift */,
 				353437BA2901664C003917A0 /* PDFHandler.swift */,
+				35C5FA5B2905E9B20007ABEB /* optionView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -195,6 +198,7 @@
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */,
+				35C5FA5C2905E9B20007ABEB /* optionView.swift in Sources */,
 				35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */,
 				35F0A47D28F4BBB900A95D17 /* CustomPDFView.swift in Sources */,
 			);

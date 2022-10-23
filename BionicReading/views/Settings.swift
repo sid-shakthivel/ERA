@@ -17,10 +17,15 @@ class UserCustomisations: ObservableObject {
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
     
     @Published var backgroundColour: Color = Color(hex: 0xFFF9F0, alpha: 1)
+    
+    @Published var accent: String = "en-GB"
 }
 
 struct Settings: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    var languages = ["en-GB", "en-US", "en-ZA", "fr-FR", "en-IN", "ko-KR"]
+    
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserCustomisations
     
@@ -62,7 +67,7 @@ struct Settings: View {
                                     .font(.system(size: 14))
                             })
                         }
-    
+
                         Group {
                             Text("Font Selection")
                                 .foregroundColor(.black)
@@ -89,7 +94,7 @@ struct Settings: View {
                             .background(Color(hex: 0xFFFFFF, alpha: 1))
                             .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
                         }
-                        
+
                         Group {
                             Text("Font Size")
                                 .foregroundColor(.black)
@@ -115,7 +120,7 @@ struct Settings: View {
                                 .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
                                 .onChange(of: settings.fontSize, perform: { newFontSize in
                                     settings.font = UIFont(descriptor: settings.font.fontDescriptor, size: CGFloat(settings.fontSize))
-                                    
+
                                     settings.headingFont = UIFont(descriptor: settings.font.fontDescriptor, size: CGFloat(Double(settings.fontSize) * 1.5))
                                 })
                         }
@@ -138,7 +143,7 @@ struct Settings: View {
                                 .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
                         }
                     }
-                    
+
                     Group {
                         Text("Background Settings")
                             .foregroundColor(.black)
@@ -146,13 +151,13 @@ struct Settings: View {
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
-    
+
                         Text("Background Colour")
                             .foregroundColor(.black)
                             .fontWeight(.bold)
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
-    
+
                         ColorPicker(selection: $settings.backgroundColour) {
                             RoundedRectangle(cornerRadius: 5, style: .circular)
                                 .fill(settings.backgroundColour)
@@ -162,6 +167,23 @@ struct Settings: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color(hex: 0xFFFFFF, alpha: 1))
                             .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                    }
+                    
+                    Group {
+                        Text("Speech Accent")
+                            .foregroundColor(.black)
+                            .fontWeight(.bold)
+                            .font(.system(size: 24))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top)
+                        
+                        Picker(selection: $settings.accent, content: {
+                            ForEach(languages, id: \.self) {
+                                Text($0)
+                            }
+                       }, label: {
+
+                       })
                     }
     
                     Button(action: {
