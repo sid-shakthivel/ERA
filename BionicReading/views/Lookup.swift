@@ -102,7 +102,7 @@ struct Lookup: View {
         Group {
             switch state {
             case .Fetching:
-                Text("Fetching Data")
+                Text("Fetching Data \(word)")
             case .Failure:
                 Text("Failed to fetch data - check your internet connection")
             case .Success:
