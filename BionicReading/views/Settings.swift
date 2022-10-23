@@ -56,7 +56,7 @@ struct Settings: View {
 
                         Group {
                             Toggle(isOn: $settings.isBionicReading, label: {
-                                Text("Bionic Reading")
+                                Text("Enhanced Reading")
                                     .foregroundColor(.black)
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))

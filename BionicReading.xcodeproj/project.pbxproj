@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* Lookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* Lookup.swift */; };
+		353437BB2901664C003917A0 /* PDFHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353437BA2901664C003917A0 /* PDFHandler.swift */; };
 		356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* BionicReadingApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
 		356A455428E5C47E0067999E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455328E5C47E0067999E /* Assets.xcassets */; };
@@ -16,7 +17,7 @@
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
-		35B04B0328FDCFA40016EA76 /* Testing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B04B0228FDCFA40016EA76 /* Testing.swift */; };
+		35CF1D5F2900A1CC004176DB /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 35CF1D5E2900A1CC004176DB /* WrappingHStack */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
 		35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B828F33CFC00CA578D /* Scan.swift */; };
@@ -25,6 +26,7 @@
 
 /* Begin PBXFileReference section */
 		35051C4F28FD551200315407 /* Lookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lookup.swift; sourceTree = "<group>"; };
+		353437BA2901664C003917A0 /* PDFHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFHandler.swift; sourceTree = "<group>"; };
 		356A454C28E5C47B0067999E /* BionicReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BionicReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356A454F28E5C47B0067999E /* BionicReadingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BionicReadingApp.swift; sourceTree = "<group>"; };
 		356A455128E5C47B0067999E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -34,7 +36,6 @@
 		356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BionicReading.xcdatamodel; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
-		35B04B0228FDCFA40016EA76 /* Testing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Testing.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35CF1D5F2900A1CC004176DB /* WrappingHStack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,7 +104,7 @@
 				35D3B9B428F327E800CA578D /* Settings.swift */,
 				35805C4C28FB5E0300217169 /* Home.swift */,
 				35051C4F28FD551200315407 /* Lookup.swift */,
-				35B04B0228FDCFA40016EA76 /* Testing.swift */,
+				353437BA2901664C003917A0 /* PDFHandler.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -123,6 +125,9 @@
 			dependencies = (
 			);
 			name = BionicReading;
+			packageProductDependencies = (
+				35CF1D5E2900A1CC004176DB /* WrappingHStack */,
+			);
 			productName = BionicReading;
 			productReference = 356A454C28E5C47B0067999E /* BionicReading.app */;
 			productType = "com.apple.product-type.application";
@@ -151,6 +156,9 @@
 				Base,
 			);
 			mainGroup = 356A454328E5C47B0067999E;
+			packageReferences = (
+				35CF1D5D2900A1CC004176DB /* XCRemoteSwiftPackageReference "WrappingHStack" */,
+			);
 			productRefGroup = 356A454D28E5C47B0067999E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -180,10 +188,10 @@
 				35051C5028FD551200315407 /* Lookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
+				353437BB2901664C003917A0 /* PDFHandler.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
 				35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */,
 				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
-				35B04B0328FDCFA40016EA76 /* Testing.swift in Sources */,
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */,
@@ -327,6 +335,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -358,6 +367,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -393,6 +403,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		35CF1D5D2900A1CC004176DB /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dkk/WrappingHStack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		35CF1D5E2900A1CC004176DB /* WrappingHStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35CF1D5D2900A1CC004176DB /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */ = {

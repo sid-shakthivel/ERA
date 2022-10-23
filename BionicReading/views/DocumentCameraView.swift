@@ -10,6 +10,159 @@ import VisionKit
 import Vision
 import AVFoundation
 
+// Images go under a request which builds an array of lines of words
+func buildRequest() -> ([[String]], [VNRecognizeTextRequest]) {
+    var paragraphs: [[String]] = []
+
+    var currentParagraph: [String] = []
+    var boundingBoxes: [CGPoint] = []
+    
+    let request = VNRecognizeTextRequest { request, error in
+        guard let observations = request.results as? [VNRecognizedTextObservation] else {
+            fatalError("Received invalid observations")
+        }
+
+        for observation in observations {
+            guard let bestCandidate = observation.topCandidates(1).first else {
+                continue
+            }
+
+            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
+                paragraphs.append(currentParagraph)
+                currentParagraph.removeAll()
+                boundingBoxes.removeAll()
+            }
+
+            currentParagraph.append(bestCandidate.string)
+            boundingBoxes.append(observation.topLeft)
+        }
+    }
+    
+    request.recognitionLevel = .accurate
+    request.usesLanguageCorrection = true
+    
+    let requests = [request]
+    
+    return (paragraphs, requests)
+}
+
+/*
+    Paragraph is on a new line if:
+    Difference between Y coordinate of current line and last line is greater then 0.05 (Maybe this value can be relative???)
+    Difference between X coordinate of current line and last line is greater then 0.04 (Indent)
+    TODO: Need to ensure the max val is subtracted from min val
+    TODO: May need to average results
+ */
+func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextObservation) -> Bool {
+    if boundingBoxes.count > 0 && ((boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y >= 0.04) || (observation.topLeft.x - boundingBoxes[boundingBoxes.count - 1].x >= 0.04)) {
+        return true
+    }
+    return false
+}
+
+func scanPhotos(scan: VNDocumentCameraScan) -> ([[String]], String){
+//    var (paragraphs, requests) = buildRequest()
+    
+    var paragraphs: [[String]] = []
+
+    var currentParagraph: [String] = []
+    var boundingBoxes: [CGPoint] = []
+    
+    let request = VNRecognizeTextRequest { request, error in
+        guard let observations = request.results as? [VNRecognizedTextObservation] else {
+            fatalError("Received invalid observations")
+        }
+
+        for observation in observations {
+            guard let bestCandidate = observation.topCandidates(1).first else {
+                continue
+            }
+
+            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
+                paragraphs.append(currentParagraph)
+                currentParagraph.removeAll()
+                boundingBoxes.removeAll()
+            }
+
+            currentParagraph.append(bestCandidate.string)
+            boundingBoxes.append(observation.topLeft)
+        }
+    }
+    
+    request.recognitionLevel = .accurate
+    request.usesLanguageCorrection = true
+    
+    let requests = [request]
+    
+    // For each photo within the scanned images, analyse and collate all the text
+    for i in 0 ..< scan.pageCount {
+        let img = scan.imageOfPage(at: i)
+        guard let cgImage = img.cgImage else { continue }
+
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        try? requestHandler.perform(requests)
+    }
+    
+    // Setup text to speech
+    var joinedParagraphs = ""
+    for line in paragraphs {
+        joinedParagraphs += line.joined(separator: "")
+    }
+    
+    return (paragraphs, joinedParagraphs)
+}
+
+func testScanPDF(scan: [UIImage]) -> ([[String]], String){
+//    var (paragraphs, requests) = buildRequest()
+    
+    var paragraphs: [[String]] = []
+
+    var currentParagraph: [String] = []
+    var boundingBoxes: [CGPoint] = []
+    
+    let request = VNRecognizeTextRequest { request, error in
+        guard let observations = request.results as? [VNRecognizedTextObservation] else {
+            fatalError("Received invalid observations")
+        }
+
+        for observation in observations {
+            guard let bestCandidate = observation.topCandidates(1).first else {
+                continue
+            }
+
+            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
+                paragraphs.append(currentParagraph)
+                currentParagraph.removeAll()
+                boundingBoxes.removeAll()
+            }
+
+            currentParagraph.append(bestCandidate.string)
+            boundingBoxes.append(observation.topLeft)
+        }
+    }
+    
+    request.recognitionLevel = .accurate
+    request.usesLanguageCorrection = true
+    
+    let requests = [request]
+    
+    // For each photo within the scanned images, analyse and collate all the text
+    for image in scan {
+        guard let cgImage = image.cgImage else { continue }
+
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        try? requestHandler.perform(requests)
+    }
+    
+    // Setup text to speech
+    var joinedParagraphs = ""
+    for line in paragraphs {
+        joinedParagraphs += line.joined(separator: "")
+    }
+    
+    return (paragraphs, joinedParagraphs)
+}
+
 /*
  To implement a view controller in swiftui, it must be wrapped inside a UIViewControllerRepresentable
  VNDocumentCameraViewController hasn't been ported to swiftui yet and thus this process must ensue
@@ -145,7 +298,7 @@ struct DocumentCameraView: UIViewControllerRepresentable {
             var currentParagraph: [String] = []
             var boundingBoxes: [CGPoint] = []
 
-            let request = VNRecognizeTextRequest { [self] request, error in
+            let request = VNRecognizeTextRequest { request, error in
                 guard let observations = request.results as? [VNRecognizedTextObservation] else {
                     fatalError("Received invalid observations")
                 }
@@ -210,10 +363,6 @@ struct DocumentCameraView: UIViewControllerRepresentable {
             parent.scanResult.scannedText = scanText
             
             parent.scanResult.utterance = AVSpeechUtterance(string: scanText)
-//            parent.scanResult.utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
-            
-            print("We have this many paragraphs?")
-            print(paragraphs.count)
             
             parent.presentationMode.wrappedValue.dismiss()
           }
