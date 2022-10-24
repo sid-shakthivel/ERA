@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import PDFKit
+import HighlightedTextEditor
 
 extension Color {
     init(hex: UInt, alpha: Double = 1) {
@@ -24,6 +25,7 @@ extension Color {
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [[String]] = []
     @Published var scannedText: String = "Hello copy. This is an example document"
+    @Published var heading: String = "Example Heading"
     @Published var utterance = AVSpeechUtterance(string: "hello world")
 }
 
@@ -100,7 +102,7 @@ struct Home: View {
     }
         
     //  If bionic reading is enabled, apply to each word within the string or return it
-    func modifyText(text: String) -> LocalizedStringKey {
+    func modifyText(text: String) -> String {
         if (userSettings.isBionicReading) {
             var markdownStringArray: [String] = []
             
@@ -108,16 +110,16 @@ struct Home: View {
                 markdownStringArray.append(convertToBionic(text: String(substring)))
             }
 
-            return LocalizedStringKey(markdownStringArray.joined(separator: " "))
+            return String(markdownStringArray.joined(separator: " "))
         }
         
-        return LocalizedStringKey(text)
+        return String(text)
     }
     
     func text2speech() {
-        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
-        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-        self.synth.speak(utterance)
+//        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
+//        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
+//        self.synth.speak(utterance)
     }
 
     var body: some View {
@@ -151,7 +153,6 @@ struct Home: View {
                                     document = PDFDoc(teest: docURL)
                                     
                                     showFileExporter.toggle()
-                                    
                                 }, label: {
                                     Text("Export to PDF")
                                 })
@@ -168,24 +169,27 @@ struct Home: View {
                     .padding()
                     
                     Divider()
-                    
+
                     ZStack {
+                        
                         ScrollView(.vertical, showsIndicators: true) {
-                            LabelRepresented(text: speaker.label)
-                                .onAppear {
-                                    speaker.speak("Hi. This is a test.")
-                                }
+//                            LabelRepresented(text: speaker.label)
+//                                .onAppear {
+//                                    speaker.speak("Hi. This is a test.")
+//                                }
                             
                             if scanResult.scannedTextList.count < 1 {
-                                Text(modifyText(text: "Document Heading"))
+                                TextField(modifyText(text: scanResult.heading), text: $scanResult.heading, axis: .vertical)
                                     .foregroundColor(userSettings.fontColour)
                                     .font(Font(userSettings.headingFont))
-                                    .fontWeight(.bold)
                                 
-                                Text(modifyText(text: "\(scanResult.scannedText)"))
+                                TextEditor(text: $scanResult.scannedText)
                                     .foregroundColor(userSettings.fontColour)
+                                    .scrollContentBackground(.hidden)
+                                    .background(userSettings.backgroundColour)
                                     .font(Font(userSettings.font))
-                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(maxHeight: .infinity, alignment: .leading)
+                                
                             } else {
                                 //  Check whether text is a paragraph or heading by analysing paragraph line length
                                 ForEach(scanResult.scannedTextList, id: \.self) { paragraph in
@@ -204,6 +208,8 @@ struct Home: View {
                                     Text("")
                                 }
                             }
+                            
+                            Spacer()
                             
                             if isPlaying {
                                 Button(action: {
@@ -233,25 +239,27 @@ struct Home: View {
                         .padding()
                         .background(userSettings.backgroundColour)
                         
-                        Canvas { ctx, size in
-                            for line in canvasSettings.lines {
-                                var path = Path()
-                                path.addLines(line.points)
-                                
-                                ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
-                            }
-                        }
-                        .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                            if canvasSettings.selectedColour != .clear {
-                                let position = value.location
-                                if value.translation == .zero {
-                                    canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
-                                } else {
-                                    guard let lastIndex = canvasSettings.lines.indices.last else { return }
-                                    canvasSettings.lines[lastIndex].points.append(position)
+                        if canvasSettings.selectedColour != .clear {
+                            Canvas { ctx, size in
+                                for line in canvasSettings.lines {
+                                    var path = Path()
+                                    path.addLines(line.points)
+
+                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
                                 }
                             }
-                        }))
+                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
+                                if canvasSettings.selectedColour != .clear {
+                                    let position = value.location
+                                    if value.translation == .zero {
+                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
+                                    } else {
+                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
+                                        canvasSettings.lines[lastIndex].points.append(position)
+                                    }
+                                }
+                            }))
+                        }
                     }
                                                                 
                     VStack {

@@ -11,7 +11,7 @@ class UserCustomisations: ObservableObject {
     @Published var fontSize: Int = 16
     
     @Published var fontColour: Color = .black
-    @Published var isBionicReading: Bool = false
+    @Published var isBionicReading: Bool = true
     
     @Published var font: UIFont = UIFont.systemFont(ofSize: 16)
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
