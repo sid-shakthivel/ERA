@@ -9,6 +9,7 @@ import Foundation
 import UniformTypeIdentifiers
 import SwiftUI
 import PDFKit
+import AVFoundation
 
 struct PDFDoc: FileDocument {
     // tell the system we support only plain text
@@ -70,4 +71,47 @@ func convertPDFToImages(url: URL) -> [UIImage] {
     images.append(img)
     
     return images
+}
+
+
+struct LabelRepresented: UIViewRepresentable {
+    var text : NSAttributedString?
+    
+    func makeUIView(context: Context) -> UILabel {
+        return UILabel()
+    }
+    
+    func updateUIView(_ uiView: UILabel, context: Context) {
+        uiView.attributedText = text
+    }
+}
+
+class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
+    let synth = AVSpeechSynthesizer()
+    @Published var label: NSAttributedString? // <- change to AttributedString
+
+    override init() {
+        super.init()
+        label = NSMutableAttributedString("Hi. This is a test")
+        synth.delegate = self
+    }
+
+    func speak(_ string: String) {
+        let utterance = AVSpeechUtterance(string: string)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-GB")
+        utterance.rate = 0.4
+        synth.speak(utterance)
+    }
+    
+    // Functions to highlight text
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance)
+    {
+        let mutableAttributedString = NSMutableAttributedString(string: utterance.speechString)
+        mutableAttributedString.addAttribute(.foregroundColor, value: UIColor.red, range: characterRange)
+        label = mutableAttributedString
+    }
+
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        label = NSAttributedString(string: utterance.speechString)
+    }
 }

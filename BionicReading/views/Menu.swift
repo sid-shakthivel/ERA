@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct optionView: View {
+struct Menu: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @Binding var showDocumentCameraView: Bool
     @Binding var showFileImporter: Bool
@@ -63,6 +63,6 @@ struct optionView: View {
 
 struct optionView_Previews: PreviewProvider {
     static var previews: some View {
-        optionView(showDocumentCameraView: .constant(false), showFileImporter: .constant(false))
+        Menu(showDocumentCameraView: .constant(false), showFileImporter: .constant(false))
     }
 }

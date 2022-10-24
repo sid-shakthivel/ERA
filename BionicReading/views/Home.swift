@@ -70,9 +70,9 @@ struct Line {
 struct Home: View {
     @State var showDocumentCameraView = false
     @State var showFileImporter = false
-    @State private var showFileExporter = false
-    
-    @State private var test = true
+    @State var showFileExporter = false
+    @State var showMenu = false
+    @State var showDictionary: Bool = false
     
     @State var document: PDFDoc? = nil
     
@@ -80,16 +80,9 @@ struct Home: View {
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
     
+    @ObservedObject var speaker = Speaker()
+    
     @State var isPlaying: Bool = false
-    @State var showLookupView: Bool = false
-    
-    @State var lookupWord: String = "good"
-    
-    @State var selectedColour: Color = .clear
-    @State var lines: [Line] = []
-    @State var lineWidth: Double = 5
-    
-    let message = "Hello, www.google.com this is just testing for hyperlinks, check this out our website https://www.apple.in thank you."
     
     let synth = AVSpeechSynthesizer()
     
@@ -138,6 +131,7 @@ struct Home: View {
                             .textCase(.uppercase)
                             .contextMenu {
                                 Button(action: {
+                                    // Export to PDF
                                     let image = self.takeScreenshot(origin: geometryProxy.frame(in: .global).origin, size: geometryProxy.size)
                                     
                                     let pdfDocument = PDFDocument()
@@ -166,7 +160,9 @@ struct Home: View {
                         Spacer()
                         
                         NavigationLink(destination: Settings()) {
-                            Image("setting")
+                            Image(systemName: "gear")
+                                .font(.headline)
+                                .foregroundColor(Color(hex: 0xDFF4D0F, alpha: 1))
                         }
                     }
                     .padding()
@@ -175,7 +171,10 @@ struct Home: View {
                     
                     ZStack {
                         ScrollView(.vertical, showsIndicators: true) {
-                            Text(LocalizedStringKey(message))
+                            LabelRepresented(text: speaker.label)
+                                .onAppear {
+                                    speaker.speak("Hi. This is a test.")
+                                }
                             
                             if scanResult.scannedTextList.count < 1 {
                                 Text(modifyText(text: "Document Heading"))
@@ -186,9 +185,7 @@ struct Home: View {
                                 Text(modifyText(text: "\(scanResult.scannedText)"))
                                     .foregroundColor(userSettings.fontColour)
                                     .font(Font(userSettings.font))
-                                    .onTapGesture { location in
-                                        
-                                    }
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             } else {
                                 //  Check whether text is a paragraph or heading by analysing paragraph line length
                                 ForEach(scanResult.scannedTextList, id: \.self) { paragraph in
@@ -196,6 +193,7 @@ struct Home: View {
                                         Text(modifyText(text: paragraph.joined(separator: " ")))
                                             .foregroundColor(userSettings.fontColour)
                                             .font(Font(userSettings.headingFont))
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                     } else {
                                         Text(modifyText(text: paragraph[0]))
                                             .foregroundColor(userSettings.fontColour)
@@ -229,48 +227,56 @@ struct Home: View {
                                 .font(.system(size: 24))
                             }
                         }
+                        .onTapGesture(count: 2) {
+                            showDictionary.toggle()
+                        }
                         .padding()
                         .background(userSettings.backgroundColour)
                         
                         Canvas { ctx, size in
-                            for line in lines {
+                            for line in canvasSettings.lines {
                                 var path = Path()
                                 path.addLines(line.points)
                                 
-                                ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: lineWidth, lineCap: .round, lineJoin: .round))
+                                ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
                             }
                         }
                         .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                            let position = value.location
-                            if value.translation == .zero {
-                                lines.append(Line(points: [position], colour: selectedColour))
-                            } else {
-                                guard let lastIndex = lines.indices.last else { return }
-                                lines[lastIndex].points.append(position)
+                            if canvasSettings.selectedColour != .clear {
+                                let position = value.location
+                                if value.translation == .zero {
+                                    canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
+                                } else {
+                                    guard let lastIndex = canvasSettings.lines.indices.last else { return }
+                                    canvasSettings.lines[lastIndex].points.append(position)
+                                }
                             }
                         }))
-                        
-                        Button(action: {
-                            test.toggle()
-                        }, label: {
-                            Image(systemName: "gear")
-                        })
-                        
-//                        VStack {
-//                            HStack {
-//                                ForEach([Color.green, Color.blue, Color.red, Color.black], id: \.self) { colour in
-//                                    colourButton(colour: colour)
-//                                }
-//                                clearButton()
-//                                eraseButton()
-//                            }
-//
-//                            Slider(value: $canvasSettings.lineWidth, in: 0...20)
-//                                .padding()
-//                        }
-//                        frame(maxWidth: .infinity, alignment: .leading)
-//                        .background(Color.white)
                     }
+                                                                
+                    VStack {
+                        HStack {
+                            Image("setting")
+                                .font(.largeTitle)
+                                .onTapGesture(count: 2) {
+                                    showDictionary.toggle()
+                                }
+                                .onTapGesture(count: 1) {
+                                    showMenu.toggle()
+                                }
+                            
+                            ForEach([Color.green, Color.blue, Color.red, Color.black], id: \.self) { colour in
+                                colourButton(colour: colour)
+                            }
+                            clearButton()
+                            eraseButton()
+                        }
+
+                        Slider(value: $canvasSettings.lineWidth, in: 0...20)
+                            .padding()
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.white)
                 }
                     .background(Color(hex: 0xFFF9F0, alpha: 1))
             }
@@ -283,15 +289,15 @@ struct Home: View {
                 .sheet(isPresented: $showDocumentCameraView, content: {
                     DocumentCameraView(settings: userSettings, scanResult: scanResult)
                 })
-                .sheet(isPresented: $showLookupView, content: {
-                    Lookup(word: lookupWord, wordData: nil, state: .Fetching)
-                        .environmentObject(userSettings)
-                })
-                .sheet(isPresented: $test, content: {
-                    optionView(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter)
+                .sheet(isPresented: $showMenu, content: {
+                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter)
                         .environmentObject(canvasSettings)
-                        .presentationDetents([.fraction(0.40), .fraction(0.60)])
+                        .presentationDetents([.fraction(0.40), .fraction(0.20)])
                         .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $showDictionary, content: {
+                    DictionaryLookup(wordData: nil, state: .Stationary)
+                        .environmentObject(userSettings)
                 })
                 .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                     do {
@@ -322,6 +328,7 @@ struct Home: View {
     @ViewBuilder
     func colourButton(colour: Color) -> some View {
         Button(action: {
+            print("here")
             canvasSettings.selectedColour = colour
         }, label: {
             Image(systemName: "circle.fill")

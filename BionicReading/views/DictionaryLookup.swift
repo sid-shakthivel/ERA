@@ -51,34 +51,18 @@ enum Status {
     case Success
     case Failure
     case Fetching
+    case Stationary
 }
 
-struct Lookup: View {
+struct DictionaryLookup: View {
     @EnvironmentObject var userSettings: UserCustomisations
     
-    @State var word: String
     @State var wordData: Word?
     @State var state: Status = Status.Fetching
-    
-    @State var isPlaying: Bool = false
-    
-    @State var player: AVAudioPlayer!
-    
-    func playAudio() {
-        if player != nil {
-            player.stop()
-        }
-        player = nil
-    }
-    
-    func pauseAudio() {
-        let url = Bundle.main.url(forResource: "https://api.dictionaryapi.dev/media/pronunciations/en/copy-us", withExtension: "mp3")
-        player = try! AVAudioPlayer(contentsOf: url!)
-        player.play()
-    }
+    @State var textInput: String = ""
     
     func fetchData() {
-        guard let url = URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/" + word) else {
+        guard let url = URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/" + textInput) else {
             print("Api not found")
             state = .Failure
             return
@@ -100,9 +84,35 @@ struct Lookup: View {
 
     var body: some View {
         Group {
+            VStack(alignment: .leading) {
+                Text("Dictionary")
+                    .foregroundColor(.black)
+                    .fontWeight(.bold)
+                    .font(.system(size: 24))
+                    .padding()
+                
+                TextField("Enter a word", text: $textInput)
+                    .padding(.horizontal)
+                    .onSubmit {
+                        state = .Fetching
+                        fetchData()
+                    }
+            }
+            
+            Spacer()
+                
             switch state {
+            case .Stationary:
+                Text("")
             case .Fetching:
-                Text("Fetching Data \(word)")
+                VStack {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                        .scaleEffect(3)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(userSettings.backgroundColour)
+                .padding()
             case .Failure:
                 Text("Failed to fetch data - check your internet connection")
             case .Success:
@@ -114,28 +124,6 @@ struct Lookup: View {
                     Text("\(wordData?.phonetic ?? "Unknown")")
                         .foregroundColor(userSettings.fontColour)
                         .font(Font(userSettings.headingFont))
-                    
-//                    if isPlaying {
-//                        Button(action: {
-//                            isPlaying.toggle()
-//                            pauseAudio()
-//                        }, label: {
-//                            Image(systemName: "pause.fill")
-//                        })
-//                            .padding()
-//                            .foregroundColor(Color(hex: 0xDF4D0F, alpha: 1))
-//                            .font(.system(size: 24))
-//                    } else {
-//                        Button(action: {
-//                            isPlaying.toggle()
-//                            playAudio()
-//                        }, label: {
-//                            Image(systemName: "play.fill")
-//                        })
-//                            .padding()
-//                            .foregroundColor(Color(hex: 0xDF4D0F, alpha: 1))
-//                            .font(.system(size: 24))
-//                    }
                     
                     List {
                         ForEach(wordData!.meanings, id: \.self) { meaning in
@@ -157,14 +145,11 @@ struct Lookup: View {
                 .padding()
             }
         }
-        .onAppear() {
-            fetchData()
-        }
     }
 }
 
 struct Lookup_Previews: PreviewProvider {
     static var previews: some View {
-        Lookup(word: "go")
+        DictionaryLookup()
     }
 }
