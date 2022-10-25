@@ -82,11 +82,12 @@ struct Home: View {
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
     
-    @ObservedObject var speaker = Speaker()
-    
     @State var isPlaying: Bool = false
+    @State var isEditing: Bool = false
     
     let synth = AVSpeechSynthesizer()
+    
+    @State var currentLabel: NSAttributedString = NSAttributedString(AttributedString("Hello copy. This is an example document"))
     
     // Converts text to bionic reading format by bolding the first half of every word
     func convertToBionic(text: String) -> String {
@@ -102,7 +103,7 @@ struct Home: View {
     }
         
     //  If bionic reading is enabled, apply to each word within the string or return it
-    func modifyText(text: String) -> String {
+    func modifyText(text: String) -> LocalizedStringKey {
         if (userSettings.isBionicReading) {
             var markdownStringArray: [String] = []
             
@@ -110,16 +111,19 @@ struct Home: View {
                 markdownStringArray.append(convertToBionic(text: String(substring)))
             }
 
-            return String(markdownStringArray.joined(separator: " "))
+            return LocalizedStringKey(markdownStringArray.joined(separator: " "))
         }
         
-        return String(text)
+        return LocalizedStringKey(text)
     }
     
-    func text2speech() {
-//        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
-//        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-//        self.synth.speak(utterance)
+    func text2speech(speech: String) {
+        let utterance = AVSpeechUtterance(string: speech)
+        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
+        utterance.rate = 0.4
+        self.synth.speak(utterance)
+        
+        print("OKOKOK")
     }
 
     var body: some View {
@@ -160,10 +164,29 @@ struct Home: View {
 
                         Spacer()
                         
-                        NavigationLink(destination: Settings()) {
-                            Image(systemName: "gear")
-                                .font(.headline)
-                                .foregroundColor(Color(hex: 0xDFF4D0F, alpha: 1))
+                        Group {
+                            if isEditing {
+                                Button(action: {
+                                    isEditing.toggle()
+                                }, label: {
+                                    Image(systemName: "pencil.slash")
+                                        .font(.headline)
+                                })
+                            } else {
+                                Button(action: {
+                                    isEditing.toggle()
+                                }, label: {
+                                    Image(systemName: "pencil")
+                                        .font(.headline)
+                                })
+                            }
+                                
+                            
+                            NavigationLink(destination: Settings()) {
+                                Image(systemName: "gear")
+                                    .font(.headline)
+                                    .foregroundColor(Color(hex: 0xDFF4D0F, alpha: 1))
+                            }
                         }
                     }
                     .padding()
@@ -171,34 +194,43 @@ struct Home: View {
                     Divider()
 
                     ZStack {
-                        
                         ScrollView(.vertical, showsIndicators: true) {
-//                            LabelRepresented(text: speaker.label)
-//                                .onAppear {
-//                                    speaker.speak("Hi. This is a test.")
-//                                }
-                            
                             if scanResult.scannedTextList.count < 1 {
-                                TextField(modifyText(text: scanResult.heading), text: $scanResult.heading, axis: .vertical)
-                                    .foregroundColor(userSettings.fontColour)
-                                    .font(Font(userSettings.headingFont))
-                                
-                                TextEditor(text: $scanResult.scannedText)
-                                    .foregroundColor(userSettings.fontColour)
-                                    .scrollContentBackground(.hidden)
-                                    .background(userSettings.backgroundColour)
-                                    .font(Font(userSettings.font))
-                                    .frame(maxHeight: .infinity, alignment: .leading)
-                                
+                                if isEditing {
+                                    TextField(modifyText(text: scanResult.heading), text: $scanResult.heading, axis: .vertical)
+                                        .foregroundColor(userSettings.fontColour)
+                                        .font(Font(userSettings.headingFont))
+                                        .fontWeight(.bold)
+                                    
+                                    TextEditor(text: $scanResult.scannedText)
+                                        .foregroundColor(userSettings.fontColour)
+                                        .scrollContentBackground(.hidden)
+                                        .background(userSettings.backgroundColour)
+                                        .font(Font(userSettings.font))
+                                        .frame(maxHeight: .infinity, alignment: .leading)
+                                } else {
+                                    Text(modifyText(text: scanResult.heading))
+                                        .foregroundColor(userSettings.fontColour)
+                                        .font(Font(userSettings.headingFont))
+                                        .fontWeight(.bold)
+                                    
+                                    Text(modifyText(text: scanResult.scannedText))
+                                        .foregroundColor(userSettings.fontColour)
+                                        .font(Font(userSettings.font))
+                                    
+                                    Paragraph(text: scanResult.scannedText)
+                                }
                             } else {
-                                //  Check whether text is a paragraph or heading by analysing paragraph line length
                                 ForEach(scanResult.scannedTextList, id: \.self) { paragraph in
                                     if paragraph.count > 1 {
+                                        // Paragraph
                                         Text(modifyText(text: paragraph.joined(separator: " ")))
                                             .foregroundColor(userSettings.fontColour)
                                             .font(Font(userSettings.headingFont))
                                             .frame(maxWidth: .infinity, alignment: .leading)
+                                        
                                     } else {
+                                        // Heading
                                         Text(modifyText(text: paragraph[0]))
                                             .foregroundColor(userSettings.fontColour)
                                             .font(Font(userSettings.headingFont))
@@ -210,31 +242,6 @@ struct Home: View {
                             }
                             
                             Spacer()
-                            
-                            if isPlaying {
-                                Button(action: {
-                                    isPlaying.toggle()
-                                    synth.stopSpeaking(at: AVSpeechBoundary.immediate)
-                                }, label: {
-                                    Image(systemName: "pause.fill")
-                                })
-                                .padding()
-                                .foregroundColor(Color(hex: 0xDF4D0F, alpha: 1))
-                                .font(.system(size: 24))
-                            } else {
-                                Button(action: {
-                                    isPlaying.toggle()
-                                    text2speech()
-                                }, label: {
-                                    Image(systemName: "play.fill")
-                                })
-                                .padding()
-                                .foregroundColor(Color(hex: 0xDF4D0F, alpha: 1))
-                                .font(.system(size: 24))
-                            }
-                        }
-                        .onTapGesture(count: 2) {
-                            showDictionary.toggle()
                         }
                         .padding()
                         .background(userSettings.backgroundColour)
@@ -297,16 +304,6 @@ struct Home: View {
                 .sheet(isPresented: $showDocumentCameraView, content: {
                     DocumentCameraView(settings: userSettings, scanResult: scanResult)
                 })
-                .sheet(isPresented: $showMenu, content: {
-                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter)
-                        .environmentObject(canvasSettings)
-                        .presentationDetents([.fraction(0.40), .fraction(0.20)])
-                        .presentationDragIndicator(.visible)
-                })
-                .sheet(isPresented: $showDictionary, content: {
-                    DictionaryLookup(wordData: nil, state: .Stationary)
-                        .environmentObject(userSettings)
-                })
                 .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                     do {
                         let url = try result.get()
@@ -317,6 +314,16 @@ struct Home: View {
                     } catch {
                         print("OH DEAR")
                     }
+                })
+                .sheet(isPresented: $showMenu, content: {
+                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter)
+                        .environmentObject(canvasSettings)
+                        .presentationDetents([.fraction(0.40), .fraction(0.20)])
+                        .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $showDictionary, content: {
+                    DictionaryLookup(wordData: nil, state: .Stationary)
+                        .environmentObject(userSettings)
                 })
                 .fileExporter(
                    isPresented: $showFileExporter,

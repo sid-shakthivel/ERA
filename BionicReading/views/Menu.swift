@@ -39,6 +39,7 @@ struct Menu: View {
                
                Button {
                    showFileImporter.toggle()
+                   print("here")
                } label: {
                    HStack {
                        Image("upload")

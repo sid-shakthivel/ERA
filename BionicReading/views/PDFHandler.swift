@@ -74,6 +74,42 @@ func convertPDFToImages(url: URL) -> [UIImage] {
 }
 
 
+struct SpeakingText: UIViewRepresentable {
+    typealias UIViewType = UILabel
+    
+    @State var text : NSAttributedString?
+    
+    var label = UILabel()
+    
+    func makeUIView(context: Context) -> UILabel {
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(sender:)))
+        label.addGestureRecognizer(tapGesture)
+        return label
+    }
+    
+    func makeCoordinator() -> SpeakingText.Coordinator {
+       Coordinator(label)
+     }
+    
+    func updateUIView(_ uiView: UILabel, context: Context) {
+        uiView.attributedText = text
+    }
+    
+    final class Coordinator: NSObject {
+        private let label: UILabel
+      
+        init(_ label: UILabel) {
+            print("at least here")
+            self.label = label
+            super.init()
+        }
+        
+        @objc func handleTap(sender: UITapGestureRecognizer) {
+          print("Tapped")
+        }
+      }
+}
+
 struct LabelRepresented: UIViewRepresentable {
     var text : NSAttributedString?
     
@@ -89,10 +125,10 @@ struct LabelRepresented: UIViewRepresentable {
 class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     let synth = AVSpeechSynthesizer()
     @Published var label: NSAttributedString? // <- change to AttributedString
-
+    
     override init() {
         super.init()
-        label = NSMutableAttributedString("Hi. This is a test")
+//        label = NSMutableAttributedString("hello")
         synth.delegate = self
     }
 
