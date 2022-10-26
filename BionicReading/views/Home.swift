@@ -24,7 +24,7 @@ extension Color {
 
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [[String]] = []
-    @Published var scannedText: String = "Hello copy. This is an example document"
+    @Published var scannedText: String = "Hello copy. **This is an example** document and I really really really hope this works perfectly fine"
     @Published var heading: String = "Example Heading"
     @Published var utterance = AVSpeechUtterance(string: "hello world")
 }
@@ -32,6 +32,7 @@ class ScanResult: ObservableObject {
 class CanvasSettings: ObservableObject {
     @Published var selectedColour: Color = .clear
     @Published var lines: [Line] = []
+    @Published var lastLine: Line?
     @Published var lineWidth: Double = 5
 }
 
@@ -82,49 +83,7 @@ struct Home: View {
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
     
-    @State var isPlaying: Bool = false
     @State var isEditing: Bool = false
-    
-    let synth = AVSpeechSynthesizer()
-    
-    @State var currentLabel: NSAttributedString = NSAttributedString(AttributedString("Hello copy. This is an example document"))
-    
-    // Converts text to bionic reading format by bolding the first half of every word
-    func convertToBionic(text: String) -> String {
-        var modifiedText = text
-        let boldIndex = Int(ceil(Double(text.count) / 2)) + 1
-        modifiedText.insert("*", at: modifiedText.startIndex)
-        modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: 1))
-        
-        modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 1))
-        modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 2))
-        
-        return modifiedText
-    }
-        
-    //  If bionic reading is enabled, apply to each word within the string or return it
-    func modifyText(text: String) -> LocalizedStringKey {
-        if (userSettings.isBionicReading) {
-            var markdownStringArray: [String] = []
-            
-            for substring in text.split(separator: " ") {
-                markdownStringArray.append(convertToBionic(text: String(substring)))
-            }
-
-            return LocalizedStringKey(markdownStringArray.joined(separator: " "))
-        }
-        
-        return LocalizedStringKey(text)
-    }
-    
-    func text2speech(speech: String) {
-        let utterance = AVSpeechUtterance(string: speech)
-        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-        utterance.rate = 0.4
-        self.synth.speak(utterance)
-        
-        print("OKOKOK")
-    }
 
     var body: some View {
         GeometryReader { geometryProxy in
@@ -167,17 +126,17 @@ struct Home: View {
                         Group {
                             if isEditing {
                                 Button(action: {
-                                    isEditing.toggle()
+                                    isEditing = false
                                 }, label: {
                                     Image(systemName: "pencil.slash")
-                                        .font(.headline)
+                                        .font(.title)
                                 })
                             } else {
                                 Button(action: {
-                                    isEditing.toggle()
+                                    isEditing = true
                                 }, label: {
                                     Image(systemName: "pencil")
-                                        .font(.headline)
+                                        .font(.title)
                                 })
                             }
                                 
@@ -192,16 +151,27 @@ struct Home: View {
                     .padding()
                     
                     Divider()
-
+                    
                     ZStack {
+//                        Canvas { ctx, size in
+//                            for line in canvasSettings.lines {
+//                                var path = Path()
+//                                path.addLines(line.points)
+//
+//                                ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
+//                            }
+//                        }
+                        
                         ScrollView(.vertical, showsIndicators: true) {
                             if scanResult.scannedTextList.count < 1 {
+                                // View generated on inital startup which is editable
+                                
                                 if isEditing {
-                                    TextField(modifyText(text: scanResult.heading), text: $scanResult.heading, axis: .vertical)
+                                    TextField(scanResult.heading, text: $scanResult.heading)
                                         .foregroundColor(userSettings.fontColour)
                                         .font(Font(userSettings.headingFont))
                                         .fontWeight(.bold)
-                                    
+
                                     TextEditor(text: $scanResult.scannedText)
                                         .foregroundColor(userSettings.fontColour)
                                         .scrollContentBackground(.hidden)
@@ -209,65 +179,58 @@ struct Home: View {
                                         .font(Font(userSettings.font))
                                         .frame(maxHeight: .infinity, alignment: .leading)
                                 } else {
-                                    Text(modifyText(text: scanResult.heading))
-                                        .foregroundColor(userSettings.fontColour)
-                                        .font(Font(userSettings.headingFont))
-                                        .fontWeight(.bold)
-                                    
-                                    Text(modifyText(text: scanResult.scannedText))
-                                        .foregroundColor(userSettings.fontColour)
-                                        .font(Font(userSettings.font))
-                                    
-                                    Paragraph(text: scanResult.scannedText)
+                                    Paragraph(isHeading: true, text: scanResult.heading)
+                                    Paragraph(isHeading: false, text: scanResult.scannedText)
                                 }
                             } else {
+                                // View generated on scan/imported PDF
+                                
                                 ForEach(scanResult.scannedTextList, id: \.self) { paragraph in
-                                    if paragraph.count > 1 {
-                                        // Paragraph
-                                        Text(modifyText(text: paragraph.joined(separator: " ")))
-                                            .foregroundColor(userSettings.fontColour)
-                                            .font(Font(userSettings.headingFont))
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        
-                                    } else {
+                                    if paragraph.count < 2 {
                                         // Heading
-                                        Text(modifyText(text: paragraph[0]))
-                                            .foregroundColor(userSettings.fontColour)
-                                            .font(Font(userSettings.headingFont))
-                                            .fontWeight(.bold)
+                                        Paragraph(isHeading: true, text: paragraph[0])
+                                    } else {
+                                        // Paragraph
+                                        Paragraph(isHeading: false, text: paragraph.joined(separator: " "))
                                     }
-                                    
                                     Text("")
                                 }
                             }
-                            
-                            Spacer()
                         }
+                        
+//                        if canvasSettings.selectedColour != .clear {
+//                            Canvas { ctx, size in
+//                                for line in canvasSettings.lines {
+//                                    var path = Path()
+//                                    path.addLines(line.points)
+//
+//                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
+//                                }
+//                            }
+//                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
+//                                if canvasSettings.selectedColour != .clear {
+//                                    let position = value.location
+//                                    if value.translation == .zero {
+//                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
+//                                    } else {
+//                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
+//                                        canvasSettings.lines[lastIndex].points.append(position)
+//                                    }
+//                                }
+//                            }))
+//                        } else {
+//                            Canvas { ctx, size in
+//                                for line in canvasSettings.lines {
+//                                    var path = Path()
+//                                    path.addLines(line.points)
+//
+//                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
+//                                }
+//                            }
+//                        }
+                    }
                         .padding()
                         .background(userSettings.backgroundColour)
-                        
-                        if canvasSettings.selectedColour != .clear {
-                            Canvas { ctx, size in
-                                for line in canvasSettings.lines {
-                                    var path = Path()
-                                    path.addLines(line.points)
-
-                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
-                                }
-                            }
-                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                                if canvasSettings.selectedColour != .clear {
-                                    let position = value.location
-                                    if value.translation == .zero {
-                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
-                                    } else {
-                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
-                                        canvasSettings.lines[lastIndex].points.append(position)
-                                    }
-                                }
-                            }))
-                        }
-                    }
                                                                 
                     VStack {
                         HStack {
@@ -280,11 +243,43 @@ struct Home: View {
                                     showMenu.toggle()
                                 }
                             
-                            ForEach([Color.green, Color.blue, Color.red, Color.black], id: \.self) { colour in
+                            ForEach([Color.blue, Color.red, Color.black], id: \.self) { colour in
                                 colourButton(colour: colour)
                             }
-                            clearButton()
-                            eraseButton()
+                            
+                            Button(action: {
+                                canvasSettings.selectedColour = .clear
+                            }, label: {
+                                Image(systemName: "checkmark")
+                                    .font(.largeTitle)
+                            })
+                            
+                            Button(action: {
+                                canvasSettings.lines = []
+                            }, label: {
+                                Image(systemName: "trash.fill")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.gray)
+                            })
+                            
+                            Button(action: {
+                                if canvasSettings.lines.count > 1 {
+                                    canvasSettings.lastLine = canvasSettings.lines.removeLast()
+                                }
+                            }, label: {
+                                Image(systemName: "arrow.uturn.backward")
+                                    .font(.largeTitle)
+                            })
+                            
+                            Button(action: {
+                                if canvasSettings.lastLine != nil {
+                                    canvasSettings.lines.append(canvasSettings.lastLine!)
+                                    canvasSettings.lastLine = nil
+                                }
+                            }, label: {
+                                Image(systemName: "arrow.uturn.forward")
+                                    .font(.largeTitle)
+                            })
                         }
 
                         Slider(value: $canvasSettings.lineWidth, in: 0...20)
@@ -301,9 +296,6 @@ struct Home: View {
                 .navigationBarTitle("")
                 .navigationBarBackButtonHidden(true)
                 .navigationBarHidden(true)
-                .sheet(isPresented: $showDocumentCameraView, content: {
-                    DocumentCameraView(settings: userSettings, scanResult: scanResult)
-                })
                 .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                     do {
                         let url = try result.get()
@@ -315,8 +307,11 @@ struct Home: View {
                         print("OH DEAR")
                     }
                 })
+                .sheet(isPresented: $showDocumentCameraView, content: {
+                    DocumentCameraView(settings: userSettings, scanResult: scanResult)
+                })
                 .sheet(isPresented: $showMenu, content: {
-                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter)
+                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showMenu: $showMenu)
                         .environmentObject(canvasSettings)
                         .presentationDetents([.fraction(0.40), .fraction(0.20)])
                         .presentationDragIndicator(.visible)
@@ -343,7 +338,6 @@ struct Home: View {
     @ViewBuilder
     func colourButton(colour: Color) -> some View {
         Button(action: {
-            print("here")
             canvasSettings.selectedColour = colour
         }, label: {
             Image(systemName: "circle.fill")
@@ -353,30 +347,6 @@ struct Home: View {
                     Image(systemName: "pencil.tip")
                         .font(.largeTitle)
                 }
-        })
-    }
-    
-    
-    @ViewBuilder
-    func clearButton() -> some View {
-        Button(action: {
-            canvasSettings.selectedColour = .clear
-        }, label: {
-            Image(systemName: "pencil.tip")
-                .font(.largeTitle)
-                .foregroundColor(.gray)
-        })
-    }
-    
-    @ViewBuilder
-    func eraseButton() -> some View {
-        Button(action: {
-            canvasSettings.lines = []
-            canvasSettings.selectedColour = .clear
-        }, label: {
-            Image(systemName: "trash.fill")
-                .font(.largeTitle)
-                .foregroundColor(.gray)
         })
     }
 }

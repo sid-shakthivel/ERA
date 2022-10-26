@@ -11,10 +11,10 @@ class UserCustomisations: ObservableObject {
     @Published var fontSize: Int = 16
     
     @Published var fontColour: Color = .black
-    @Published var isBionicReading: Bool = false
+    @Published var isBionicReading: Bool = true
     
     @Published var font: UIFont = UIFont.systemFont(ofSize: 16)
-    @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
+    @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24, weight: .bold)
     
     @Published var backgroundColour: Color = Color(hex: 0xFFF9F0, alpha: 1)
     
@@ -120,7 +120,6 @@ struct Settings: View {
                                 .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
                                 .onChange(of: settings.fontSize, perform: { newFontSize in
                                     settings.font = UIFont(descriptor: settings.font.fontDescriptor, size: CGFloat(settings.fontSize))
-
                                     settings.headingFont = UIFont(descriptor: settings.font.fontDescriptor, size: CGFloat(Double(settings.fontSize) * 1.5))
                                 })
                         }
@@ -170,20 +169,29 @@ struct Settings: View {
                     }
                     
                     Group {
-                        Text("Speech Accent")
+                        Text("Text to Speech")
                             .foregroundColor(.black)
                             .fontWeight(.bold)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
                         
+                        Text("Accent")
+                            .foregroundColor(.black)
+                            .fontWeight(.bold)
+                            .font(.system(size: 14))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        
                         Picker(selection: $settings.accent, content: {
                             ForEach(languages, id: \.self) {
                                 Text($0)
                             }
                        }, label: {
-
+                           
                        })
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(Color(hex: 0xFFFFFF, alpha: 1))
+                            .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
                     }
     
                     Button(action: {

@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct Menu: View {
+    @Environment(\.presentationMode) var presentationMode
+    
     @EnvironmentObject var canvasSettings: CanvasSettings
     @Binding var showDocumentCameraView: Bool
     @Binding var showFileImporter: Bool
+    @Binding var showMenu: Bool
     
     var body: some View {
         Group {
@@ -38,8 +41,11 @@ struct Menu: View {
                    .padding(.horizontal, 30)
                
                Button {
-                   showFileImporter.toggle()
-                   print("here")
+                   // Fix for attempt to present View ... which is already presenting
+                   showMenu = false
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                       showFileImporter.toggle()
+                   }
                } label: {
                    HStack {
                        Image("upload")
@@ -64,6 +70,6 @@ struct Menu: View {
 
 struct optionView_Previews: PreviewProvider {
     static var previews: some View {
-        Menu(showDocumentCameraView: .constant(false), showFileImporter: .constant(false))
+        Menu(showDocumentCameraView: .constant(false), showFileImporter: .constant(false), showMenu: .constant(false))
     }
 }

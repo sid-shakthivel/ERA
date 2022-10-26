@@ -25,7 +25,7 @@ struct Definition: Codable, Hashable {
 }
 
 struct Phonetic: Codable, Hashable {
-    var text: String
+    var text: String?
     var audio: String
     var sourceUrl: String?
     var licence: License?
@@ -40,7 +40,7 @@ struct Meaning: Codable, Hashable {
 
 struct Word: Codable, Hashable {
     var word: String
-    var phonetic: String
+    var phonetic: String?
     var phonetics: [Phonetic]
     var meanings: [Meaning]
     var license: License
@@ -63,7 +63,6 @@ struct DictionaryLookup: View {
     
     func fetchData() {
         guard let url = URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/" + textInput) else {
-            print("Api not found")
             state = .Failure
             return
         }
@@ -71,7 +70,6 @@ struct DictionaryLookup: View {
         URLSession.shared.dataTask(with: url) { (data, _, _) in
             // Fetch the first result - it's a success
             let tempWordData = try! JSONDecoder().decode([Word].self, from: data!)
-            print(tempWordData)
             if tempWordData.isEmpty {
                 state = .Failure
             } else {
@@ -125,20 +123,53 @@ struct DictionaryLookup: View {
                         .foregroundColor(userSettings.fontColour)
                         .font(Font(userSettings.headingFont))
                     
-                    List {
-                        ForEach(wordData!.meanings, id: \.self) { meaning in
-                            ForEach(meaning.definitions, id: \.self) { definition in
-                                VStack(alignment: .leading) {
-                                    Text("\(definition.definition)")
-                                    Text("\(definition.example ?? "No Example")")
-                                        .font(.subheadline)
+                    TabView {
+                        List {
+                            ForEach(wordData!.meanings, id: \.self) { meaning in
+                                Text("\(meaning.partOfSpeech.capitalized)")
+                                ForEach(meaning.definitions, id: \.self) { definition in
+                                    VStack(alignment: .leading) {
+                                        Text("\(definition.definition)")
+                                        Text("\(definition.example ?? "No Example")")
+                                            .font(.subheadline)
+                                    }
+                                    .listRowBackground(userSettings.backgroundColour)
                                 }
-                                .listRowBackground(userSettings.backgroundColour)
                             }
                         }
+                        .scrollContentBackground(.hidden)
+                        .background(userSettings.backgroundColour)
+                        .tabItem {
+                            Label("Defintions", systemImage: "pencil.circle")
+                        }
+                        
+                        List {
+                            Text("Synonyms")
+                            ForEach(wordData!.meanings, id: \.self) { meaning in
+                                ForEach(meaning.synonyms, id: \.self) { synonym in
+                                    VStack(alignment: .leading) {
+                                        Text("\(synonym)")
+                                    }
+                                    .listRowBackground(userSettings.backgroundColour)
+                                }
+                            }
+                            
+                            Text("Antonyms")
+                            ForEach(wordData!.meanings, id: \.self) { meaning in
+                                ForEach(meaning.antonyms, id: \.self) { antonym in
+                                    VStack(alignment: .leading) {
+                                        Text("\(antonym)")
+                                    }
+                                    .listRowBackground(userSettings.backgroundColour)
+                                }
+                            }
+                        }
+                        .scrollContentBackground(.hidden)
+                        .background(userSettings.backgroundColour)
+                        .tabItem {
+                            Label("Synonyms", systemImage: "pencil")
+                        }
                     }
-                    .scrollContentBackground(.hidden)
-                    .background(userSettings.backgroundColour)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .background(userSettings.backgroundColour)
