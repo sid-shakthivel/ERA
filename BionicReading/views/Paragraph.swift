@@ -59,11 +59,9 @@ struct Paragraph: View {
                     .font(Font(userSettings.headingFont))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture {
-//                        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
-//                        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-//                        self.synth.speak(utterance)
-                        
-                        print(paragraphFormat)
+                        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
+                        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
+                        self.synth.speak(utterance)
                     }
             }
         } else {
@@ -90,11 +88,9 @@ struct Paragraph: View {
                     .font(Font(userSettings.font))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture {
-//                        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
-//                        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-//                        self.synth.speak(utterance)
-                        
-                        print(paragraphFormat)
+                        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
+                        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
+                        self.synth.speak(utterance)
                     }
             }
         }
