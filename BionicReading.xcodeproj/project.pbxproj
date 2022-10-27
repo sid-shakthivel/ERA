@@ -18,6 +18,9 @@
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
+		35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57A290AB41C00FC5588 /* OptionBar.swift */; };
+		35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */; };
+		35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57E290ACA4400FC5588 /* OnboardingView.swift */; };
 		35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* Menu.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
@@ -39,6 +42,9 @@
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		35BCD57A290AB41C00FC5588 /* OptionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBar.swift; sourceTree = "<group>"; };
+		35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardSubView.swift; sourceTree = "<group>"; };
+		35BCD57E290ACA4400FC5588 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		35C5FA5B2905E9B20007ABEB /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
@@ -109,6 +115,9 @@
 				353437BA2901664C003917A0 /* PDFHandler.swift */,
 				35C5FA5B2905E9B20007ABEB /* Menu.swift */,
 				3562C29829084C51004497D6 /* Paragraph.swift */,
+				35BCD57A290AB41C00FC5588 /* OptionBar.swift */,
+				35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */,
+				35BCD57E290ACA4400FC5588 /* OnboardingView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -190,6 +199,7 @@
 				35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
+				35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */,
 				353437BB2901664C003917A0 /* PDFHandler.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
@@ -198,8 +208,10 @@
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */,
+				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */,
+				35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */,
 				35F0A47D28F4BBB900A95D17 /* CustomPDFView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

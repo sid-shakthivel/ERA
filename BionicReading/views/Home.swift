@@ -83,6 +83,7 @@ struct Home: View {
     @StateObject var canvasSettings = CanvasSettings()
     
     @State var isEditingText: Bool = false
+    @State var isDrawing: Bool = false
 
     var body: some View {
         GeometryReader { geometryProxy in
@@ -165,36 +166,34 @@ struct Home: View {
                             }
                         }
                         
-//                        if canvasSettings.selectedColour != .clear && isEditing {
-//                            Canvas { ctx, size in
-//                                for line in canvasSettings.lines {
-//                                    var path = Path()
-//                                    path.addLines(line.points)
-//
-//                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
-//                                }
-//                            }
-//                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-//                                if canvasSettings.selectedColour != .clear {
-//                                    let position = value.location
-//                                    if value.translation == .zero {
-//                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
-//                                    } else {
-//                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
-//                                        canvasSettings.lines[lastIndex].points.append(position)
-//                                    }
-//                                }
-//                            }))
-//                        }
+                        if isDrawing {
+                            Canvas { ctx, size in
+                                for line in canvasSettings.lines {
+                                    var path = Path()
+                                    path.addLines(line.points)
+
+                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
+                                }
+                            }
+                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
+                                if canvasSettings.selectedColour != .clear {
+                                    let position = value.location
+                                    if value.translation == .zero {
+                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
+                                    } else {
+                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
+                                        canvasSettings.lines[lastIndex].points.append(position)
+                                    }
+                                }
+                            }))
+                        }
                     }
                         .padding()
                         .background(userSettings.backgroundColour)
                                                                 
-                    VStack {
-                       
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.white)
+                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.white)
                 }
                     .background(Color(hex: 0xFFF9F0, alpha: 1))
             }
@@ -240,21 +239,6 @@ struct Home: View {
                    }
                }
         }
-    }
-    
-    @ViewBuilder
-    func colourButton(colour: Color) -> some View {
-        Button(action: {
-            canvasSettings.selectedColour = colour
-        }, label: {
-            Image(systemName: "circle.fill")
-                .font(.largeTitle)
-                .foregroundColor(colour)
-                .mask {
-                    Image(systemName: "pencil.tip")
-                        .font(.largeTitle)
-                }
-        })
     }
 }
 

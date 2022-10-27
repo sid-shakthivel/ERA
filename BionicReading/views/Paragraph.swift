@@ -67,21 +67,12 @@ struct Paragraph: View {
         } else {
             // Normal paragraph
             if isEditingText {
-                ZStack() {
-                    TextEditor(text: $paragraphFormat.text)
-                        .foregroundColor(userSettings.fontColour)
-                        .scrollContentBackground(.hidden)
-                        .background(userSettings.backgroundColour)
-                        .font(Font(userSettings.font))
-                        .frame(maxHeight: .infinity, alignment: .leading)
-                        
-                    Text(modifyText(text: paragraphFormat.text))
-                        .font(Font(userSettings.font))
-                        .foregroundColor(userSettings.fontColour)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .opacity(0)
-                }
-                .cornerRadius(5)
+                TextEditor(text: $paragraphFormat.text)
+                    .foregroundColor(userSettings.fontColour)
+                    .scrollContentBackground(.hidden)
+                    .background(userSettings.backgroundColour)
+                    .font(Font(userSettings.font))
+                    .frame(minHeight: 500)
             } else {
                 Text(modifyText(text: paragraphFormat.text))
                     .foregroundColor(userSettings.fontColour)
