@@ -11,7 +11,7 @@ class UserCustomisations: ObservableObject {
     @Published var fontSize: Int = 16
     
     @Published var fontColour: Color = .black
-    @Published var isBionicReading: Bool = true
+    @Published var isEnhancedReading: Bool = false
     
     @Published var font: UIFont = UIFont.systemFont(ofSize: 16)
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24, weight: .bold)
@@ -60,7 +60,7 @@ struct Settings: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         Group {
-                            Toggle(isOn: $settings.isBionicReading, label: {
+                            Toggle(isOn: $settings.isEnhancedReading, label: {
                                 Text("Enhanced Reading")
                                     .foregroundColor(.black)
                                     .fontWeight(.bold)
@@ -199,7 +199,7 @@ struct Settings: View {
                         
                         settings.fontSize = 16;
                         settings.fontColour = .black
-                        settings.isBionicReading = false
+                        settings.isEnhancedReading = false
                         settings.font = UIFont.systemFont(ofSize: 16)
                         settings.headingFont = UIFont.systemFont(ofSize: 24)
                         settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)

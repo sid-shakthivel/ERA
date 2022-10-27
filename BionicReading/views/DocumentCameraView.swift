@@ -10,40 +10,14 @@ import VisionKit
 import Vision
 import AVFoundation
 
-// Images go under a request which builds an array of lines of words
-func buildRequest() -> ([[String]], [VNRecognizeTextRequest]) {
-    var paragraphs: [[String]] = []
-
-    var currentParagraph: [String] = []
-    var boundingBoxes: [CGPoint] = []
+struct ParagraphFormat: Hashable {
+    var text: String
+    var isHeading: Bool
     
-    let request = VNRecognizeTextRequest { request, error in
-        guard let observations = request.results as? [VNRecognizedTextObservation] else {
-            fatalError("Received invalid observations")
-        }
-
-        for observation in observations {
-            guard let bestCandidate = observation.topCandidates(1).first else {
-                continue
-            }
-
-            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
-                paragraphs.append(currentParagraph)
-                currentParagraph.removeAll()
-                boundingBoxes.removeAll()
-            }
-
-            currentParagraph.append(bestCandidate.string)
-            boundingBoxes.append(observation.topLeft)
-        }
+    init(text: String, isHeading: Bool) {
+        self.text = text
+        self.isHeading = isHeading
     }
-    
-    request.recognitionLevel = .accurate
-    request.usesLanguageCorrection = true
-    
-    let requests = [request]
-    
-    return (paragraphs, requests)
 }
 
 /*
@@ -60,10 +34,8 @@ func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextOb
     return false
 }
 
-func scanPhotos(scan: VNDocumentCameraScan) -> ([[String]], String){
-//    var (paragraphs, requests) = buildRequest()
-    
-    var paragraphs: [[String]] = []
+func scanPhotos(scan: VNDocumentCameraScan) -> [ParagraphFormat] {
+    var paragraphs: [ParagraphFormat] = []
 
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
@@ -79,7 +51,17 @@ func scanPhotos(scan: VNDocumentCameraScan) -> ([[String]], String){
             }
 
             if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
-                paragraphs.append(currentParagraph)
+                if currentParagraph.count < 2 {
+                    // Heading
+                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: true))
+                } else {
+                    // Paragraph
+                    
+                    currentParagraph[currentParagraph.count-1] += "\n"
+                    
+                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: false))
+                }
+                
                 currentParagraph.removeAll()
                 boundingBoxes.removeAll()
             }
@@ -103,19 +85,11 @@ func scanPhotos(scan: VNDocumentCameraScan) -> ([[String]], String){
         try? requestHandler.perform(requests)
     }
     
-    // Setup text to speech
-    var joinedParagraphs = ""
-    for line in paragraphs {
-        joinedParagraphs += line.joined(separator: "")
-    }
-    
-    return (paragraphs, joinedParagraphs)
+    return paragraphs
 }
 
-func testScanPDF(scan: [UIImage]) -> ([[String]], String){
-//    var (paragraphs, requests) = buildRequest()
-    
-    var paragraphs: [[String]] = []
+func testScanPDF(scan: [UIImage]) -> [ParagraphFormat] {
+    var paragraphs: [ParagraphFormat] = []
 
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
@@ -131,7 +105,14 @@ func testScanPDF(scan: [UIImage]) -> ([[String]], String){
             }
 
             if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
-                paragraphs.append(currentParagraph)
+                if currentParagraph.count < 2 {
+                    // Heading
+                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: true))
+                } else {
+                    // Paragraph
+                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: false))
+                }
+                
                 currentParagraph.removeAll()
                 boundingBoxes.removeAll()
             }
@@ -154,13 +135,7 @@ func testScanPDF(scan: [UIImage]) -> ([[String]], String){
         try? requestHandler.perform(requests)
     }
     
-    // Setup text to speech
-    var joinedParagraphs = ""
-    for line in paragraphs {
-        joinedParagraphs += line.joined(separator: "")
-    }
-    
-    return (paragraphs, joinedParagraphs)
+    return paragraphs
 }
 
 /*
@@ -207,77 +182,7 @@ struct DocumentCameraView: UIViewControllerRepresentable {
         
         // Called when there are scanned images to analyse
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
-            var paragraphs: [[String]] = []
-
-            var currentParagraph: [String] = []
-            var boundingBoxes: [CGPoint] = []
-
-            let request = VNRecognizeTextRequest { request, error in
-                guard let observations = request.results as? [VNRecognizedTextObservation] else {
-                    fatalError("Received invalid observations")
-                }
-
-                for observation in observations {
-                    guard let bestCandidate = observation.topCandidates(1).first else {
-                        print("No candidate")
-                        continue
-                    }
-
-                    print(bestCandidate.string)
-                    print(observation.topLeft)
-
-                    if boundingBoxes.count > 0 {
-                        // Check if there is a large enough gap between the current and previous candidate
-
-                        /*
-                            Paragraph is on a new line if:
-                            Difference between Y coordinate of current line and last line is greater then 0.05 (Maybe this value can be relative???)
-                            Difference between X coordinate of current line and last line is greater then 0.04 (Indent)
-                            TODO: Need to ensure the max val is subtracted from min val
-                            TODO: May need to average results
-                         */
-                        if (boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y >= 0.04) || (observation.topLeft.x - boundingBoxes[boundingBoxes.count - 1].x >= 0.04) {
-                            print("Creating new paragraph")
-                            
-                            // Create a new paragraph
-                            paragraphs.append(currentParagraph)
-                            currentParagraph.removeAll()
-                            boundingBoxes.removeAll()
-                        }
-                    }
-
-                    currentParagraph.append(bestCandidate.string)
-
-                    boundingBoxes.append(observation.topLeft)
-                }
-            }
-
-            request.recognitionLevel = .accurate
-            request.usesLanguageCorrection = true
-
-            let requests = [request]
-
-            // Make a new custom scanned view which consits of a number of text
-            for i in 0 ..< scan.pageCount {
-                let img = scan.imageOfPage(at: i)
-                guard let cgImage = img.cgImage else { continue }
-
-                let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-                try? requestHandler.perform(requests)
-            }
-            
-            parent.scanResult.scannedTextList = paragraphs
-            
-            // Setup text to speech
-            
-            var scanText = ""
-            for line in paragraphs {
-                scanText += line.joined(separator: "")
-            }
-            parent.scanResult.scannedText = scanText
-            
-            parent.scanResult.utterance = AVSpeechUtterance(string: scanText)
-            
+            parent.scanResult.scannedTextList = scanPhotos(scan: scan)
             parent.presentationMode.wrappedValue.dismiss()
           }
     }

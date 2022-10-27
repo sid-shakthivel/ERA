@@ -23,10 +23,9 @@ extension Color {
 }
 
 class ScanResult: ObservableObject {
-    @Published var scannedTextList: [[String]] = []
-    @Published var scannedText: String = "Hello copy. **This is an example** document and I really really really hope this works perfectly fine"
-    @Published var heading: String = "Example Heading"
-    @Published var utterance = AVSpeechUtterance(string: "hello world")
+    @Published var scannedTextList: [ParagraphFormat] = []
+    @Published var exampleHeading: ParagraphFormat = ParagraphFormat(text: "Example", isHeading: true)
+    @Published var exampleText: ParagraphFormat = ParagraphFormat(text: "Hello World", isHeading: false)
 }
 
 class CanvasSettings: ObservableObject {
@@ -83,7 +82,7 @@ struct Home: View {
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
     
-    @State var isEditing: Bool = false
+    @State var isEditingText: Bool = false
 
     var body: some View {
         GeometryReader { geometryProxy in
@@ -124,22 +123,21 @@ struct Home: View {
                         Spacer()
                         
                         Group {
-                            if isEditing {
+                            if isEditingText {
                                 Button(action: {
-                                    isEditing = false
+                                    isEditingText = false
                                 }, label: {
                                     Image(systemName: "pencil.slash")
                                         .font(.title)
                                 })
                             } else {
                                 Button(action: {
-                                    isEditing = true
+                                    isEditingText = true
                                 }, label: {
                                     Image(systemName: "pencil")
                                         .font(.title)
                                 })
                             }
-                                
                             
                             NavigationLink(destination: Settings()) {
                                 Image(systemName: "gear")
@@ -153,52 +151,21 @@ struct Home: View {
                     Divider()
                     
                     ZStack {
-//                        Canvas { ctx, size in
-//                            for line in canvasSettings.lines {
-//                                var path = Path()
-//                                path.addLines(line.points)
-//
-//                                ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
-//                            }
-//                        }
-                        
                         ScrollView(.vertical, showsIndicators: true) {
                             if scanResult.scannedTextList.count < 1 {
-                                // View generated on inital startup which is editable
-                                
-                                if isEditing {
-                                    TextField(scanResult.heading, text: $scanResult.heading)
-                                        .foregroundColor(userSettings.fontColour)
-                                        .font(Font(userSettings.headingFont))
-                                        .fontWeight(.bold)
-
-                                    TextEditor(text: $scanResult.scannedText)
-                                        .foregroundColor(userSettings.fontColour)
-                                        .scrollContentBackground(.hidden)
-                                        .background(userSettings.backgroundColour)
-                                        .font(Font(userSettings.font))
-                                        .frame(maxHeight: .infinity, alignment: .leading)
-                                } else {
-                                    Paragraph(isHeading: true, text: scanResult.heading)
-                                    Paragraph(isHeading: false, text: scanResult.scannedText)
-                                }
+                                // View generated on intial startup (editable)
+                                Paragraph(paragraphFormat: $scanResult.exampleHeading, isEditingText: $isEditingText)
+                                Paragraph(paragraphFormat: $scanResult.exampleText, isEditingText: $isEditingText)
                             } else {
                                 // View generated on scan/imported PDF
-                                
-                                ForEach(scanResult.scannedTextList, id: \.self) { paragraph in
-                                    if paragraph.count < 2 {
-                                        // Heading
-                                        Paragraph(isHeading: true, text: paragraph[0])
-                                    } else {
-                                        // Paragraph
-                                        Paragraph(isHeading: false, text: paragraph.joined(separator: " "))
-                                    }
+                                ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
+                                    Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText)
                                     Text("")
                                 }
                             }
                         }
                         
-//                        if canvasSettings.selectedColour != .clear {
+//                        if canvasSettings.selectedColour != .clear && isEditing {
 //                            Canvas { ctx, size in
 //                                for line in canvasSettings.lines {
 //                                    var path = Path()
@@ -218,72 +185,13 @@ struct Home: View {
 //                                    }
 //                                }
 //                            }))
-//                        } else {
-//                            Canvas { ctx, size in
-//                                for line in canvasSettings.lines {
-//                                    var path = Path()
-//                                    path.addLines(line.points)
-//
-//                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
-//                                }
-//                            }
 //                        }
                     }
                         .padding()
                         .background(userSettings.backgroundColour)
                                                                 
                     VStack {
-                        HStack {
-                            Image("setting")
-                                .font(.largeTitle)
-                                .onTapGesture(count: 2) {
-                                    showDictionary.toggle()
-                                }
-                                .onTapGesture(count: 1) {
-                                    showMenu.toggle()
-                                }
-                            
-                            ForEach([Color.blue, Color.red, Color.black], id: \.self) { colour in
-                                colourButton(colour: colour)
-                            }
-                            
-                            Button(action: {
-                                canvasSettings.selectedColour = .clear
-                            }, label: {
-                                Image(systemName: "checkmark")
-                                    .font(.largeTitle)
-                            })
-                            
-                            Button(action: {
-                                canvasSettings.lines = []
-                            }, label: {
-                                Image(systemName: "trash.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.gray)
-                            })
-                            
-                            Button(action: {
-                                if canvasSettings.lines.count > 1 {
-                                    canvasSettings.lastLine = canvasSettings.lines.removeLast()
-                                }
-                            }, label: {
-                                Image(systemName: "arrow.uturn.backward")
-                                    .font(.largeTitle)
-                            })
-                            
-                            Button(action: {
-                                if canvasSettings.lastLine != nil {
-                                    canvasSettings.lines.append(canvasSettings.lastLine!)
-                                    canvasSettings.lastLine = nil
-                                }
-                            }, label: {
-                                Image(systemName: "arrow.uturn.forward")
-                                    .font(.largeTitle)
-                            })
-                        }
-
-                        Slider(value: $canvasSettings.lineWidth, in: 0...20)
-                            .padding()
+                       
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Color.white)
@@ -300,9 +208,8 @@ struct Home: View {
                     do {
                         let url = try result.get()
                         let images = convertPDFToImages(url: url)
-                        let (paragraphs, joinedParagraphs) = testScanPDF(scan: images)
+                        let paragraphs = testScanPDF(scan: images)
                         self.scanResult.scannedTextList = paragraphs
-                        self.scanResult.scannedText = joinedParagraphs
                     } catch {
                         print("OH DEAR")
                     }
