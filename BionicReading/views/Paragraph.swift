@@ -30,7 +30,7 @@ struct Paragraph: View {
         return modifiedText
     }
         
-    //  If enhanced reading is enabled, apply to each word within the string or return it
+    // If enhanced reading is enabled, apply to each word within the string or return it
     func modifyText(text: String) -> LocalizedStringKey {
         if (userSettings.isEnhancedReading) {
             var markdownStringArray: [String] = []
@@ -45,6 +45,16 @@ struct Paragraph: View {
         return LocalizedStringKey(text)
     }
     
+    // Speaks given text
+    func speak(text: String) {
+        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
+        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
+        utterance.volume = userSettings.volume
+        utterance.pitchMultiplier = userSettings.pitch
+        utterance.rate = userSettings.rate
+        synth.speak(utterance)
+    }
+    
     var body: some View {
         if paragraphFormat.isHeading {
             // Heading
@@ -54,34 +64,48 @@ struct Paragraph: View {
                     .font(Font(userSettings.headingFont))
                     .fontWeight(.bold)
             } else {
-                Text(modifyText(text: paragraphFormat.text))
+                Text(paragraphFormat.text)
                     .foregroundColor(userSettings.fontColour)
                     .font(Font(userSettings.headingFont))
+                    .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture {
-                        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
-                        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-                        self.synth.speak(utterance)
+                        speak(text: paragraphFormat.text)
                     }
             }
         } else {
             // Normal paragraph
             if isEditingText {
-                TextEditor(text: $paragraphFormat.text)
-                    .foregroundColor(userSettings.fontColour)
-                    .scrollContentBackground(.hidden)
-                    .background(userSettings.backgroundColour)
-                    .font(Font(userSettings.font))
-                    .frame(minHeight: 500)
+                ZStack {
+                    TextEditor(text: $paragraphFormat.text)
+                        .disabled(true)
+                    
+                    TextEditor(text: $paragraphFormat.text)
+                        .foregroundColor(userSettings.fontColour)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .scrollContentBackground(.hidden)
+                        .background(userSettings.backgroundColour)
+                        .font(Font(userSettings.paragraphFont))
+                        .frame(minHeight: 500)
+                }
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Button {
+                            isEditingText = false
+                        } label: {
+                            Text("Done")
+                                .foregroundColor(.accentColor)
+                                .padding(.trailing)
+                        }
+                    }
+                }
             } else {
                 Text(modifyText(text: paragraphFormat.text))
                     .foregroundColor(userSettings.fontColour)
-                    .font(Font(userSettings.font))
+                    .font(Font(userSettings.paragraphFont))
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .onTapGesture {
-                        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
-                        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.accent)
-                        self.synth.speak(utterance)
+                        speak(text: paragraphFormat.text)
                     }
             }
         }

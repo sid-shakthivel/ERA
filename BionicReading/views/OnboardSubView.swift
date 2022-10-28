@@ -48,10 +48,10 @@ struct OnboardSubView: View {
 
             Spacer()
             
-            NavigationLink(destination: Home()) {
+            NavigationLink(destination: Home().preferredColorScheme(.light)) {
                 Text("Get Started")
                     .padding()
-                    .cornerRadius(5)
+                    .clipShape(Capsule())
                     .textCase(.uppercase)
                     .foregroundColor(.white)
                     .background(Color(hex: 0x19242D, alpha: 1))

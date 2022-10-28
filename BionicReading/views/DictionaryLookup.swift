@@ -105,8 +105,8 @@ struct DictionaryLookup: View {
             case .Fetching:
                 VStack {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .red))
-                        .scaleEffect(3)
+                        .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0x0B1F29, alpha: 1)))
+                        .scaleEffect(2)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(userSettings.backgroundColour)
@@ -118,10 +118,11 @@ struct DictionaryLookup: View {
                     Text("\(wordData?.word ?? "Unknown")")
                         .foregroundColor(userSettings.fontColour)
                         .font(Font(userSettings.headingFont))
+                        .fontWeight(.bold)
                     
                     Text("\(wordData?.phonetic ?? "Unknown")")
                         .foregroundColor(userSettings.fontColour)
-                        .font(Font(userSettings.headingFont))
+                        .font(Font(userSettings.subheadingFont))
                     
                     TabView {
                         List {
@@ -131,7 +132,7 @@ struct DictionaryLookup: View {
                                     VStack(alignment: .leading) {
                                         Text("\(definition.definition)")
                                         Text("\(definition.example ?? "No Example")")
-                                            .font(.subheadline)
+                                            .font(Font(userSettings.subParagaphFont))
                                     }
                                     .listRowBackground(userSettings.backgroundColour)
                                 }
@@ -173,9 +174,9 @@ struct DictionaryLookup: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .background(userSettings.backgroundColour)
-                .padding()
             }
         }
+            .background(Color(hex: 0xFFF9F0, alpha: 1))
     }
 }
 

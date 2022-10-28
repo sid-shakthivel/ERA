@@ -8,17 +8,22 @@
 import SwiftUI
 
 class UserCustomisations: ObservableObject {
-    @Published var fontSize: Int = 16
+    @Published var paragraphFontSize: Int = 16
     
     @Published var fontColour: Color = .black
     @Published var isEnhancedReading: Bool = false
     
-    @Published var font: UIFont = UIFont.systemFont(ofSize: 16)
-    @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24, weight: .bold)
+    @Published var paragraphFont: UIFont = UIFont.systemFont(ofSize: 16)
+    @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
+    @Published var subheadingFont: UIFont = UIFont.systemFont(ofSize: 20)
+    @Published var subParagaphFont: UIFont = UIFont.systemFont(ofSize: 12)
     
     @Published var backgroundColour: Color = Color(hex: 0xFFF9F0, alpha: 1)
     
-    @Published var accent: String = "en-GB"
+    @Published var voice: String = "en-GB"
+    @Published var pitch: Float = 1.0
+    @Published var rate: Float = 1.0
+    @Published var volume: Float = 1.0
 }
 
 struct Settings: View {
@@ -31,7 +36,7 @@ struct Settings: View {
     
     var body: some View {
         NavigationView {
-            VStack {
+            ScrollView {
                 HStack {
                     Button {
                         presentationMode.wrappedValue.dismiss()
@@ -79,7 +84,7 @@ struct Settings: View {
                                 isShowingFontPicker.toggle()
                             }, label: {
                                 HStack {
-                                    Text("\(settings.font.fontName)")
+                                    Text("\(settings.paragraphFont.fontName)")
                                         .font(.system(size: 14))
                                         .fontWeight(.regular)
                                         .foregroundColor(.black)
@@ -102,7 +107,7 @@ struct Settings: View {
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                            Picker(selection: $settings.fontSize, content: {
+                            Picker(selection: $settings.paragraphFontSize, content: {
                                 ForEach(10...50, id: \.self) { number in
                                     HStack {
                                         Text("\(number)")
@@ -116,11 +121,14 @@ struct Settings: View {
 
                             })
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .accentColor(.black)
                                 .background(Color(hex: 0xFFFFFF, alpha: 1))
                                 .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
-                                .onChange(of: settings.fontSize, perform: { newFontSize in
-                                    settings.font = UIFont(descriptor: settings.font.fontDescriptor, size: CGFloat(settings.fontSize))
-                                    settings.headingFont = UIFont(descriptor: settings.font.fontDescriptor, size: CGFloat(Double(settings.fontSize) * 1.5))
+                                .onChange(of: settings.paragraphFontSize, perform: { newFontSize in
+                                    settings.paragraphFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(settings.paragraphFontSize))
+                                    settings.headingFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.5))
+                                    settings.subheadingFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.25))
+                                    settings.subParagaphFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 0.75))
                                 })
                         }
 
@@ -150,6 +158,7 @@ struct Settings: View {
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
+                            .padding(.bottom)
 
                         Text("Background Colour")
                             .foregroundColor(.black)
@@ -175,32 +184,64 @@ struct Settings: View {
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
+                            .padding(.bottom)
                         
-                        Text("Accent")
-                            .foregroundColor(.black)
-                            .fontWeight(.bold)
-                            .font(.system(size: 14))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Group {
+                            Text("Pitch")
+                                .foregroundColor(.black)
+                                .fontWeight(.bold)
+                                .font(.system(size: 14))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Slider(value: $settings.pitch, in: 0...1)
+                            
+                            Text("Volume")
+                                .foregroundColor(.black)
+                                .fontWeight(.bold)
+                                .font(.system(size: 14))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Slider(value: $settings.volume, in: 0...1)
+                            
+                            Text("Rate")
+                                .foregroundColor(.black)
+                                .fontWeight(.bold)
+                                .font(.system(size: 14))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Slider(value: $settings.rate, in: 0...1)
+                        }
                         
-                        Picker(selection: $settings.accent, content: {
-                            ForEach(languages, id: \.self) {
-                                Text($0)
-                            }
-                       }, label: {
-                           
-                       })
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(hex: 0xFFFFFF, alpha: 1))
-                            .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                        Group {
+                            Text("Accent")
+                                .foregroundColor(.black)
+                                .fontWeight(.bold)
+                                .font(.system(size: 14))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Picker(selection: $settings.voice, content: {
+                                ForEach(languages, id: \.self) {
+                                    Text($0)
+                                }
+                           }, label: {
+                                
+                           })
+                                .labelsHidden()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accentColor(.black)
+                                .background(Color(hex: 0xFFFFFF, alpha: 1))
+                                .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                                .padding(.bottom)
+                        }
                     }
     
                     Button(action: {
                         // Resets settings back to default
-                        
-                        settings.fontSize = 16;
+
+                        settings.paragraphFontSize = 16;
                         settings.fontColour = .black
                         settings.isEnhancedReading = false
-                        settings.font = UIFont.systemFont(ofSize: 16)
+                        settings.paragraphFont = UIFont.systemFont(ofSize: 16)
                         settings.headingFont = UIFont.systemFont(ofSize: 24)
                         settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)
                     }, label: {

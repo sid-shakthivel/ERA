@@ -19,6 +19,7 @@ struct ContentView: View {
                 }
         } else {
            Home()
+                .preferredColorScheme(.light)
         }
     }
 }

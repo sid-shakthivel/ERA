@@ -8,7 +8,6 @@
 import SwiftUI
 import AVFoundation
 import PDFKit
-import HighlightedTextEditor
 
 extension Color {
     init(hex: UInt, alpha: Double = 1) {

@@ -24,8 +24,6 @@
 		35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* Menu.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
-		35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B828F33CFC00CA578D /* Scan.swift */; };
-		35F0A47D28F4BBB900A95D17 /* CustomPDFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F0A47C28F4BBB900A95D17 /* CustomPDFView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,8 +46,6 @@
 		35C5FA5B2905E9B20007ABEB /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
-		35D3B9B828F33CFC00CA578D /* Scan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scan.swift; sourceTree = "<group>"; };
-		35F0A47C28F4BBB900A95D17 /* CustomPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPDFView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,8 +86,6 @@
 				356A455828E5C47E0067999E /* Persistence.swift */,
 				356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */,
 				356A455528E5C47E0067999E /* Preview Content */,
-				35D3B9B828F33CFC00CA578D /* Scan.swift */,
-				35F0A47C28F4BBB900A95D17 /* CustomPDFView.swift */,
 			);
 			path = BionicReading;
 			sourceTree = "<group>";
@@ -203,7 +197,6 @@
 				353437BB2901664C003917A0 /* PDFHandler.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
-				35D3B9B928F33CFD00CA578D /* Scan.swift in Sources */,
 				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
@@ -212,7 +205,6 @@
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */,
 				35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */,
-				35F0A47D28F4BBB900A95D17 /* CustomPDFView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

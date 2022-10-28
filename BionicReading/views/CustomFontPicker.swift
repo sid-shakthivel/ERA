@@ -40,13 +40,12 @@ struct CustomFontPicker: UIViewControllerRepresentable {
         
         public func fontPickerViewControllerDidPickFont(_ viewController: UIFontPickerViewController) {
             guard let descriptor = viewController.selectedFontDescriptor else { return }
+        
             
-//            let boldDescriptor = descriptor.addingAttributes([.traits: [
-//                UIFontDescriptor.TraitKey.weight: UIFont.Weight.bold]
-//            ])
-            
-            parent.settings.font = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.fontSize))
-            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.fontSize) * 1.5))
+            parent.settings.paragraphFont = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.paragraphFontSize))
+            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.5))
+            parent.settings.subheadingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.25))
+            parent.settings.subParagaphFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 0.75))
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
