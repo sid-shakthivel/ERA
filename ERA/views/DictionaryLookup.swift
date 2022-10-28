@@ -69,12 +69,19 @@ struct DictionaryLookup: View {
         
         URLSession.shared.dataTask(with: url) { (data, _, _) in
             // Fetch the first result - it's a success
-            let tempWordData = try! JSONDecoder().decode([Word].self, from: data!)
-            if tempWordData.isEmpty {
-                state = .Failure
+            
+            if let unwrapped_data = data {
+                let tempWordData = try! JSONDecoder().decode([Word].self, from: unwrapped_data)
+                
+                if tempWordData.isEmpty {
+                    state = .Failure
+                } else {
+                    wordData = tempWordData[0]
+                    state = .Success
+                }
             } else {
-                wordData = tempWordData[0]
-                state = .Success
+                state = .Failure
+                return
             }
         }
         .resume()
@@ -112,7 +119,10 @@ struct DictionaryLookup: View {
                 .background(userSettings.backgroundColour)
                 .padding()
             case .Failure:
-                Text("Failed to fetch data - check your internet connection")
+                VStack {
+                    Text("Failed to fetch data - check your internet connection")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .Success:
                 VStack {
                     Text("\(wordData?.word ?? "Unknown")")
