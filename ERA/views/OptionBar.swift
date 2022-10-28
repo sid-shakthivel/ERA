@@ -16,8 +16,7 @@ struct OptionBar: View {
     var body: some View {
         VStack {
             HStack {
-                Image("setting")
-                    .font(.largeTitle)
+                Image("menu")
                     .onTapGesture(count: 2) {
                         showDictionary.toggle()
                     }
@@ -33,14 +32,14 @@ struct OptionBar: View {
                     isDrawing = false
                     canvasSettings.selectedColour = .clear
                 }, label: {
-                    Image(systemName: "checkmark")
+                    Image("tick")
                         .font(.largeTitle)
                 })
                 
                 Button(action: {
                     canvasSettings.lines = []
                 }, label: {
-                    Image(systemName: "trash.fill")
+                    Image("bin")
                         .font(.largeTitle)
                         .foregroundColor(.gray)
                 })
@@ -51,7 +50,8 @@ struct OptionBar: View {
                     }
                 }, label: {
                     Image(systemName: "arrow.uturn.backward")
-                        .font(.largeTitle)
+                        .font(.title)
+                        .foregroundColor(Color(hex: 0xC24E1C))
                 })
                 
                 Button(action: {
@@ -61,12 +61,16 @@ struct OptionBar: View {
                     }
                 }, label: {
                     Image(systemName: "arrow.uturn.forward")
-                        .font(.largeTitle)
+                        .font(.title)
+                        .foregroundColor(Color(hex: 0xC24E1C))
                 })
             }
+            .padding()
 
             Slider(value: $canvasSettings.lineWidth, in: 0...20)
-                .padding()
+                .padding(.bottom)
+                .padding(.leading)
+                .padding(.trailing)
         }
     }
     
@@ -77,7 +81,7 @@ struct OptionBar: View {
             canvasSettings.selectedColour = colour
         }, label: {
             Image(systemName: "circle.fill")
-                .font(.largeTitle)
+                .font(.title)
                 .foregroundColor(colour)
                 .mask {
                     Image(systemName: "pencil.tip")

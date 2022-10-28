@@ -127,20 +127,20 @@ struct Home: View {
                                 Button(action: {
                                     isEditingText = false
                                 }, label: {
-                                    Image(systemName: "pencil.slash")
+                                    Image("stop-edit")
                                         .font(.title)
                                 })
                             } else {
                                 Button(action: {
                                     isEditingText = true
                                 }, label: {
-                                    Image(systemName: "pencil")
-                                        .font(.title)
+                                    Image("edit")
+                                        .font(.largeTitle)
                                 })
                             }
                             
                             NavigationLink(destination: Settings()) {
-                                Image(systemName: "gear")
+                                Image("settings")
                                     .font(.headline)
                                     .foregroundColor(Color(hex: 0xDFF4D0F, alpha: 1))
                             }
