@@ -1,6 +1,6 @@
 //
 //  Paragraph.swift
-//  BionicReading
+//  ERA
 //
 //  Created by Siddharth Shakthivel Muthu Pandian on 25/10/2022.
 //

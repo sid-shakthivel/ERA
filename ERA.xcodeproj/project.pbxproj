@@ -10,7 +10,7 @@
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
 		353437BB2901664C003917A0 /* PDFHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353437BA2901664C003917A0 /* PDFHandler.swift */; };
 		3562C29929084C51004497D6 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3562C29829084C51004497D6 /* Paragraph.swift */; };
-		356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* BionicReadingApp.swift */; };
+		356A455028E5C47B0067999E /* ERAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* ERAApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
 		356A455428E5C47E0067999E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455328E5C47E0067999E /* Assets.xcassets */; };
 		356A455728E5C47E0067999E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455628E5C47E0067999E /* Preview Assets.xcassets */; };
@@ -30,8 +30,8 @@
 		35051C4F28FD551200315407 /* DictionaryLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryLookup.swift; sourceTree = "<group>"; };
 		353437BA2901664C003917A0 /* PDFHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFHandler.swift; sourceTree = "<group>"; };
 		3562C29829084C51004497D6 /* Paragraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paragraph.swift; sourceTree = "<group>"; };
-		356A454C28E5C47B0067999E /* BionicReading.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BionicReading.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		356A454F28E5C47B0067999E /* BionicReadingApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BionicReadingApp.swift; sourceTree = "<group>"; };
+		356A454C28E5C47B0067999E /* ERA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ERA.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		356A454F28E5C47B0067999E /* ERAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERAApp.swift; sourceTree = "<group>"; };
 		356A455128E5C47B0067999E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		356A455328E5C47E0067999E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		356A455628E5C47E0067999E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -62,7 +62,7 @@
 		356A454328E5C47B0067999E = {
 			isa = PBXGroup;
 			children = (
-				356A454E28E5C47B0067999E /* BionicReading */,
+				356A454E28E5C47B0067999E /* ERA */,
 				356A454D28E5C47B0067999E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,24 +70,24 @@
 		356A454D28E5C47B0067999E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				356A454C28E5C47B0067999E /* BionicReading.app */,
+				356A454C28E5C47B0067999E /* ERA.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		356A454E28E5C47B0067999E /* BionicReading */ = {
+		356A454E28E5C47B0067999E /* ERA */ = {
 			isa = PBXGroup;
 			children = (
 				35805C4B28FB5DE900217169 /* views */,
 				35B36E9728E639B2009DF703 /* Info.plist */,
-				356A454F28E5C47B0067999E /* BionicReadingApp.swift */,
+				356A454F28E5C47B0067999E /* ERAApp.swift */,
 				356A455128E5C47B0067999E /* ContentView.swift */,
 				356A455328E5C47E0067999E /* Assets.xcassets */,
 				356A455828E5C47E0067999E /* Persistence.swift */,
 				356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */,
 				356A455528E5C47E0067999E /* Preview Content */,
 			);
-			path = BionicReading;
+			path = ERA;
 			sourceTree = "<group>";
 		};
 		356A455528E5C47E0067999E /* Preview Content */ = {
@@ -119,9 +119,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		356A454B28E5C47B0067999E /* BionicReading */ = {
+		356A454B28E5C47B0067999E /* ERA */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 356A455F28E5C47E0067999E /* Build configuration list for PBXNativeTarget "BionicReading" */;
+			buildConfigurationList = 356A455F28E5C47E0067999E /* Build configuration list for PBXNativeTarget "ERA" */;
 			buildPhases = (
 				356A454828E5C47B0067999E /* Sources */,
 				356A454928E5C47B0067999E /* Frameworks */,
@@ -131,11 +131,11 @@
 			);
 			dependencies = (
 			);
-			name = BionicReading;
+			name = ERA;
 			packageProductDependencies = (
 			);
 			productName = BionicReading;
-			productReference = 356A454C28E5C47B0067999E /* BionicReading.app */;
+			productReference = 356A454C28E5C47B0067999E /* ERA.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -153,7 +153,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 356A454728E5C47B0067999E /* Build configuration list for PBXProject "BionicReading" */;
+			buildConfigurationList = 356A454728E5C47B0067999E /* Build configuration list for PBXProject "ERA" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -168,7 +168,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				356A454B28E5C47B0067999E /* BionicReading */,
+				356A454B28E5C47B0067999E /* ERA */,
 			);
 		};
 /* End PBXProject section */
@@ -200,7 +200,7 @@
 				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
-				356A455028E5C47B0067999E /* BionicReadingApp.swift in Sources */,
+				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */,
@@ -332,11 +332,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BionicReading/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ERA/Preview Content\"";
 				DEVELOPMENT_TEAM = QG8B692V27;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BionicReading/Info.plist;
+				INFOPLIST_FILE = ERA/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera is used to scan text";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -349,7 +349,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.BionicReading";
+				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.ERA";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -364,11 +364,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"BionicReading/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"ERA/Preview Content\"";
 				DEVELOPMENT_TEAM = QG8B692V27;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = BionicReading/Info.plist;
+				INFOPLIST_FILE = ERA/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "Camera is used to scan text";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -381,7 +381,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.BionicReading";
+				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.ERA";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -392,7 +392,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		356A454728E5C47B0067999E /* Build configuration list for PBXProject "BionicReading" */ = {
+		356A454728E5C47B0067999E /* Build configuration list for PBXProject "ERA" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				356A455D28E5C47E0067999E /* Debug */,
@@ -401,7 +401,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		356A455F28E5C47E0067999E /* Build configuration list for PBXNativeTarget "BionicReading" */ = {
+		356A455F28E5C47E0067999E /* Build configuration list for PBXNativeTarget "ERA" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				356A456028E5C47E0067999E /* Debug */,

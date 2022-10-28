@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  BionicReading
+//  ERA
 //
 //  Created by Siddharth Shakthivel Muthu Pandian on 29/09/2022.
 //
@@ -17,6 +17,7 @@ struct ContentView: View {
                     // set the value for next call
                     UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
                 }
+                .preferredColorScheme(.light)
         } else {
            Home()
                 .preferredColorScheme(.light)
