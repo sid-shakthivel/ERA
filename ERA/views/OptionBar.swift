@@ -12,11 +12,14 @@ struct OptionBar: View {
     @Binding var showDictionary: Bool
     @Binding var showMenu: Bool
     @Binding var isDrawing: Bool
+    @Binding var isEditing: Bool
     
     var body: some View {
         VStack {
             HStack {
                 Image("menu")
+                    .resizable()
+                    .frame(width: 30, height: 30)
                     .onTapGesture(count: 2) {
                         showDictionary.toggle()
                     }
@@ -30,18 +33,20 @@ struct OptionBar: View {
                 
                 Button(action: {
                     isDrawing = false
+                    isEditing = false
                     canvasSettings.selectedColour = .clear
                 }, label: {
                     Image("tick")
-                        .font(.largeTitle)
+                        .resizable()
+                        .frame(width: 30, height: 30)
                 })
                 
                 Button(action: {
                     canvasSettings.lines = []
                 }, label: {
                     Image("bin")
-                        .font(.largeTitle)
-                        .foregroundColor(.gray)
+                        .resizable()
+                        .frame(width: 30, height: 30)
                 })
                 
                 Button(action: {
@@ -93,6 +98,6 @@ struct OptionBar: View {
 
 struct OptionBar_Previews: PreviewProvider {
     static var previews: some View {
-        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false))
+        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false), isEditing: .constant(false))
     }
 }

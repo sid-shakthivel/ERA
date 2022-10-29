@@ -8,27 +8,23 @@
 import SwiftUI
 import AVFoundation
 
+// Converts text to enhanced reading format by bolding the first half of every word
+func enhanceText(text: String) -> String {
+    var modifiedText = text
+    let boldIndex = Int(ceil(Double(text.count) / 2)) + 1
+    modifiedText.insert("*", at: modifiedText.startIndex)
+    modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: 1))
+    
+    modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 1))
+    modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 2))
+    
+    return modifiedText
+}
+
 struct Paragraph: View {
     @Binding var paragraphFormat: ParagraphFormat
     @EnvironmentObject var userSettings: UserCustomisations
     @Binding var isEditingText: Bool
-    
-    @State var testString: String = "hello thereeee"
-    
-    let synth = AVSpeechSynthesizer()
-    
-    // Converts text to enhanced reading format by bolding the first half of every word
-    func convertToBionic(text: String) -> String {
-        var modifiedText = text
-        let boldIndex = Int(ceil(Double(text.count) / 2)) + 1
-        modifiedText.insert("*", at: modifiedText.startIndex)
-        modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: 1))
-        
-        modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 1))
-        modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 2))
-        
-        return modifiedText
-    }
         
     // If enhanced reading is enabled, apply to each word within the string or return it
     func modifyText(text: String) -> LocalizedStringKey {
@@ -36,7 +32,7 @@ struct Paragraph: View {
             var markdownStringArray: [String] = []
             
             for substring in text.split(separator: " ") {
-                markdownStringArray.append(convertToBionic(text: String(substring)))
+                markdownStringArray.append(enhanceText(text: String(substring)))
             }
 
             return LocalizedStringKey(markdownStringArray.joined(separator: " "))
@@ -44,6 +40,8 @@ struct Paragraph: View {
         
         return LocalizedStringKey(text)
     }
+    
+    let synth = AVSpeechSynthesizer()
     
     // Speaks given text
     func speak(text: String) {

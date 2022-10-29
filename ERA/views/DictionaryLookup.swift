@@ -61,6 +61,21 @@ struct DictionaryLookup: View {
     @State var state: Status = Status.Fetching
     @State var textInput: String = ""
     
+    // If enhanced reading is enabled, apply to each word within the string or return it
+    func modifyText(text: String) -> LocalizedStringKey {
+        if (userSettings.isEnhancedReading) {
+            var markdownStringArray: [String] = []
+            
+            for substring in text.split(separator: " ") {
+                markdownStringArray.append(enhanceText(text: String(substring)))
+            }
+
+            return LocalizedStringKey(markdownStringArray.joined(separator: " "))
+        }
+        
+        return LocalizedStringKey(text)
+    }
+    
     func fetchData() {
         guard let url = URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/" + textInput) else {
             state = .Failure
@@ -138,11 +153,16 @@ struct DictionaryLookup: View {
                         List {
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 Text("\(meaning.partOfSpeech.capitalized)")
+                                    .font(Font(userSettings.subheadingFont))
+                                    .fontWeight(.bold)
                                 ForEach(meaning.definitions, id: \.self) { definition in
                                     VStack(alignment: .leading) {
-                                        Text("\(definition.definition)")
-                                        Text("\(definition.example ?? "No Example")")
+                                        Text(modifyText(text: definition.definition))
+                                            .font(Font(userSettings.paragraphFont))
+                                            .foregroundColor(userSettings.fontColour)
+                                        Text(modifyText(text: definition.example ?? "No Exmaple"))
                                             .font(Font(userSettings.subParagaphFont))
+                                            .foregroundColor(userSettings.fontColour)
                                     }
                                     .listRowBackground(userSettings.backgroundColour)
                                 }
@@ -159,7 +179,9 @@ struct DictionaryLookup: View {
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 ForEach(meaning.synonyms, id: \.self) { synonym in
                                     VStack(alignment: .leading) {
-                                        Text("\(synonym)")
+                                        Text(modifyText(text: synonym))
+                                            .font(Font(userSettings.paragraphFont))
+                                            .foregroundColor(userSettings.fontColour)
                                     }
                                     .listRowBackground(userSettings.backgroundColour)
                                 }
@@ -169,7 +191,9 @@ struct DictionaryLookup: View {
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 ForEach(meaning.antonyms, id: \.self) { antonym in
                                     VStack(alignment: .leading) {
-                                        Text("\(antonym)")
+                                        Text(modifyText(text: antonym))
+                                            .font(Font(userSettings.paragraphFont))
+                                            .foregroundColor(userSettings.fontColour)
                                     }
                                     .listRowBackground(userSettings.backgroundColour)
                                 }

@@ -49,7 +49,7 @@ struct OnboardSubView: View {
             Spacer()
             
             NavigationLink(destination: Home().preferredColorScheme(.light)) {
-                Text("Get Started")
+                Text("Welcome to ERA...")
                     .padding()
                     .clipShape(Capsule())
                     .textCase(.uppercase)

@@ -128,21 +128,23 @@ struct Home: View {
                                     isEditingText = false
                                 }, label: {
                                     Image("stop-edit")
-                                        .font(.title)
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
                                 })
                             } else {
                                 Button(action: {
                                     isEditingText = true
                                 }, label: {
                                     Image("edit")
-                                        .font(.largeTitle)
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
                                 })
                             }
                             
                             NavigationLink(destination: Settings()) {
                                 Image("settings")
-                                    .font(.headline)
-                                    .foregroundColor(Color(hex: 0xDFF4D0F, alpha: 1))
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
                             }
                         }
                     }
@@ -190,7 +192,7 @@ struct Home: View {
                         .padding()
                         .background(userSettings.backgroundColour)
                                                                 
-                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing)
+                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color.white)
                 }

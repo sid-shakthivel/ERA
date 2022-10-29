@@ -11,7 +11,7 @@ class UserCustomisations: ObservableObject {
     @Published var paragraphFontSize: Int = 16
     
     @Published var fontColour: Color = .black
-    @Published var isEnhancedReading: Bool = false
+    @Published var isEnhancedReading: Bool = true
     
     @Published var paragraphFont: UIFont = UIFont.systemFont(ofSize: 16)
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
