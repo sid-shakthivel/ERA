@@ -22,7 +22,7 @@ class UserCustomisations: ObservableObject {
     
     @Published var voice: String = "en-GB"
     @Published var pitch: Float = 1.0
-    @Published var rate: Float = 1.0
+    @Published var rate: Float = 0.5
     @Published var volume: Float = 1.0
 }
 
