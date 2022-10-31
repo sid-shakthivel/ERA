@@ -13,23 +13,47 @@ struct OptionBar: View {
     @Binding var showMenu: Bool
     @Binding var isDrawing: Bool
     @Binding var isEditing: Bool
+    @Binding var showPencilEdit: Bool
     
     var body: some View {
-        VStack {
-            HStack {
+        HStack {
+            Spacer()
+            
+            Button(action: {
+                showMenu.toggle()
+            }, label: {
                 Image("menu")
                     .resizable()
                     .frame(width: 30, height: 30)
-                    .onTapGesture(count: 2) {
-                        showDictionary.toggle()
-                    }
-                    .onTapGesture(count: 1) {
-                        showMenu.toggle()
-                    }
+            })
+            
+            Spacer()
+            
+            Group {
+                Button(action: {
+                    isDrawing = true
+                }, label: {
+                    Image(systemName: "circle.fill")
+                        .font(.title)
+                        .foregroundColor(.black)
+                        .mask {
+                            Image(systemName: "pencil.tip")
+                                .font(.largeTitle)
+                        }
+                })
                 
-                ForEach([Color.blue, Color.red, Color.black], id: \.self) { colour in
-                    colourButton(colour: colour)
-                }
+                Button(action: {
+                    showPencilEdit = true;
+                }, label: {
+                    Image(systemName: "circle.fill")
+                        .font(.title)
+                        .foregroundColor(.black)
+                        .mask {
+                            Image(systemName: "scribble")
+                                .font(.largeTitle)
+                        }
+                })
+            
                 
                 Button(action: {
                     isDrawing = false
@@ -40,7 +64,11 @@ struct OptionBar: View {
                         .resizable()
                         .frame(width: 30, height: 30)
                 })
-                
+            }
+            
+            Spacer()
+            
+            Group {
                 Button(action: {
                     canvasSettings.lines = []
                 }, label: {
@@ -49,8 +77,9 @@ struct OptionBar: View {
                         .frame(width: 30, height: 30)
                 })
                 
+
                 Button(action: {
-                    if canvasSettings.lines.count > 1 {
+                    if canvasSettings.lines.count >= 1 {
                         canvasSettings.lastLine = canvasSettings.lines.removeLast()
                     }
                 }, label: {
@@ -58,6 +87,7 @@ struct OptionBar: View {
                         .font(.title)
                         .foregroundColor(Color(hex: 0xC24E1C))
                 })
+
                 
                 Button(action: {
                     if canvasSettings.lastLine != nil {
@@ -70,34 +100,15 @@ struct OptionBar: View {
                         .foregroundColor(Color(hex: 0xC24E1C))
                 })
             }
-            .padding()
-
-            Slider(value: $canvasSettings.lineWidth, in: 0...20)
-                .padding(.bottom)
-                .padding(.leading)
-                .padding(.trailing)
+            
+            Spacer()
         }
-    }
-    
-    @ViewBuilder
-    func colourButton(colour: Color) -> some View {
-        Button(action: {
-            isDrawing = true
-            canvasSettings.selectedColour = colour
-        }, label: {
-            Image(systemName: "circle.fill")
-                .font(.title)
-                .foregroundColor(colour)
-                .mask {
-                    Image(systemName: "pencil.tip")
-                        .font(.largeTitle)
-                }
-        })
+        .padding(.top)
     }
 }
 
 struct OptionBar_Previews: PreviewProvider {
     static var previews: some View {
-        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false), isEditing: .constant(false))
+        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false))
     }
 }

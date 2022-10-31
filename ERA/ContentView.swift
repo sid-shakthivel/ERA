@@ -10,21 +10,21 @@ import CoreData
 
 struct ContentView: View { 
     var body: some View {
-//        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
-//            // show your onboarding view
-//            OnboardingView()
-//                .onAppear() {
-//                    // set the value for next call
-//                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
-//                }
-//                .preferredColorScheme(.light)
-//        } else {
-//           Home()
-//                .preferredColorScheme(.light)
-//        }
+        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
+            // show your onboarding view
+            OnboardingView()
+                .onAppear() {
+                    // set the value for next call
+                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
+                }
+                .preferredColorScheme(.light)
+        } else {
+            Home(showMenu: false)
+                .preferredColorScheme(.light)
+        }
         
-        OnboardingView()
-            .preferredColorScheme(.light)
+//        OnboardingView()
+//            .preferredColorScheme(.light)
     }
 }
 

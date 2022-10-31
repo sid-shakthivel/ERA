@@ -72,8 +72,9 @@ struct Home: View {
     @State var showDocumentCameraView = false
     @State var showFileImporter = false
     @State var showFileExporter = false
-    @State var showMenu = false
+    @State var showMenu: Bool
     @State var showDictionary: Bool = false
+    @State var showPencilEdit: Bool = false
     
     @State var document: PDFDoc? = nil
     
@@ -126,6 +127,7 @@ struct Home: View {
                             if isEditingText {
                                 Button(action: {
                                     isEditingText = false
+                                    isDrawing = false
                                 }, label: {
                                     Image("stop-edit")
                                         .resizable()
@@ -134,6 +136,7 @@ struct Home: View {
                             } else {
                                 Button(action: {
                                     isEditingText = true
+                                    isDrawing = false
                                 }, label: {
                                     Image("edit")
                                         .resizable()
@@ -192,7 +195,7 @@ struct Home: View {
                         .padding()
                         .background(userSettings.backgroundColour)
                                                                 
-                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText)
+                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(Color.white)
                 }
@@ -217,10 +220,16 @@ struct Home: View {
                 .sheet(isPresented: $showDocumentCameraView, content: {
                     DocumentCameraView(settings: userSettings, scanResult: scanResult)
                 })
-                .sheet(isPresented: $showMenu, content: {
-                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showMenu: $showMenu)
+                .sheet(isPresented: $showPencilEdit, content: {
+                    EditPencil()
                         .environmentObject(canvasSettings)
-                        .presentationDetents([.fraction(0.40), .fraction(0.20)])
+                        .presentationDetents([.fraction(0.30)])
+                        .presentationDragIndicator(.visible)
+                })
+                .sheet(isPresented: $showMenu, content: {
+                    Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+                        .environmentObject(canvasSettings)
+                        .presentationDetents([.fraction(0.30)])
                         .presentationDragIndicator(.visible)
                 })
                 .sheet(isPresented: $showDictionary, content: {
@@ -245,6 +254,6 @@ struct Home: View {
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
-        Home()
+        Home(showMenu: true)
     }
 }

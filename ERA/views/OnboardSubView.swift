@@ -52,7 +52,7 @@ struct OnboardSubView: View {
 
             Spacer()
             
-            NavigationLink(destination: Home().preferredColorScheme(.light)) {
+            NavigationLink(destination: Home(showMenu: true).preferredColorScheme(.light)) {
                 Text("Welcome to ERA")
                     .padding()
                     .frame(maxWidth: .infinity)

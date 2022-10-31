@@ -18,6 +18,7 @@
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
+		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
 		35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57A290AB41C00FC5588 /* OptionBar.swift */; };
 		35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */; };
 		35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57E290ACA4400FC5588 /* OnboardingView.swift */; };
@@ -39,6 +40,7 @@
 		356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BionicReading.xcdatamodel; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		3598E738291066FF00F449F6 /* EditPencil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPencil.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		35BCD57A290AB41C00FC5588 /* OptionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBar.swift; sourceTree = "<group>"; };
 		35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardSubView.swift; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 				35BCD57A290AB41C00FC5588 /* OptionBar.swift */,
 				35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */,
 				35BCD57E290ACA4400FC5588 /* OnboardingView.swift */,
+				3598E738291066FF00F449F6 /* EditPencil.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
+				3598E739291066FF00F449F6 /* EditPencil.swift in Sources */,
 				35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */,
 				35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */,
 			);

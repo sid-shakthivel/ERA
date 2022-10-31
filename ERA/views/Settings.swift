@@ -29,7 +29,7 @@ class UserCustomisations: ObservableObject {
 struct Settings: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    var languages = ["en-GB", "en-US", "en-ZA", "fr-FR", "en-IN", "ko-KR"]
+    var languages = ["en-GB", "en-US", "en-ZA", "fr-FR", "en-IN", "ko-KR", "en-AU", "es-ES", "it-IT"]
     
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserCustomisations

@@ -13,6 +13,7 @@ struct Menu: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @Binding var showDocumentCameraView: Bool
     @Binding var showFileImporter: Bool
+    @Binding var showDictionary: Bool
     @Binding var showMenu: Bool
     
     var body: some View {
@@ -35,13 +36,12 @@ struct Menu: View {
                    }
                    .padding()
                }
-               .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
                
                Divider()
                    .padding(.horizontal, 30)
                
                Button {
-                   // Fix for attempt to present View ... which is already presenting
                    showMenu = false
                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                        showFileImporter.toggle()
@@ -62,6 +62,31 @@ struct Menu: View {
                        .padding()
                }
                    .frame(maxWidth: .infinity, alignment: .leading)
+               
+               Divider()
+                   .padding(.horizontal, 30)
+               
+               Button {
+                   showMenu = false
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                       showDictionary.toggle()
+                   }
+               } label: {
+                   HStack {
+                       Image("book")
+                       
+                       Text("Dictionary")
+                           .foregroundColor(.black)
+                           .textCase(.uppercase)
+                           .fontWeight(.semibold)
+                           .font(.system(size: 14))
+                       
+                       Image("arrow-right")
+                           .frame(maxWidth: .infinity, alignment: .trailing)
+                   }
+                   .padding()
+               }
+               .frame(maxWidth: .infinity, alignment: .leading)
            }
        }
            .background(Color.white)
@@ -70,6 +95,6 @@ struct Menu: View {
 
 struct optionView_Previews: PreviewProvider {
     static var previews: some View {
-        Menu(showDocumentCameraView: .constant(false), showFileImporter: .constant(false), showMenu: .constant(false))
+        Menu(showDocumentCameraView: .constant(false), showFileImporter: .constant(false), showDictionary: .constant(false), showMenu: .constant(false))
     }
 }
