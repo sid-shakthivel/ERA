@@ -24,12 +24,16 @@ struct ParagraphFormat: Hashable {
     Paragraph is on a new line if:
     Difference between Y coordinate of current line and last line is greater then 0.05 (Maybe this value can be relative???)
     Difference between X coordinate of current line and last line is greater then 0.04 (Indent)
-    TODO: Need to ensure the max val is subtracted from min val
-    TODO: May need to average results
  */
-func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextObservation) -> Bool {
-    if boundingBoxes.count > 0 && ((boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y >= 0.04) || (observation.topLeft.x - boundingBoxes[boundingBoxes.count - 1].x >= 0.04)) {
-        return true
+func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextObservation, y_limit: CGFloat) -> Bool {
+    
+    if boundingBoxes.count > 0 {
+        let difference = abs(boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y)
+        
+        if difference >= (y_limit + 0.01) || difference <= (y_limit - 0.01) {
+            // || (observation.topLeft.x - boundingBoxes[boundingBoxes.count - 1].x >= 0.04))
+            return true
+        }
     }
     return false
 }
@@ -40,25 +44,38 @@ func scanPhotos(scan: VNDocumentCameraScan) -> [ParagraphFormat] {
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
     
+    var sum: CGFloat = 0
+    
     let request = VNRecognizeTextRequest { request, error in
         guard let observations = request.results as? [VNRecognizedTextObservation] else {
             fatalError("Received invalid observations")
         }
+        
+        // Calculate the average difference between heights of observations
+        for observation in observations {
+            if boundingBoxes.count > 0 {
+                sum += (boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y)
+            }
+            
+            boundingBoxes.append(observation.topLeft)
+        }
 
+        let average: CGFloat = sum / CGFloat(boundingBoxes.count)
+        
+        boundingBoxes.removeAll()
+        
         for observation in observations {
             guard let bestCandidate = observation.topCandidates(1).first else {
                 continue
             }
 
-            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
+            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
                 if currentParagraph.count < 2 {
                     // Heading
                     paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: true))
                 } else {
                     // Paragraph
-                    
                     currentParagraph[currentParagraph.count-1] += "\n"
-                    
                     paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: false))
                 }
                 
@@ -94,17 +111,32 @@ func testScanPDF(scan: [UIImage]) -> [ParagraphFormat] {
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
     
+    var sum: CGFloat = 0
+    
     let request = VNRecognizeTextRequest { request, error in
         guard let observations = request.results as? [VNRecognizedTextObservation] else {
             fatalError("Received invalid observations")
         }
+        
+        // Calculate the average difference between heights of observations
+        for observation in observations {
+            if boundingBoxes.count > 0 {
+                sum += (boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y)
+            }
+            
+            boundingBoxes.append(observation.topLeft)
+        }
+
+        let average: CGFloat = sum / CGFloat(boundingBoxes.count)
+        
+        boundingBoxes.removeAll()
 
         for observation in observations {
             guard let bestCandidate = observation.topCandidates(1).first else {
                 continue
             }
 
-            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation) {
+            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
                 if currentParagraph.count < 2 {
                     // Heading
                     paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: true))
@@ -181,9 +213,12 @@ struct DocumentCameraView: UIViewControllerRepresentable {
         }
         
         // Called when there are scanned images to analyse
-        func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
-            parent.scanResult.scannedTextList = scanPhotos(scan: scan)
+        func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan)
+        {
             parent.presentationMode.wrappedValue.dismiss()
-          }
+            DispatchQueue.main.async {
+                self.parent.scanResult.scannedTextList = scanPhotos(scan: scan)
+            }
+        }
     }
 }

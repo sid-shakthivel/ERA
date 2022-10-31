@@ -11,7 +11,7 @@ class UserCustomisations: ObservableObject {
     @Published var paragraphFontSize: Int = 16
     
     @Published var fontColour: Color = .black
-    @Published var isEnhancedReading: Bool = true
+    @Published var isEnhancedReading: Bool = false
     
     @Published var paragraphFont: UIFont = UIFont.systemFont(ofSize: 16)
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
@@ -42,14 +42,13 @@ struct Settings: View {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Image("arrow-left")
+                        
+                        Text("Settings")
+                            .foregroundColor(.black)
+                            .font(.system(size: 14))
+                            .fontWeight(.bold)
+                            .textCase(.uppercase)
                     }
-
-
-                    Text("Settings")
-                        .foregroundColor(.black)
-                        .font(.system(size: 14))
-                        .fontWeight(.bold)
-                        .textCase(.uppercase)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()

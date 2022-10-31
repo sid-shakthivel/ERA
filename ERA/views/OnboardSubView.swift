@@ -45,7 +45,7 @@ struct OnboardSubView: View {
             Spacer()
 
             Text(data.mainText)
-                .foregroundColor(Color(hex: 0xB3B3B3))
+                .foregroundColor(Color(hex: 0x000000))
                 .font(.system(size: 24))
                 .multilineTextAlignment(.center)
                 .padding()
