@@ -243,6 +243,11 @@ struct Settings: View {
                         settings.paragraphFont = UIFont.systemFont(ofSize: 16)
                         settings.headingFont = UIFont.systemFont(ofSize: 24)
                         settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)
+                        settings.volume = 1
+                        settings.pitch = 1
+                        settings.rate = 0.5
+                        settings.voice = "en-GB"
+                        
                     }, label: {
                         Text("Reset")
                             .textCase(.uppercase)

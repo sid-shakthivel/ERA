@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditPencil: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
+    @Binding var lineWidth: Double
     
     let colours: [Color] = [.black, .red, .green, .yellow, .blue, .brown]
     
@@ -21,23 +22,29 @@ struct EditPencil: View {
             
             VStack {
                 HStack {
-                    ForEach(colours, id: \.self) { colour in
-                        Image(systemName: "circle.fill")
-                            .foregroundColor(colour)
-                            .font(.title)
-                        
-                        Spacer()
-                    }
+//                    ForEach(colours, id: \.self) { colour in
+//                        Button(action: {
+//                            canvasSettings.selectedColour = colour
+//                        }, label: {
+//                            Image(systemName: "circle.fill")
+//                                .foregroundColor(colour)
+//                                .font(.title)
+//                                .border(.blue)
+//                        })
+//
+//                        Spacer()
+//                    }
+                    
+                    Text("Colour")
+                        .font(.system(size: 16))
+                        .fontWeight(.semibold)
+                        .padding()
                     
                     Spacer()
                     
                     ColorPicker(selection: $canvasSettings.selectedColour) {
-                        RoundedRectangle(cornerRadius: 5, style: .circular)
-                            .fill(canvasSettings.selectedColour)
-                            .frame(width: 20, height: 20)
                     }
-                    .font(.title)
-                    
+                        .font(.title)
                 }
                 
                 HStack {
@@ -57,12 +64,12 @@ struct EditPencil: View {
         }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color(hex: 0x666460).edgesIgnoringSafeArea(.all))
+            .background(Color(hex: 0xa6a6a6).edgesIgnoringSafeArea(.all))
     }
 }
 
 struct EditDraw_Previews: PreviewProvider {
     static var previews: some View {
-        EditPencil()
+        EditPencil(lineWidth: .constant(5))
     }
 }

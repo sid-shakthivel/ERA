@@ -35,7 +35,7 @@ struct OptionBar: View {
                 }, label: {
                     Image(systemName: "circle.fill")
                         .font(.title)
-                        .foregroundColor(.black)
+                        .foregroundColor(canvasSettings.selectedColour)
                         .mask {
                             Image(systemName: "pencil.tip")
                                 .font(.largeTitle)
@@ -44,12 +44,26 @@ struct OptionBar: View {
                 
                 Button(action: {
                     showPencilEdit = true;
+                    isDrawing = true
                 }, label: {
                     Image(systemName: "circle.fill")
                         .font(.title)
-                        .foregroundColor(.black)
+                        .foregroundColor(canvasSettings.selectedColour)
                         .mask {
                             Image(systemName: "scribble")
+                                .font(.largeTitle)
+                        }
+                })
+                
+                Button(action: {
+                    isDrawing = true
+                    canvasSettings.isRubbing = true
+                }, label: {
+                    Image(systemName: "circle.fill")
+                        .font(.title)
+                        .foregroundColor(.gray)
+                        .mask {
+                            Image(systemName: "pencil.tip")
                                 .font(.largeTitle)
                         }
                 })

@@ -216,7 +216,8 @@ struct DocumentCameraView: UIViewControllerRepresentable {
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan)
         {
             parent.presentationMode.wrappedValue.dismiss()
-            DispatchQueue.main.async {
+            let queue = DispatchQueue(label: "textRecognitionQueue", qos: .userInitiated)
+            queue.async {
                 self.parent.scanResult.scannedTextList = scanPhotos(scan: scan)
             }
         }

@@ -28,10 +28,11 @@ class ScanResult: ObservableObject {
 }
 
 class CanvasSettings: ObservableObject {
-    @Published var selectedColour: Color = .clear
+    @Published var selectedColour: Color = .black
     @Published var lines: [Line] = []
     @Published var lastLine: Line?
     @Published var lineWidth: Double = 5
+    @Published var isRubbing: Bool = false
 }
 
 extension UIView {
@@ -66,6 +67,7 @@ extension String {
 struct Line {
     var points: [CGPoint]
     var colour: Color
+    var lineWidth: Double
 }
 
 struct Home: View {
@@ -81,6 +83,7 @@ struct Home: View {
     @StateObject var userSettings = UserCustomisations()
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
+    @State var lineWidth: Double = 5
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
@@ -175,15 +178,15 @@ struct Home: View {
                                 for line in canvasSettings.lines {
                                     var path = Path()
                                     path.addLines(line.points)
-
-                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: canvasSettings.lineWidth, lineCap: .round, lineJoin: .round))
+                                    
+                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
                                 }
                             }
                             .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
                                 if canvasSettings.selectedColour != .clear {
                                     let position = value.location
                                     if value.translation == .zero {
-                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour))
+                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineWidth: canvasSettings.lineWidth))
                                     } else {
                                         guard let lastIndex = canvasSettings.lines.indices.last else { return }
                                         canvasSettings.lines[lastIndex].points.append(position)
@@ -221,7 +224,7 @@ struct Home: View {
                     DocumentCameraView(settings: userSettings, scanResult: scanResult)
                 })
                 .sheet(isPresented: $showPencilEdit, content: {
-                    EditPencil()
+                    EditPencil(lineWidth: $lineWidth)
                         .environmentObject(canvasSettings)
                         .presentationDetents([.fraction(0.30)])
                         .presentationDragIndicator(.visible)

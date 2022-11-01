@@ -33,6 +33,16 @@ struct OnboardSubView: View {
     var data: OnboardingData
     @State var isAnimating = true
     
+    func modifyText(text: String) -> LocalizedStringKey {
+        var markdownStringArray: [String] = []
+        
+        for substring in text.split(separator: " ") {
+            markdownStringArray.append(enhanceText(text: String(substring)))
+        }
+
+        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
+    }
+    
     var body: some View {
         VStack() {
             Spacer()
@@ -44,7 +54,7 @@ struct OnboardSubView: View {
             
             Spacer()
 
-            Text(data.mainText)
+            Text(modifyText(text: data.mainText))
                 .foregroundColor(Color(hex: 0x000000))
                 .font(.system(size: 24))
                 .multilineTextAlignment(.center)
