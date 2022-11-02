@@ -34,7 +34,7 @@ struct CustomFontPicker: UIViewControllerRepresentable {
         }
         
         public func fontPickerViewControllerDidCancel(_ viewController: UIFontPickerViewController) {
-            print("idk what to do...")
+            parent.presentationMode.wrappedValue.dismiss()
         }
         
         public func fontPickerViewControllerDidPickFont(_ viewController: UIFontPickerViewController) {

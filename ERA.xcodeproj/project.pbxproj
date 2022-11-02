@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
 		353437BB2901664C003917A0 /* PDFHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353437BA2901664C003917A0 /* PDFHandler.swift */; };
+		355916AF2913232C00CE8D5E /* HighlightedTextEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 355916AE2913232C00CE8D5E /* HighlightedTextEditor */; };
+		355916B22913239A00CE8D5E /* SwiftDown in Frameworks */ = {isa = PBXBuildFile; productRef = 355916B12913239A00CE8D5E /* SwiftDown */; };
 		3562C29929084C51004497D6 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3562C29829084C51004497D6 /* Paragraph.swift */; };
 		356A455028E5C47B0067999E /* ERAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* ERAApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
@@ -55,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				355916B22913239A00CE8D5E /* SwiftDown in Frameworks */,
+				355916AF2913232C00CE8D5E /* HighlightedTextEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,6 +140,8 @@
 			);
 			name = ERA;
 			packageProductDependencies = (
+				355916AE2913232C00CE8D5E /* HighlightedTextEditor */,
+				355916B12913239A00CE8D5E /* SwiftDown */,
 			);
 			productName = BionicReading;
 			productReference = 356A454C28E5C47B0067999E /* ERA.app */;
@@ -166,6 +172,8 @@
 			);
 			mainGroup = 356A454328E5C47B0067999E;
 			packageReferences = (
+				355916AD2913232C00CE8D5E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */,
+				355916B02913239A00CE8D5E /* XCRemoteSwiftPackageReference "SwiftDown" */,
 			);
 			productRefGroup = 356A454D28E5C47B0067999E /* Products */;
 			projectDirPath = "";
@@ -348,6 +356,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -355,9 +364,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.ERA";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -380,6 +392,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -387,9 +400,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.ERA";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -415,6 +431,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		355916AD2913232C00CE8D5E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kyle-n/HighlightedTextEditor";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		355916B02913239A00CE8D5E /* XCRemoteSwiftPackageReference "SwiftDown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/qeude/SwiftDown.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		355916AE2913232C00CE8D5E /* HighlightedTextEditor */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 355916AD2913232C00CE8D5E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */;
+			productName = HighlightedTextEditor;
+		};
+		355916B12913239A00CE8D5E /* SwiftDown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 355916B02913239A00CE8D5E /* XCRemoteSwiftPackageReference "SwiftDown" */;
+			productName = SwiftDown;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */ = {

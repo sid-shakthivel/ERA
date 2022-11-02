@@ -7,6 +7,7 @@
 
 import SwiftUI
 import AVFoundation
+import SwiftDown
 
 // Converts text to enhanced reading format by bolding the first half of every word
 func enhanceText(text: String) -> String {
@@ -22,7 +23,7 @@ func enhanceText(text: String) -> String {
 }
 
 struct Paragraph: View {
-    @Binding var paragraphFormat: ParagraphFormat
+    @Binding var paragraphFormat: TestingStuff
     @EnvironmentObject var userSettings: UserCustomisations
     @Binding var isEditingText: Bool
         
@@ -67,44 +68,44 @@ struct Paragraph: View {
                     .font(Font(userSettings.headingFont))
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .onTapGesture {
-                        speak(text: paragraphFormat.text)
-                    }
+//                    .onTapGesture {
+//                        speak(text: paragraphFormat.text)
+//                    }
             }
         } else {
             // Normal paragraph
             if isEditingText {
-                ZStack {
-                    TextEditor(text: $paragraphFormat.text)
-                        .disabled(true)
-                    
-                    TextEditor(text: $paragraphFormat.text)
-                        .foregroundColor(userSettings.fontColour)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .scrollContentBackground(.hidden)
-                        .background(userSettings.backgroundColour)
-                        .font(Font(userSettings.paragraphFont))
-                        .frame(minHeight: 500)
-                }
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Button {
-                            isEditingText = false
-                        } label: {
-                            Text("Done")
-                                .foregroundColor(.accentColor)
-                                .padding(.trailing)
-                        }
-                    }
-                }
+//                ZStack {
+//                    TextEditor(text: $paragraphFormat.text)
+//                        .foregroundColor(userSettings.fontColour)
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .scrollContentBackground(.hidden)
+//                        .background(userSettings.backgroundColour)
+//                        .font(Font(userSettings.paragraphFont))
+//                        .frame(minHeight: 500)
+//                }
+//                .toolbar {
+//                    ToolbarItemGroup(placement: .keyboard) {
+//                        Button {
+//                            isEditingText = false
+//                        } label: {
+//                            Text("Done")
+//                                .foregroundColor(.accentColor)
+//                                .padding(.trailing)
+//                        }
+//                    }
+//                }
+                
+                TextField(paragraphFormat.text, text: $paragraphFormat.text, axis: .vertical)
+                    .textFieldStyle(.roundedBorder)
             } else {
                 Text(modifyText(text: paragraphFormat.text))
                     .foregroundColor(userSettings.fontColour)
                     .font(Font(userSettings.paragraphFont))
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .onTapGesture {
-                        speak(text: paragraphFormat.text)
-                    }
+//                    .onTapGesture {
+//                        speak(text: paragraphFormat.text)
+//                    }
             }
         }
     }
@@ -112,6 +113,6 @@ struct Paragraph: View {
 
 struct Paragraph_Previews: PreviewProvider {
     static var previews: some View {
-        Paragraph(paragraphFormat: .constant(ParagraphFormat(text: "Hello World", isHeading: false)), isEditingText: .constant(false))
+        Paragraph(paragraphFormat: .constant(TestingStuff(text: "Hello World", isHeading: false)), isEditingText: .constant(false))
     }
 }

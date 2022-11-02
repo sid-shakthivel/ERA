@@ -22,9 +22,9 @@ extension Color {
 }
 
 class ScanResult: ObservableObject {
-    @Published var scannedTextList: [ParagraphFormat] = []
-    @Published var exampleHeading: ParagraphFormat = ParagraphFormat(text: "Example", isHeading: true)
-    @Published var exampleText: ParagraphFormat = ParagraphFormat(text: "Hello World", isHeading: false)
+    @Published var scannedTextList: [TestingStuff] = []
+    @Published var exampleHeading: TestingStuff = TestingStuff(text: "Example", isHeading: true)
+    @Published var exampleText: TestingStuff = TestingStuff(text: "Hello World", isHeading: false)
 }
 
 class CanvasSettings: ObservableObject {
@@ -83,7 +83,6 @@ struct Home: View {
     @StateObject var userSettings = UserCustomisations()
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
-    @State var lineWidth: Double = 5
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
@@ -183,14 +182,16 @@ struct Home: View {
                                 }
                             }
                             .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                                if canvasSettings.selectedColour != .clear {
-                                    let position = value.location
-                                    if value.translation == .zero {
-                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineWidth: canvasSettings.lineWidth))
+                                let position = value.location
+                                if value.translation == .zero {
+                                    if canvasSettings.isRubbing {
+                                        canvasSettings.lines.append(Line(points: [position], colour: .clear, lineWidth: canvasSettings.lineWidth))
                                     } else {
-                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
-                                        canvasSettings.lines[lastIndex].points.append(position)
+                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineWidth: canvasSettings.lineWidth))
                                     }
+                                } else {
+                                    guard let lastIndex = canvasSettings.lines.indices.last else { return }
+                                    canvasSettings.lines[lastIndex].points.append(position)
                                 }
                             }))
                         }
@@ -224,7 +225,7 @@ struct Home: View {
                     DocumentCameraView(settings: userSettings, scanResult: scanResult)
                 })
                 .sheet(isPresented: $showPencilEdit, content: {
-                    EditPencil(lineWidth: $lineWidth)
+                    EditPencil()
                         .environmentObject(canvasSettings)
                         .presentationDetents([.fraction(0.30)])
                         .presentationDragIndicator(.visible)

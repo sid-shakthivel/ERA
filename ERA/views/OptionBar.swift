@@ -32,6 +32,7 @@ struct OptionBar: View {
             Group {
                 Button(action: {
                     isDrawing = true
+                    canvasSettings.isRubbing = false
                 }, label: {
                     Image(systemName: "circle.fill")
                         .font(.title)
@@ -41,10 +42,11 @@ struct OptionBar: View {
                                 .font(.largeTitle)
                         }
                 })
-                
+
                 Button(action: {
                     showPencilEdit = true;
                     isDrawing = true
+                    canvasSettings.isRubbing = false
                 }, label: {
                     Image(systemName: "circle.fill")
                         .font(.title)
@@ -54,34 +56,19 @@ struct OptionBar: View {
                                 .font(.largeTitle)
                         }
                 })
-                
-                Button(action: {
-                    isDrawing = true
-                    canvasSettings.isRubbing = true
-                }, label: {
-                    Image(systemName: "circle.fill")
-                        .font(.title)
-                        .foregroundColor(.gray)
-                        .mask {
-                            Image(systemName: "pencil.tip")
-                                .font(.largeTitle)
-                        }
-                })
-            
-                
+
                 Button(action: {
                     isDrawing = false
                     isEditing = false
-                    canvasSettings.selectedColour = .clear
                 }, label: {
                     Image("tick")
                         .resizable()
                         .frame(width: 30, height: 30)
                 })
             }
-            
+
             Spacer()
-            
+
             Group {
                 Button(action: {
                     canvasSettings.lines = []
@@ -90,7 +77,7 @@ struct OptionBar: View {
                         .resizable()
                         .frame(width: 30, height: 30)
                 })
-                
+
 
                 Button(action: {
                     if canvasSettings.lines.count >= 1 {
@@ -102,7 +89,7 @@ struct OptionBar: View {
                         .foregroundColor(Color(hex: 0xC24E1C))
                 })
 
-                
+
                 Button(action: {
                     if canvasSettings.lastLine != nil {
                         canvasSettings.lines.append(canvasSettings.lastLine!)
@@ -114,7 +101,7 @@ struct OptionBar: View {
                         .foregroundColor(Color(hex: 0xC24E1C))
                 })
             }
-            
+
             Spacer()
         }
         .padding(.top)

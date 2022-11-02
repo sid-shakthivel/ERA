@@ -20,6 +20,28 @@ struct ParagraphFormat: Hashable {
     }
 }
 
+class TestingStuff: ObservableObject, Hashable {
+    static func == (lhs: TestingStuff, rhs: TestingStuff) -> Bool {
+        lhs.identifier == rhs.identifier
+    }
+    
+    var identifier: String {
+        return UUID().uuidString
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+            return hasher.combine(identifier)
+        }
+    
+    @Published var text: String
+    @Published var isHeading: Bool
+    
+    init(text: String, isHeading: Bool) {
+        self.text = text
+        self.isHeading = isHeading
+    }
+}
+
 /*
     Paragraph is on a new line if:
     Difference between Y coordinate of current line and last line is greater then 0.05 (Maybe this value can be relative???)
@@ -38,8 +60,8 @@ func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextOb
     return false
 }
 
-func scanPhotos(scan: VNDocumentCameraScan) -> [ParagraphFormat] {
-    var paragraphs: [ParagraphFormat] = []
+func scanPhotos(scan: VNDocumentCameraScan) -> [TestingStuff] {
+    var paragraphs: [TestingStuff] = []
 
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
@@ -72,11 +94,11 @@ func scanPhotos(scan: VNDocumentCameraScan) -> [ParagraphFormat] {
             if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
                 if currentParagraph.count < 2 {
                     // Heading
-                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: true))
+                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: true))
                 } else {
                     // Paragraph
                     currentParagraph[currentParagraph.count-1] += "\n"
-                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: false))
+                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: false))
                 }
                 
                 currentParagraph.removeAll()
@@ -105,8 +127,8 @@ func scanPhotos(scan: VNDocumentCameraScan) -> [ParagraphFormat] {
     return paragraphs
 }
 
-func testScanPDF(scan: [UIImage]) -> [ParagraphFormat] {
-    var paragraphs: [ParagraphFormat] = []
+func testScanPDF(scan: [UIImage]) -> [TestingStuff] {
+    var paragraphs: [TestingStuff] = []
 
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
@@ -139,10 +161,10 @@ func testScanPDF(scan: [UIImage]) -> [ParagraphFormat] {
             if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
                 if currentParagraph.count < 2 {
                     // Heading
-                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: true))
+                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: true))
                 } else {
                     // Paragraph
-                    paragraphs.append(ParagraphFormat(text: currentParagraph.joined(separator: ""), isHeading: false))
+                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: false))
                 }
                 
                 currentParagraph.removeAll()

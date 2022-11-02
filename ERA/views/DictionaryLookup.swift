@@ -54,11 +54,18 @@ enum Status {
     case Stationary
 }
 
+enum ErrorMessages {
+    case NoInternet
+    case UnknownWord
+    case Nothing
+}
+
 struct DictionaryLookup: View {
     @EnvironmentObject var userSettings: UserCustomisations
     
     @State var wordData: Word?
     @State var state: Status = Status.Fetching
+    @State var errorMessage: ErrorMessages = ErrorMessages.Nothing
     @State var textInput: String = ""
     
     // If enhanced reading is enabled, apply to each word within the string or return it
@@ -82,24 +89,39 @@ struct DictionaryLookup: View {
             return
         }
         
-        URLSession.shared.dataTask(with: url) { (data, _, _) in
-            // Fetch the first result - it's a success
-            
-            if let unwrapped_data = data {
-                let tempWordData = try! JSONDecoder().decode([Word].self, from: unwrapped_data)
-                
-                if tempWordData.isEmpty {
-                    state = .Failure
-                } else {
-                    wordData = tempWordData[0]
-                    state = .Success
-                }
-            } else {
+        let session = URLSession.shared
+        
+        let task = session.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                errorMessage = .NoInternet
                 state = .Failure
                 return
             }
-        }
-        .resume()
+
+            do {
+                let tempWordData = try JSONDecoder().decode([Word].self, from: data)
+                
+                if tempWordData.isEmpty {
+                    errorMessage = .UnknownWord
+                    state = .Failure
+                    return
+                } else {
+                    wordData = tempWordData[0]
+                    state = .Success
+                    return
+                }
+            } catch DecodingError.typeMismatch {
+                errorMessage = .UnknownWord
+                state = .Failure
+                return
+            } catch {
+                errorMessage = .UnknownWord
+                state = .Failure
+                return
+            }
+       }
+
+       task.resume()
     }
 
     var body: some View {
@@ -135,7 +157,18 @@ struct DictionaryLookup: View {
                 .padding()
             case .Failure:
                 VStack {
-                    Text("Failed to fetch data - check your internet connection")
+                    switch errorMessage {
+                    case .NoInternet:
+                        Text("Dictionary requires internet")
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.headingFont))
+                            .fontWeight(.bold)
+                    case .UnknownWord, .Nothing:
+                        Text("Word not found!?")
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.headingFont))
+                            .fontWeight(.bold)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .Success:

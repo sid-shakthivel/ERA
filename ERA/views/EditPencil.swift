@@ -9,7 +9,6 @@ import SwiftUI
 
 struct EditPencil: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
-    @Binding var lineWidth: Double
     
     let colours: [Color] = [.black, .red, .green, .yellow, .blue, .brown]
     
@@ -70,6 +69,6 @@ struct EditPencil: View {
 
 struct EditDraw_Previews: PreviewProvider {
     static var previews: some View {
-        EditPencil(lineWidth: .constant(5))
+        EditPencil()
     }
 }
