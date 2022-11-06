@@ -8,9 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
-		353437BB2901664C003917A0 /* PDFHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353437BA2901664C003917A0 /* PDFHandler.swift */; };
-		355916AF2913232C00CE8D5E /* HighlightedTextEditor in Frameworks */ = {isa = PBXBuildFile; productRef = 355916AE2913232C00CE8D5E /* HighlightedTextEditor */; };
-		355916B22913239A00CE8D5E /* SwiftDown in Frameworks */ = {isa = PBXBuildFile; productRef = 355916B12913239A00CE8D5E /* SwiftDown */; };
 		3562C29929084C51004497D6 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3562C29829084C51004497D6 /* Paragraph.swift */; };
 		356A455028E5C47B0067999E /* ERAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* ERAApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
@@ -19,19 +16,19 @@
 		356A455928E5C47E0067999E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455828E5C47E0067999E /* Persistence.swift */; };
 		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
+		356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
 		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
 		35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57A290AB41C00FC5588 /* OptionBar.swift */; };
 		35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */; };
 		35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57E290ACA4400FC5588 /* OnboardingView.swift */; };
+		35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BEE0DF2913E2B5006AAD86 /* Utils.swift */; };
 		35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* Menu.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
-		35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		35051C4F28FD551200315407 /* DictionaryLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryLookup.swift; sourceTree = "<group>"; };
-		353437BA2901664C003917A0 /* PDFHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFHandler.swift; sourceTree = "<group>"; };
 		3562C29829084C51004497D6 /* Paragraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paragraph.swift; sourceTree = "<group>"; };
 		356A454C28E5C47B0067999E /* ERA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ERA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356A454F28E5C47B0067999E /* ERAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERAApp.swift; sourceTree = "<group>"; };
@@ -41,15 +38,16 @@
 		356A455828E5C47E0067999E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BionicReading.xcdatamodel; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
+		356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPickerWrapper.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		3598E738291066FF00F449F6 /* EditPencil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPencil.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		35BCD57A290AB41C00FC5588 /* OptionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBar.swift; sourceTree = "<group>"; };
 		35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardSubView.swift; sourceTree = "<group>"; };
 		35BCD57E290ACA4400FC5588 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		35BEE0DF2913E2B5006AAD86 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		35C5FA5B2905E9B20007ABEB /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
-		35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomFontPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,8 +55,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				355916B22913239A00CE8D5E /* SwiftDown in Frameworks */,
-				355916AF2913232C00CE8D5E /* HighlightedTextEditor in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,18 +103,18 @@
 		35805C4B28FB5DE900217169 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				35D3B9B628F32FC500CA578D /* CustomFontPicker.swift */,
 				356A456428E5C61A0067999E /* DocumentCameraView.swift */,
 				35D3B9B428F327E800CA578D /* Settings.swift */,
 				35805C4C28FB5E0300217169 /* Home.swift */,
 				35051C4F28FD551200315407 /* DictionaryLookup.swift */,
-				353437BA2901664C003917A0 /* PDFHandler.swift */,
 				35C5FA5B2905E9B20007ABEB /* Menu.swift */,
 				3562C29829084C51004497D6 /* Paragraph.swift */,
 				35BCD57A290AB41C00FC5588 /* OptionBar.swift */,
 				35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */,
 				35BCD57E290ACA4400FC5588 /* OnboardingView.swift */,
 				3598E738291066FF00F449F6 /* EditPencil.swift */,
+				35BEE0DF2913E2B5006AAD86 /* Utils.swift */,
+				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -140,8 +136,6 @@
 			);
 			name = ERA;
 			packageProductDependencies = (
-				355916AE2913232C00CE8D5E /* HighlightedTextEditor */,
-				355916B12913239A00CE8D5E /* SwiftDown */,
 			);
 			productName = BionicReading;
 			productReference = 356A454C28E5C47B0067999E /* ERA.app */;
@@ -172,8 +166,6 @@
 			);
 			mainGroup = 356A454328E5C47B0067999E;
 			packageReferences = (
-				355916AD2913232C00CE8D5E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */,
-				355916B02913239A00CE8D5E /* XCRemoteSwiftPackageReference "SwiftDown" */,
 			);
 			productRefGroup = 356A454D28E5C47B0067999E /* Products */;
 			projectDirPath = "";
@@ -205,17 +197,17 @@
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
 				35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */,
-				353437BB2901664C003917A0 /* PDFHandler.swift in Sources */,
+				356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
 				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
+				35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */,
 				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				3598E739291066FF00F449F6 /* EditPencil.swift in Sources */,
-				35D3B9B728F32FC500CA578D /* CustomFontPicker.swift in Sources */,
 				35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,7 +353,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.ERA";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -397,7 +389,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "sid-shakthivel.ERA";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -431,38 +423,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		355916AD2913232C00CE8D5E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kyle-n/HighlightedTextEditor";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		355916B02913239A00CE8D5E /* XCRemoteSwiftPackageReference "SwiftDown" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/qeude/SwiftDown.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		355916AE2913232C00CE8D5E /* HighlightedTextEditor */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 355916AD2913232C00CE8D5E /* XCRemoteSwiftPackageReference "HighlightedTextEditor" */;
-			productName = HighlightedTextEditor;
-		};
-		355916B12913239A00CE8D5E /* SwiftDown */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 355916B02913239A00CE8D5E /* XCRemoteSwiftPackageReference "SwiftDown" */;
-			productName = SwiftDown;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */ = {

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import AVFoundation
-import SwiftDown
 
 // Converts text to enhanced reading format by bolding the first half of every word
 func enhanceText(text: String) -> String {

@@ -1,12 +1,42 @@
 //
-//  CustomFontPicker.swift
+//  Test.swift
 //  ERA
 //
-//  Created by Siddharth Shakthivel Muthu Pandian on 09/10/2022.
+//  Created by Siddharth Shakthivel Muthu Pandian on 06/11/2022.
 //
 
 import SwiftUI
-import Foundation
+
+struct FontPickerWrapper: View {
+    @Binding var isShowingFontPicker: Bool
+    @EnvironmentObject var settings: UserCustomisations
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("Font Picker")
+                    .font(Font(settings.subheadingFont))
+                    .fontWeight(.semibold)
+                
+                Spacer()
+                
+                Button(action: {
+                    isShowingFontPicker.toggle()
+                }, label: {
+                    Text("Cancel")
+                        
+                        
+                })
+            }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.top)
+                .padding(.trailing)
+                .padding(.leading)
+                
+            CustomFontPicker(settings: _settings)
+        }
+    }
+}
 
 struct CustomFontPicker: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIFontPickerViewController
@@ -49,4 +79,10 @@ struct CustomFontPicker: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+}
+
+struct FontPickerWrapper_Previews: PreviewProvider {
+    static var previews: some View {
+        FontPickerWrapper(isShowingFontPicker: .constant(true))
+    }
 }

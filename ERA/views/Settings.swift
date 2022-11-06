@@ -184,33 +184,33 @@ struct Settings: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
                             .padding(.bottom)
-                        
+
                         Group {
                             Text("Pitch")
                                 .foregroundColor(.black)
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                             Slider(value: $settings.pitch, in: 0...1)
-                            
+
                             Text("Volume")
                                 .foregroundColor(.black)
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                             Slider(value: $settings.volume, in: 0...1)
-                            
+
                             Text("Rate")
                                 .foregroundColor(.black)
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                             Slider(value: $settings.rate, in: 0...1)
                         }
-                        
+
                         Group {
                             Text("Accent")
                                 .foregroundColor(.black)
@@ -223,7 +223,7 @@ struct Settings: View {
                                     Text($0)
                                 }
                            }, label: {
-                                
+
                            })
                                 .labelsHidden()
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -236,7 +236,6 @@ struct Settings: View {
     
                     Button(action: {
                         // Resets settings back to default
-
                         settings.paragraphFontSize = 16;
                         settings.fontColour = .black
                         settings.isEnhancedReading = false
@@ -266,8 +265,8 @@ struct Settings: View {
                     .padding()
             }
                 .background(Color(hex: 0xFFF9F0, alpha: 1))
-                .sheet(isPresented: $isShowingFontPicker) {
-                    CustomFontPicker(settings: _settings)
+                .sheet(isPresented: $isShowingFontPicker) {                    
+                    FontPickerWrapper(isShowingFontPicker: $isShowingFontPicker)
                 }
         }
             .navigationBarTitle("")
