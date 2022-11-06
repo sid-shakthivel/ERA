@@ -30,8 +30,8 @@ class TestingStuff: ObservableObject, Hashable {
     }
     
     public func hash(into hasher: inout Hasher) {
-            return hasher.combine(identifier)
-        }
+        return hasher.combine(identifier)
+    }
     
     @Published var text: String
     @Published var isHeading: Bool
@@ -60,7 +60,7 @@ func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextOb
     return false
 }
 
-func scanPhotos(scan: VNDocumentCameraScan) -> [TestingStuff] {
+func scanPhotos(scan: VNDocumentCameraScan) -> ([TestingStuff], String) {
     var paragraphs: [TestingStuff] = []
 
     var currentParagraph: [String] = []
@@ -124,10 +124,15 @@ func scanPhotos(scan: VNDocumentCameraScan) -> [TestingStuff] {
         try? requestHandler.perform(requests)
     }
     
-    return paragraphs
+    var text: String = ""
+    for paragraph in paragraphs {
+        text += paragraph.text
+    }
+    
+    return (paragraphs, text)
 }
 
-func testScanPDF(scan: [UIImage]) -> [TestingStuff] {
+func testScanPDF(scan: [UIImage]) -> ([TestingStuff], String) {
     var paragraphs: [TestingStuff] = []
 
     var currentParagraph: [String] = []
@@ -189,7 +194,12 @@ func testScanPDF(scan: [UIImage]) -> [TestingStuff] {
         try? requestHandler.perform(requests)
     }
     
-    return paragraphs
+    var text: String = ""
+    for paragraph in paragraphs {
+        text += paragraph.text
+    }
+    
+    return (paragraphs, text)
 }
 
 /*
@@ -240,7 +250,9 @@ struct DocumentCameraView: UIViewControllerRepresentable {
             parent.presentationMode.wrappedValue.dismiss()
             let queue = DispatchQueue(label: "textRecognitionQueue", qos: .userInitiated)
             queue.async {
-                self.parent.scanResult.scannedTextList = scanPhotos(scan: scan)
+                let result = scanPhotos(scan: scan)
+                self.parent.scanResult.scannedTextList = result.0
+                self.parent.scanResult.scannedText = result.1
             }
         }
     }

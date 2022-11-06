@@ -41,18 +41,6 @@ struct Paragraph: View {
         return LocalizedStringKey(text)
     }
     
-    let synth = AVSpeechSynthesizer()
-    
-    // Speaks given text
-    func speak(text: String) {
-        let utterance = AVSpeechUtterance(string: paragraphFormat.text)
-        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
-        utterance.volume = userSettings.volume
-        utterance.pitchMultiplier = userSettings.pitch
-        utterance.rate = userSettings.rate
-        synth.speak(utterance)
-    }
-    
     var body: some View {
         if paragraphFormat.isHeading {
             // Heading
@@ -67,9 +55,6 @@ struct Paragraph: View {
                     .font(Font(userSettings.headingFont))
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity, alignment: .leading)
-//                    .onTapGesture {
-//                        speak(text: paragraphFormat.text)
-//                    }
             }
         } else {
             // Normal paragraph
@@ -102,9 +87,6 @@ struct Paragraph: View {
                     .foregroundColor(userSettings.fontColour)
                     .font(Font(userSettings.paragraphFont))
                     .frame(maxWidth: .infinity, alignment: .leading)
-//                    .onTapGesture {
-//                        speak(text: paragraphFormat.text)
-//                    }
             }
         }
     }

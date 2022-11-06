@@ -24,7 +24,8 @@ extension Color {
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [TestingStuff] = []
     @Published var exampleHeading: TestingStuff = TestingStuff(text: "Example", isHeading: true)
-    @Published var exampleText: TestingStuff = TestingStuff(text: "Hello World", isHeading: false)
+    @Published var exampleText: TestingStuff = TestingStuff(text: "Welcome to ERA", isHeading: false)
+    @Published var scannedText: String = "Welcome to ERA"
 }
 
 class CanvasSettings: ObservableObject {
@@ -86,6 +87,23 @@ struct Home: View {
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
+    @State var isPlayingAudio: Bool = false
+    
+    let synth = AVSpeechSynthesizer()
+    
+    // Speaks given text
+    func speak_text() {
+        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
+        utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
+        utterance.volume = userSettings.volume
+        utterance.pitchMultiplier = userSettings.pitch
+        utterance.rate = userSettings.rate
+        synth.speak(utterance)
+    }
+    
+    func stop_speaking() {
+        synth.stopSpeaking(at: .immediate)
+    }
 
     var body: some View {
         GeometryReader { geometryProxy in
@@ -110,9 +128,9 @@ struct Home: View {
                                     let docURL = documentDirectory.appendingPathComponent("ExamplePDF.pdf")
                                     
                                     do{
-                                      try data?.write(to: docURL)
+                                        try data?.write(to: docURL)
                                     } catch(let error){
-                                       print("error is \(error.localizedDescription)")
+                                        print("error is \(error.localizedDescription)")
                                     }
                                     
                                     document = PDFDoc(teest: docURL)
@@ -122,29 +140,38 @@ struct Home: View {
                                     Text("Export to PDF")
                                 })
                             }
-
+                        
                         Spacer()
                         
                         Group {
-//                            if isEditingText {
-//                                Button(action: {
-//                                    isEditingText = false
-//                                    isDrawing = false
-//                                }, label: {
-//                                    Image("stop-edit")
-//                                        .resizable()
-//                                        .frame(width: 30, height: 30)
-//                                })
-//                            } else {
-//                                Button(action: {
-//                                    isEditingText = true
-//                                    isDrawing = false
-//                                }, label: {
-//                                    Image("edit")
-//                                        .resizable()
-//                                        .frame(width: 30, height: 30)
-//                                })
-//                            }
+                            if isPlayingAudio {
+                                Button(action: {
+                                    // Check whether the speaker is paused or not
+                                    synth.pauseSpeaking(at: AVSpeechBoundary.immediate)
+                                    isPlayingAudio.toggle()
+                                }, label: {
+                                    Image(systemName: "pause.fill")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
+                                })
+                                .padding(.trailing)
+                            } else {
+                                // Present play button and allow text to be played
+                                Button(action: {
+                                    if synth.isPaused {
+                                        synth.continueSpeaking()
+                                    } else {
+                                        self.speak_text()
+                                    }
+                                    
+                                    isPlayingAudio.toggle()
+                                }, label: {
+                                    Image(systemName: "play.fill")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
+                                })
+                                .padding(.trailing)
+                            }
                             
                             NavigationLink(destination: Settings()) {
                                 Image("settings")
@@ -153,7 +180,8 @@ struct Home: View {
                             }
                         }
                     }
-                    .padding()
+                    .padding(.leading)
+                    .padding(.trailing)
                     
                     Divider()
                     
@@ -215,8 +243,9 @@ struct Home: View {
                     do {
                         let url = try result.get()
                         let images = convertPDFToImages(url: url)
-                        let paragraphs = testScanPDF(scan: images)
-                        self.scanResult.scannedTextList = paragraphs
+                        let result = testScanPDF(scan: images)
+                        self.scanResult.scannedTextList = result.0
+                        self.scanResult.scannedText = result.1
                     } catch {
                         print("OH DEAR")
                     }
