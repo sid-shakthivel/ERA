@@ -8,11 +8,16 @@
 import SwiftUI
 
 extension View {
-    func `if`<Content: View>(_ conditional: Bool, content: (Self) -> Content) -> TupleView<(Self?, Content?)> {
-        if conditional {
-            return TupleView((nil, content(self)))
+    /// Applies the given transform if the given condition evaluates to `true`.
+    /// - Parameters:
+    ///   - condition: The condition to evaluate.
+    ///   - transform: The transform to apply to the source `View`.
+    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
+    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
         } else {
-            return TupleView((self, nil))
+            self
         }
     }
 }
@@ -40,29 +45,37 @@ struct OptionBar: View {
             Spacer()
             
             Group {
-                Group {
-                    Button(action: {
-                        isDrawing = true
-                        canvasSettings.isRubbing = false
-                    }, label: {
-                        Image(systemName: "circle.fill")
-                            .font(.title)
-                            .foregroundColor(canvasSettings.selectedColour)
-                    })
-
+                ZStack {
                     if isDrawing {
+                        Capsule()
+                            .fill(Color(hex: 0xe6e0d8, alpha: 1))
+                            .frame(width: 80, height: 35)
+                    }
+                    
+                    HStack {
                         Button(action: {
-                            showPencilEdit = true;
+                            isDrawing = true
                             canvasSettings.isRubbing = false
                         }, label: {
-                            Image(systemName: "circle.fill")
+                            Image(systemName: "pencil.tip")
                                 .font(.title)
                                 .foregroundColor(canvasSettings.selectedColour)
-                                .mask {
-                                    Image(systemName: "scribble")
-                                        .font(.largeTitle)
-                                }
                         })
+
+                        if isDrawing {
+                            Button(action: {
+                                showPencilEdit = true;
+                                canvasSettings.isRubbing = false
+                            }, label: {
+                                Image(systemName: "circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(canvasSettings.selectedColour)
+                                    .mask {
+                                        Image(systemName: "scribble")
+                                            .font(.largeTitle)
+                                    }
+                            })
+                        }
                     }
                 }
 

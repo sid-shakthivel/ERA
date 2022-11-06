@@ -221,10 +221,12 @@ struct Settings: View {
                             Picker(selection: $settings.voice, content: {
                                 ForEach(languages, id: \.self) {
                                     Text($0)
+                                        .frame(maxWidth: .infinity, alignment: .trailing)
                                 }
                            }, label: {
-
+                               
                            })
+                                .pickerStyle(.menu)
                                 .labelsHidden()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .accentColor(.black)

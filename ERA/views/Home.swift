@@ -126,25 +126,25 @@ struct Home: View {
                         Spacer()
                         
                         Group {
-                            if isEditingText {
-                                Button(action: {
-                                    isEditingText = false
-                                    isDrawing = false
-                                }, label: {
-                                    Image("stop-edit")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                })
-                            } else {
-                                Button(action: {
-                                    isEditingText = true
-                                    isDrawing = false
-                                }, label: {
-                                    Image("edit")
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                })
-                            }
+//                            if isEditingText {
+//                                Button(action: {
+//                                    isEditingText = false
+//                                    isDrawing = false
+//                                }, label: {
+//                                    Image("stop-edit")
+//                                        .resizable()
+//                                        .frame(width: 30, height: 30)
+//                                })
+//                            } else {
+//                                Button(action: {
+//                                    isEditingText = true
+//                                    isDrawing = false
+//                                }, label: {
+//                                    Image("edit")
+//                                        .resizable()
+//                                        .frame(width: 30, height: 30)
+//                                })
+//                            }
                             
                             NavigationLink(destination: Settings()) {
                                 Image("settings")
