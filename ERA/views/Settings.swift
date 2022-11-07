@@ -70,6 +70,10 @@ struct Settings: View {
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))
                             })
+                            
+                            Text("Enhanced reading boldens the first half of every word which improves concentration")
+                                .fontWeight(.semibold)
+                                .font(settings.subParagaphFont)
                         }
 
                         Group {

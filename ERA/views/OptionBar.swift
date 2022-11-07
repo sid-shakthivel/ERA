@@ -43,73 +43,85 @@ struct OptionBar: View {
             Spacer()
             
             Group {
-                ZStack {
-//                    if isDrawing && canvasSettings.lineCap == .butt {
-//                        Capsule()
-//                            .fill(Color(.red))
-//                            .frame(width: 80, height: 35)
-//                    } else if isDrawing && canvasSettings.lineCap == .round {
-//                        Capsule()
-//                            .fill(Color(.yellow))
-//                            .frame(width: 80, height: 35)
-//                    }
-                    
-                    HStack {
-                        Button(action: {
-                            isDrawing = true
-                            isShowingPencil = true
-                            canvasSettings.lineCap = .round
-                            canvasSettings.isRubbing = false
-                        }, label: {
-                            Image(systemName: "pencil.tip")
-                                .font(.title)
-                                .foregroundColor(canvasSettings.selectedColour)
-                        })
-                        .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
-                            view.background(.red)
-                        })
-
-                        if isShowingPencil {
-                            Button(action: {
-                                showPencilEdit = true;
-                                isShowingPencil = false
-                                canvasSettings.isRubbing = false
-                            }, label: {
-                                Image(systemName: "circle.fill")
-                                    .font(.title)
-                                    .foregroundColor(canvasSettings.selectedColour)
-                                    .mask {
-                                        Image(systemName: "scribble")
-                                            .font(.largeTitle)
-                                    }
-                            })
+                HStack {
+                    ZStack {
+                        if isDrawing && canvasSettings.lineCap == .round {
+                            Capsule()
+                                .fill(.red)
+                                .frame(width: 80, height: 30)
                         }
                         
-                        Button(action: {
-                            isDrawing = true
-                            isShowingHighlighter = true
-                            canvasSettings.lineCap = .butt
-                            canvasSettings.isRubbing = false
-                        }, label: {
-                            Image(systemName: "highlighter")
-                                .font(.title)
-                                .foregroundColor(canvasSettings.selectedHighlighterColour)
-                        })
-                        
-                        if isShowingHighlighter {
+                        HStack {
                             Button(action: {
-                                showPencilEdit = true;
+                                isDrawing = true
+                                isShowingPencil = true
+                                isShowingHighlighter = false
+                                canvasSettings.lineCap = .round
                                 canvasSettings.isRubbing = false
-                                isDrawing = false
                             }, label: {
-                                Image(systemName: "circle.fill")
+                                Image(systemName: "pencil.tip")
+                                    .font(.title)
+                                    .foregroundColor(canvasSettings.selectedColour)
+                            })
+                            .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
+                                view
+                                    .background(Color.red)
+                                    .clipShape(Circle())
+                            })
+
+                            if isShowingPencil {
+                                Button(action: {
+                                    showPencilEdit = true
+                                    isShowingPencil = false
+                                    canvasSettings.isRubbing = false
+                                }, label: {
+                                    Image(systemName: "circle.fill")
+                                        .font(.title)
+                                        .foregroundColor(canvasSettings.selectedColour)
+                                        .mask {
+                                            Image(systemName: "scribble")
+                                                .font(.largeTitle)
+                                        }
+                                })
+                            }
+                        }
+                    }
+                    
+                    ZStack {
+                        if isDrawing && canvasSettings.lineCap == .butt {
+                            Capsule()
+                                .fill(.yellow)
+                                .frame(width: 80, height: 30)
+                        }
+                        
+                        HStack {
+                            Button(action: {
+                                isDrawing = true
+                                isShowingHighlighter = true
+                                isShowingPencil = false
+                                canvasSettings.lineCap = .butt
+                                canvasSettings.isRubbing = false
+                            }, label: {
+                                Image(systemName: "highlighter")
                                     .font(.title)
                                     .foregroundColor(canvasSettings.selectedHighlighterColour)
-                                    .mask {
-                                        Image(systemName: "scribble")
-                                            .font(.largeTitle)
-                                    }
                             })
+
+                            if isShowingHighlighter {
+                                Button(action: {
+                                    showPencilEdit = true;
+                                    canvasSettings.isRubbing = false
+                                    isDrawing = false
+                                }, label: {
+                                    Image(systemName: "circle.fill")
+                                        .font(.title)
+                                        .foregroundColor(canvasSettings.selectedHighlighterColour)
+                                        .mask {
+                                            Image(systemName: "scribble")
+                                                .font(.largeTitle)
+                                        }
+                                })
+                            }
                         }
                     }
                 }

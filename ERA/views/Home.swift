@@ -118,36 +118,37 @@ struct Home: View {
                             .foregroundColor(.black)
                             .fontWeight(.bold)
                             .textCase(.uppercase)
-                            .contextMenu {
-                                Button(action: {
-                                    // Export to PDF
-                                    let image = self.takeScreenshot(origin: geometryProxy.frame(in: .global).origin, size: geometryProxy.size)
-                                    
-                                    let pdfDocument = PDFDocument()
-                                    let pdfPage = PDFPage(image: image)
-                                    pdfDocument.insert(pdfPage!, at: 0)
-                                    
-                                    let data = pdfDocument.dataRepresentation()
-                                    let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                                    let docURL = documentDirectory.appendingPathComponent("ExamplePDF.pdf")
-                                    
-                                    do{
-                                        try data?.write(to: docURL)
-                                    } catch(let error){
-                                        print("error is \(error.localizedDescription)")
-                                    }
-                                    
-                                    document = PDFDoc(teest: docURL)
-                                    
-                                    showFileExporter.toggle()
-                                }, label: {
-                                    Text("Export to PDF")
-                                })
-                            }
                         
                         Spacer()
                         
                         Group {
+                            Button(action: {
+                                // Export to PDF
+                                let image = self.takeScreenshot(origin: geometryProxy.frame(in: .global).origin, size: geometryProxy.size)
+                                
+                                let pdfDocument = PDFDocument()
+                                let pdfPage = PDFPage(image: image)
+                                pdfDocument.insert(pdfPage!, at: 0)
+                                
+                                let data = pdfDocument.dataRepresentation()
+                                let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                                let docURL = documentDirectory.appendingPathComponent("ExamplePDF.pdf")
+                                
+                                do{
+                                    try data?.write(to: docURL)
+                                } catch(let error){
+                                    print("error is \(error.localizedDescription)")
+                                }
+                                
+                                document = PDFDoc(teest: docURL)
+                                
+                                showFileExporter.toggle()
+                            }, label: {
+                                Image(systemName: "square.and.arrow.up.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                            })
+                            
                             if isPlayingAudio {
                                 Button(action: {
                                     // Check whether the speaker is paused or not
@@ -156,7 +157,7 @@ struct Home: View {
                                 }, label: {
                                     Image(systemName: "pause.fill")
                                         .resizable()
-                                        .frame(width: 25, height: 25)
+                                        .frame(width: 20, height: 20)
                                 })
                                 .padding(.trailing)
                             } else {
@@ -172,7 +173,7 @@ struct Home: View {
                                 }, label: {
                                     Image(systemName: "play.fill")
                                         .resizable()
-                                        .frame(width: 25, height: 25)
+                                        .frame(width: 20, height: 20)
                                 })
                                 .padding(.trailing)
                             }
