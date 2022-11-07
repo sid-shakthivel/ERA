@@ -41,9 +41,15 @@ struct EditPencil: View {
                     
                     Spacer()
                     
-                    ColorPicker(selection: $canvasSettings.selectedColour) {
+                    if canvasSettings.lineCap == .round {
+                        ColorPicker(selection: $canvasSettings.selectedColour) {
+                        }
+                            .font(.title)
+                    } else {
+                        ColorPicker(selection: $canvasSettings.selectedHighlighterColour) {
+                        }
+                            .font(.title)
                     }
-                        .font(.title)
                 }
                 
                 HStack {

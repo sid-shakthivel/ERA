@@ -8,11 +8,6 @@
 import SwiftUI
 
 extension View {
-    /// Applies the given transform if the given condition evaluates to `true`.
-    /// - Parameters:
-    ///   - condition: The condition to evaluate.
-    ///   - transform: The transform to apply to the source `View`.
-    /// - Returns: Either the original `View` or the modified `View` if the condition is `true`.
     @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
         if condition {
             transform(self)
@@ -30,6 +25,9 @@ struct OptionBar: View {
     @Binding var isEditing: Bool
     @Binding var showPencilEdit: Bool
     
+    @State var isShowingHighlighter: Bool = false
+    @State var isShowingPencil: Bool = false
+    
     var body: some View {
         HStack {
             Spacer()
@@ -37,7 +35,7 @@ struct OptionBar: View {
             Button(action: {
                 showMenu.toggle()
             }, label: {
-                Image("menu")
+                Image("hamburger")
                     .resizable()
                     .frame(width: 30, height: 30)
             })
@@ -46,30 +44,67 @@ struct OptionBar: View {
             
             Group {
                 ZStack {
-                    if isDrawing {
-                        Capsule()
-                            .fill(Color(hex: 0xe6e0d8, alpha: 1))
-                            .frame(width: 80, height: 35)
-                    }
+//                    if isDrawing && canvasSettings.lineCap == .butt {
+//                        Capsule()
+//                            .fill(Color(.red))
+//                            .frame(width: 80, height: 35)
+//                    } else if isDrawing && canvasSettings.lineCap == .round {
+//                        Capsule()
+//                            .fill(Color(.yellow))
+//                            .frame(width: 80, height: 35)
+//                    }
                     
                     HStack {
                         Button(action: {
                             isDrawing = true
+                            isShowingPencil = true
+                            canvasSettings.lineCap = .round
                             canvasSettings.isRubbing = false
                         }, label: {
                             Image(systemName: "pencil.tip")
                                 .font(.title)
                                 .foregroundColor(canvasSettings.selectedColour)
                         })
+                        .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
+                            view.background(.red)
+                        })
 
-                        if isDrawing {
+                        if isShowingPencil {
                             Button(action: {
                                 showPencilEdit = true;
+                                isShowingPencil = false
                                 canvasSettings.isRubbing = false
                             }, label: {
                                 Image(systemName: "circle.fill")
                                     .font(.title)
                                     .foregroundColor(canvasSettings.selectedColour)
+                                    .mask {
+                                        Image(systemName: "scribble")
+                                            .font(.largeTitle)
+                                    }
+                            })
+                        }
+                        
+                        Button(action: {
+                            isDrawing = true
+                            isShowingHighlighter = true
+                            canvasSettings.lineCap = .butt
+                            canvasSettings.isRubbing = false
+                        }, label: {
+                            Image(systemName: "highlighter")
+                                .font(.title)
+                                .foregroundColor(canvasSettings.selectedHighlighterColour)
+                        })
+                        
+                        if isShowingHighlighter {
+                            Button(action: {
+                                showPencilEdit = true;
+                                canvasSettings.isRubbing = false
+                                isDrawing = false
+                            }, label: {
+                                Image(systemName: "circle.fill")
+                                    .font(.title)
+                                    .foregroundColor(canvasSettings.selectedHighlighterColour)
                                     .mask {
                                         Image(systemName: "scribble")
                                             .font(.largeTitle)
@@ -82,6 +117,8 @@ struct OptionBar: View {
                 Button(action: {
                     isDrawing = false
                     isEditing = false
+                    isShowingHighlighter = false
+                    isShowingPencil = false
                 }, label: {
                     Image("tick")
                         .resizable()

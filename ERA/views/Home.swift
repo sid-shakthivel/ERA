@@ -30,10 +30,12 @@ class ScanResult: ObservableObject {
 
 class CanvasSettings: ObservableObject {
     @Published var selectedColour: Color = .black
+    @Published var selectedHighlighterColour: Color = Color(hex: 0x000000, alpha: 0.5)
     @Published var lines: [Line] = []
     @Published var lastLine: Line?
     @Published var lineWidth: Double = 5
     @Published var isRubbing: Bool = false
+    @Published var lineCap: CGLineCap = .round
 }
 
 extension UIView {
@@ -68,7 +70,9 @@ extension String {
 struct Line {
     var points: [CGPoint]
     var colour: Color
+    var lineCap: CGLineCap
     var lineWidth: Double
+    var isHighlighter: Bool
 }
 
 struct Home: View {
@@ -206,16 +210,20 @@ struct Home: View {
                                     var path = Path()
                                     path.addLines(line.points)
                                     
-                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: .round, lineJoin: .round))
+                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: canvasSettings.lineCap, lineJoin: .round))
                                 }
                             }
                             .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
                                 let position = value.location
                                 if value.translation == .zero {
                                     if canvasSettings.isRubbing {
-                                        canvasSettings.lines.append(Line(points: [position], colour: .clear, lineWidth: canvasSettings.lineWidth))
+                                        canvasSettings.lines.append(Line(points: [position], colour: .clear, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
                                     } else {
-                                        canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineWidth: canvasSettings.lineWidth))
+                                        if canvasSettings.lineCap == .round {
+                                            canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                        } else {
+                                            canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedHighlighterColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                        }
                                     }
                                 } else {
                                     guard let lastIndex = canvasSettings.lines.indices.last else { return }
