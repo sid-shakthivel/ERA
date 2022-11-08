@@ -9,6 +9,7 @@ import SwiftUI
 
 struct EditPencil: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
+    @EnvironmentObject var settings: UserCustomisations
     
     let colours: [Color] = [.black, .red, .green, .yellow, .blue, .brown]
     
@@ -35,6 +36,14 @@ struct EditPencil: View {
 //                    }
                     
                     Text("Colour")
+                        .if(settings.isDarkMode) { view in
+                            view
+                                .foregroundColor(.white)
+                        }
+                        .if(!settings.isDarkMode) { view in
+                            view
+                                .foregroundColor(.black)
+                        }
                         .font(.system(size: 16))
                         .fontWeight(.semibold)
                         .padding()
@@ -59,6 +68,7 @@ struct EditPencil: View {
                         .padding(.trailing)
                     
                     Text("\(Int(canvasSettings.lineWidth)) pt")
+                        .foregroundColor(.black)
                         .fontWeight(.bold)
                         .padding()
                 }

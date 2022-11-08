@@ -42,6 +42,7 @@ struct Settings: View {
     
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserCustomisations
+    @EnvironmentObject var canvasSettings: CanvasSettings
     
     var body: some View {
         NavigationView {
@@ -51,6 +52,9 @@ struct Settings: View {
                         presentationMode.wrappedValue.dismiss()
                     } label: {
                         Image("arrow-left")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .invertOnDarkTheme()
 
                         Text("Settings")
                             .if(settings.isDarkMode) { view in
@@ -286,12 +290,18 @@ struct Settings: View {
                                     .font(.system(size: 14))
                             })
                             .onTapGesture {
-                                if settings.backgroundColour == ColourConstants.lightModeBackground {
-                                    settings.backgroundColour = ColourConstants.darkModeBackground
-                                    settings.fontColour = .white
-                                } else if settings.backgroundColour == ColourConstants.darkModeBackground {
-                                    settings.backgroundColour = ColourConstants.lightModeBackground
-                                    settings.fontColour = .black
+                                DispatchQueue.main.async{
+                                    if settings.backgroundColour == ColourConstants.lightModeBackground {
+                                        settings.backgroundColour = ColourConstants.darkModeBackground
+                                        settings.fontColour = .white
+                                        canvasSettings.selectedColour = .black
+                                        canvasSettings.selectedHighlighterColour = .black
+                                    } else if settings.backgroundColour == ColourConstants.darkModeBackground {
+                                        settings.backgroundColour = ColourConstants.lightModeBackground
+                                        settings.fontColour = .black
+                                        canvasSettings.selectedColour = .white
+                                        canvasSettings.selectedHighlighterColour = .white
+                                    }
                                 }
                             }
                         }

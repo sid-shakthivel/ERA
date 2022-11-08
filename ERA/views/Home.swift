@@ -22,6 +22,25 @@ extension Color {
     }
 }
 
+struct DetectThemeChange: ViewModifier {
+    @EnvironmentObject var settings: UserCustomisations
+
+    func body(content: Content) -> some View {
+        
+        if(settings.isDarkMode){
+            content.colorInvert()
+        }else{
+            content
+        }
+    }
+}
+
+extension View {
+    func invertOnDarkTheme() -> some View {
+        modifier(DetectThemeChange())
+    }
+}
+
 extension UIColor {
     var inverted: UIColor {
         var r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0, a: CGFloat = 0.0
@@ -120,8 +139,13 @@ struct Home: View {
         synth.stopSpeaking(at: .immediate)
     }
 
+    @State var tooltipConfig = DefaultTooltipConfig()
     
-    var tooltipConfig = DefaultTooltipConfig()
+    func setup_tooltips() {
+        tooltipConfig.enableAnimation = true
+        tooltipConfig.animationOffset = 10
+        tooltipConfig.animationTime = 1
+    }
     
     var body: some View {
         GeometryReader { geometryProxy in
@@ -186,6 +210,7 @@ struct Home: View {
                                     Image("pause")
                                         .resizable()
                                         .frame(width: 20, height: 20)
+                                        .invertOnDarkTheme()
                                 })
                                     .padding(.trailing)
                             } else {
@@ -202,11 +227,12 @@ struct Home: View {
                                     Image("play-but-big")
                                         .resizable()
                                         .frame(width: 20, height: 20)
+                                        .invertOnDarkTheme()
                                 })
                                     .padding(.trailing)
                                     .if(isShowingHelp) { view in
                                         view
-                                            .tooltip(.bottom) {
+                                            .tooltip(.bottom, config: tooltipConfig) {
                                                 Text("Play/Pause")
                                                     .font(Font(userSettings.subParagaphFont))
                                             }
@@ -225,11 +251,13 @@ struct Home: View {
                                 Image("settings")
                                     .resizable()
                                     .frame(width: 30, height: 30)
+                                    .invertOnDarkTheme()
                             }
                         }
                     }
                     .padding(.leading)
                     .padding(.trailing)
+                    .padding(.bottom)
                     
                     Divider()
                     
@@ -261,7 +289,7 @@ struct Home: View {
                                 let position = value.location
                                 if value.translation == .zero {
                                     if canvasSettings.isRubbing {
-                                        canvasSettings.lines.append(Line(points: [position], colour: .clear, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                        canvasSettings.lines.append(Line(points: [position], colour: userSettings.backgroundColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
                                     } else {
                                         if canvasSettings.lineCap == .round {
                                             canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
@@ -281,6 +309,8 @@ struct Home: View {
                                                                 
                     OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .environmentObject(userSettings)
+                        .environmentObject(canvasSettings)
                         .if(userSettings.isDarkMode) { view in
                             view
                                 .background(ColourConstants.darkModeLighter)
@@ -299,6 +329,7 @@ struct Home: View {
                         .background(ColourConstants.lightModeBackground)
                 }
             }
+            .onAppear(perform: setup_tooltips)
                 .environmentObject(userSettings)
                 .environmentObject(scanResult)
                 .environmentObject(canvasSettings)

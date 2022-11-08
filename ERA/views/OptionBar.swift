@@ -22,6 +22,14 @@ struct OptionBar: View {
     @State var isShowingHighlighter: Bool = false
     @State var isShowingPencil: Bool = false
     
+    @State var tooltipConfig = DefaultTooltipConfig()
+    
+    func setup_tooltips() {
+        tooltipConfig.enableAnimation = true
+        tooltipConfig.animationOffset = 10
+        tooltipConfig.animationTime = 1
+    }
+    
     var body: some View {
         HStack {
             Spacer()
@@ -32,10 +40,11 @@ struct OptionBar: View {
                 Image("hamburger")
                     .resizable()
                     .frame(width: 25, height: 25)
+                    .invertOnDarkTheme()
             })
             .if(isShowingHelp) { view in
                 view
-                    .tooltip(.top) {
+                    .tooltip(.top, config: tooltipConfig) {
                         Text("Menu")
                             .font(Font(settings.subParagaphFont))
                     }
@@ -63,6 +72,7 @@ struct OptionBar: View {
                                 Image(systemName: "pencil.tip")
                                     .font(.title)
                                     .foregroundColor(canvasSettings.selectedColour)
+                                    .invertOnDarkTheme()
                             })
                             .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
                                 view
@@ -102,6 +112,7 @@ struct OptionBar: View {
                                 Image(systemName: "highlighter")
                                     .font(.title)
                                     .foregroundColor(canvasSettings.selectedHighlighterColour)
+                                    .invertOnDarkTheme()
                             })
 
                             if isShowingHighlighter {
@@ -128,21 +139,28 @@ struct OptionBar: View {
                     Image("tick")
                         .resizable()
                         .frame(width: 30, height: 30)
+                        .invertOnDarkTheme()
                 })
                     .if(isShowingHelp) { view in
                         view
-                            .tooltip(.top) {
+                            .tooltip(.top, config: tooltipConfig) {
                                 Text("Close canvas")
                                     .font(Font(settings.subParagaphFont))
                             }
                     }
                 
                 Button(action: {
-                    isDrawing = false
+                    isDrawing = true
+                    isEditing = false
+                    canvasSettings.isRubbing = true
+                    isShowingHighlighter = false
+                    isShowingPencil = false
+                    canvasSettings.lineCap = .square
                 }, label: {
                     Image("rubber")
                         .resizable()
                         .frame(width: 30, height: 30)
+                        .invertOnDarkTheme()
                 })
             }
 
@@ -155,6 +173,7 @@ struct OptionBar: View {
                     Image("bin")
                         .resizable()
                         .frame(width: 30, height: 30)
+                        .invertOnDarkTheme()
                 })
 
                 Button(action: {
@@ -165,6 +184,7 @@ struct OptionBar: View {
                     Image(systemName: "arrow.uturn.backward")
                         .font(.title)
                         .foregroundColor(Color(hex: 0xC24E1C))
+                        .invertOnDarkTheme()
                 })
 
 
@@ -177,11 +197,13 @@ struct OptionBar: View {
                     Image(systemName: "arrow.uturn.forward")
                         .font(.title)
                         .foregroundColor(Color(hex: 0xC24E1C))
+                        .invertOnDarkTheme()
                 })
             }
 
             Spacer()
         }
+        .onAppear(perform: setup_tooltips)
         .padding(.top)
     }
 }
