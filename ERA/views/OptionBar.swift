@@ -7,16 +7,6 @@
 
 import SwiftUI
 
-extension View {
-    @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
-        if condition {
-            transform(self)
-        } else {
-            self
-        }
-    }
-}
-
 struct OptionBar: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @Binding var showDictionary: Bool
@@ -37,7 +27,7 @@ struct OptionBar: View {
             }, label: {
                 Image("hamburger")
                     .resizable()
-                    .frame(width: 30, height: 30)
+                    .frame(width: 25, height: 25)
             })
             
             Spacer()
@@ -75,13 +65,9 @@ struct OptionBar: View {
                                     isShowingPencil = false
                                     canvasSettings.isRubbing = false
                                 }, label: {
-                                    Image(systemName: "circle.fill")
-                                        .font(.title)
-                                        .foregroundColor(canvasSettings.selectedColour)
-                                        .mask {
-                                            Image(systemName: "scribble")
-                                                .font(.largeTitle)
-                                        }
+                                    Image("edit-attributes")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
                                 })
                             }
                         }
@@ -113,13 +99,10 @@ struct OptionBar: View {
                                     canvasSettings.isRubbing = false
                                     isDrawing = false
                                 }, label: {
-                                    Image(systemName: "circle.fill")
-                                        .font(.title)
-                                        .foregroundColor(canvasSettings.selectedHighlighterColour)
-                                        .mask {
-                                            Image(systemName: "scribble")
-                                                .font(.largeTitle)
-                                        }
+                                    Image("edit-attributes")
+                                        .resizable()
+                                        .frame(width: 25, height: 25)
+//                                        .foregroundColor(canvasSettings.selectedHighlighterColour)
                                 })
                             }
                         }

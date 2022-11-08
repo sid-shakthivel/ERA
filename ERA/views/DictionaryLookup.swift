@@ -128,7 +128,14 @@ struct DictionaryLookup: View {
         Group {
             VStack(alignment: .leading) {
                 Text("Dictionary")
-                    .foregroundColor(.black)
+                    .if(userSettings.isDarkMode) { view in
+                        view
+                            .foregroundColor(.white)
+                    }
+                    .if(!userSettings.isDarkMode) { view in
+                        view
+                            .foregroundColor(.black)
+                    }
                     .fontWeight(.bold)
                     .font(.system(size: 24))
                     .padding()
@@ -243,7 +250,14 @@ struct DictionaryLookup: View {
                 .background(userSettings.backgroundColour)
             }
         }
-            .background(Color(hex: 0xFFF9F0, alpha: 1))
+        .if(userSettings.isDarkMode) { view in
+            view
+                .background(ColourConstants.darkModeBackground)
+        }
+        .if(!userSettings.isDarkMode) { view in
+            view
+                .background(ColourConstants.lightModeBackground)
+        }
     }
 }
 

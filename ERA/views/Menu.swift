@@ -11,6 +11,8 @@ struct Menu: View {
     @Environment(\.presentationMode) var presentationMode
     
     @EnvironmentObject var canvasSettings: CanvasSettings
+    @EnvironmentObject var userSettings: UserCustomisations
+    
     @Binding var showDocumentCameraView: Bool
     @Binding var showFileImporter: Bool
     @Binding var showDictionary: Bool
@@ -26,7 +28,14 @@ struct Menu: View {
                        Image("scan")
                        
                        Text("Scan Document")
-                           .foregroundColor(.black)
+                           .if(userSettings.isDarkMode) { view in
+                               view
+                                   .foregroundColor(.white)
+                           }
+                           .if(!userSettings.isDarkMode) { view in
+                               view
+                                   .foregroundColor(.black)
+                           }
                            .textCase(.uppercase)
                            .fontWeight(.semibold)
                            .font(.system(size: 14))
@@ -51,7 +60,14 @@ struct Menu: View {
                        Image("upload")
                        
                        Text("Upload Document")
-                           .foregroundColor(.black)
+                           .if(userSettings.isDarkMode) { view in
+                               view
+                                   .foregroundColor(.white)
+                           }
+                           .if(!userSettings.isDarkMode) { view in
+                               view
+                                   .foregroundColor(.black)
+                           }
                            .fontWeight(.semibold)
                            .textCase(.uppercase)
                            .font(.system(size: 14))
@@ -76,7 +92,14 @@ struct Menu: View {
                        Image("book")
                        
                        Text("Dictionary")
-                           .foregroundColor(.black)
+                           .if(userSettings.isDarkMode) { view in
+                               view
+                                   .foregroundColor(.white)
+                           }
+                           .if(!userSettings.isDarkMode) { view in
+                               view
+                                   .foregroundColor(.black)
+                           }
                            .textCase(.uppercase)
                            .fontWeight(.semibold)
                            .font(.system(size: 14))
@@ -89,7 +112,14 @@ struct Menu: View {
                .frame(maxWidth: .infinity, alignment: .leading)
            }
        }
-           .background(Color.white)
+            .if(userSettings.isDarkMode) { view in
+                view
+                    .background(ColourConstants.darkModeBackground)
+            }
+            .if(!userSettings.isDarkMode) { view in
+                view
+                    .background(ColourConstants.lightModeBackground)
+            }
     }
 }
 

@@ -85,13 +85,14 @@ struct Home: View {
     
     @State var document: PDFDoc? = nil
     
-    @StateObject var userSettings = UserCustomisations()
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
     @State var isPlayingAudio: Bool = false
+    
+    @EnvironmentObject var userSettings: UserCustomisations
     
     let synth = AVSpeechSynthesizer()
     
@@ -115,9 +116,16 @@ struct Home: View {
                 VStack {
                     HStack {
                         Text("Easy Reading Assistant")
-                            .foregroundColor(.black)
                             .fontWeight(.bold)
                             .textCase(.uppercase)
+                            .if(userSettings.isDarkMode) { view in
+                                view
+                                    .foregroundColor(.white)
+                            }
+                            .if(!userSettings.isDarkMode) { view in
+                                view
+                                    .foregroundColor(.black)
+                            }
                         
                         Spacer()
                         
@@ -155,7 +163,7 @@ struct Home: View {
                                     synth.pauseSpeaking(at: AVSpeechBoundary.immediate)
                                     isPlayingAudio.toggle()
                                 }, label: {
-                                    Image(systemName: "pause.fill")
+                                    Image("pause")
                                         .resizable()
                                         .frame(width: 20, height: 20)
                                 })
@@ -238,9 +246,23 @@ struct Home: View {
                                                                 
                     OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(Color.white)
+                        .if(userSettings.isDarkMode) { view in
+                            view
+                                .background(ColourConstants.darkModeLighter)
+                        }
+                        .if(!userSettings.isDarkMode) { view in
+                            view
+                                .background(ColourConstants.lightModeLighter)
+                        }
                 }
-                    .background(Color(hex: 0xFFF9F0, alpha: 1))
+                .if(userSettings.isDarkMode) { view in
+                    view
+                        .background(ColourConstants.darkModeBackground)
+                }
+                .if(!userSettings.isDarkMode) { view in
+                    view
+                        .background(ColourConstants.lightModeBackground)
+                }
             }
                 .environmentObject(userSettings)
                 .environmentObject(scanResult)
