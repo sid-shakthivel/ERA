@@ -11,7 +11,7 @@ struct ColourConstants {
     static let lightModeBackground = Color(hex: 0xFFF9F0, alpha: 1)
     static let darkModeBackground = Color(hex: 0x0B1F29, alpha: 1)
     static let lightModeLighter = Color(hex: 0xFFFFFF, alpha: 1)
-    static let darkModeLighter = Color(hex: 0xced2d4, alpha: 1)
+    static let darkModeLighter = Color(hex: 0x061015, alpha: 1)
 }
 
 class UserCustomisations: ObservableObject {
@@ -294,10 +294,6 @@ struct Settings: View {
                                     settings.fontColour = .black
                                 }
                             }
-//                            .onChange(of: settings.isDarkMode) { value in
-//                                print("hello hello hello")
-//
-//                            }
                         }
                     }
                     

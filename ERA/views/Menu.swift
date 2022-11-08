@@ -118,7 +118,7 @@ struct Menu: View {
             }
             .if(!userSettings.isDarkMode) { view in
                 view
-                    .background(ColourConstants.lightModeBackground)
+                    .background(ColourConstants.lightModeLighter)
             }
     }
 }

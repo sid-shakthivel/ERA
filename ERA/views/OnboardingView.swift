@@ -20,7 +20,7 @@ struct OnboardingView: View {
         NavigationView {
             TabView(selection: $currentTab) {
                 ForEach(onboardingScreenData) { data in
-                    OnboardSubView(data: data)
+                    OnboardSubView(data: data, id: data.id)
                         .tag(data.id)
                 }
             }

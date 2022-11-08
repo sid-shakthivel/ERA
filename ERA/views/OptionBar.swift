@@ -6,14 +6,18 @@
 //
 
 import SwiftUI
+import SwiftUITooltip
 
 struct OptionBar: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
+    @EnvironmentObject var settings: UserCustomisations
+    
     @Binding var showDictionary: Bool
     @Binding var showMenu: Bool
     @Binding var isDrawing: Bool
     @Binding var isEditing: Bool
     @Binding var showPencilEdit: Bool
+    @Binding var isShowingHelp: Bool
     
     @State var isShowingHighlighter: Bool = false
     @State var isShowingPencil: Bool = false
@@ -29,6 +33,13 @@ struct OptionBar: View {
                     .resizable()
                     .frame(width: 25, height: 25)
             })
+            .if(isShowingHelp) { view in
+                view
+                    .tooltip(.top) {
+                        Text("Menu")
+                            .font(Font(settings.subParagaphFont))
+                    }
+                }
             
             Spacer()
             
@@ -102,7 +113,6 @@ struct OptionBar: View {
                                     Image("edit-attributes")
                                         .resizable()
                                         .frame(width: 25, height: 25)
-//                                        .foregroundColor(canvasSettings.selectedHighlighterColour)
                                 })
                             }
                         }
@@ -119,6 +129,21 @@ struct OptionBar: View {
                         .resizable()
                         .frame(width: 30, height: 30)
                 })
+                    .if(isShowingHelp) { view in
+                        view
+                            .tooltip(.top) {
+                                Text("Close canvas")
+                                    .font(Font(settings.subParagaphFont))
+                            }
+                    }
+                
+                Button(action: {
+                    isDrawing = false
+                }, label: {
+                    Image("rubber")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                })
             }
 
             Spacer()
@@ -131,7 +156,6 @@ struct OptionBar: View {
                         .resizable()
                         .frame(width: 30, height: 30)
                 })
-
 
                 Button(action: {
                     if canvasSettings.lines.count >= 1 {
@@ -164,6 +188,6 @@ struct OptionBar: View {
 
 struct OptionBar_Previews: PreviewProvider {
     static var previews: some View {
-        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false))
+        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false), isShowingHelp: .constant(false))
     }
 }

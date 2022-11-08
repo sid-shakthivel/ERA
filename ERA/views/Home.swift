@@ -8,6 +8,7 @@
 import SwiftUI
 import AVFoundation
 import PDFKit
+import SwiftUITooltip
 
 extension Color {
     init(hex: UInt, alpha: Double = 1) {
@@ -18,6 +19,14 @@ extension Color {
             blue: Double((hex >> 00) & 0xff) / 255,
             opacity: alpha
         )
+    }
+}
+
+extension UIColor {
+    var inverted: UIColor {
+        var r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0, a: CGFloat = 0.0
+        self.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return UIColor(red: (1 - r), green: (1 - g), blue: (1 - b), alpha: a) // Assuming you want the same alpha value.
     }
 }
 
@@ -91,6 +100,7 @@ struct Home: View {
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
     @State var isPlayingAudio: Bool = false
+    @State var isShowingHelp: Bool = false
     
     @EnvironmentObject var userSettings: UserCustomisations
     
@@ -110,6 +120,9 @@ struct Home: View {
         synth.stopSpeaking(at: .immediate)
     }
 
+    
+    var tooltipConfig = DefaultTooltipConfig()
+    
     var body: some View {
         GeometryReader { geometryProxy in
             NavigationView {
@@ -156,6 +169,13 @@ struct Home: View {
                                     .resizable()
                                     .frame(width: 20, height: 20)
                             })
+                            .if(isShowingHelp) { view in
+                                view
+                                    .tooltip(.left, config: tooltipConfig) {
+                                        Text("Export PDF")
+                                            .font(Font(userSettings.subParagaphFont))
+                                    }
+                            }
                             
                             if isPlayingAudio {
                                 Button(action: {
@@ -167,7 +187,7 @@ struct Home: View {
                                         .resizable()
                                         .frame(width: 20, height: 20)
                                 })
-                                .padding(.trailing)
+                                    .padding(.trailing)
                             } else {
                                 // Present play button and allow text to be played
                                 Button(action: {
@@ -179,12 +199,27 @@ struct Home: View {
                                     
                                     isPlayingAudio.toggle()
                                 }, label: {
-                                    Image(systemName: "play.fill")
+                                    Image("play-but-big")
                                         .resizable()
                                         .frame(width: 20, height: 20)
                                 })
-                                .padding(.trailing)
+                                    .padding(.trailing)
+                                    .if(isShowingHelp) { view in
+                                        view
+                                            .tooltip(.bottom) {
+                                                Text("Play/Pause")
+                                                    .font(Font(userSettings.subParagaphFont))
+                                            }
+                                    }
                             }
+                            
+                            Button(action: {
+                                isShowingHelp.toggle()
+                            }, label: {
+                                Image(systemName: "info.circle.fill")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
+                            })
                             
                             NavigationLink(destination: Settings()) {
                                 Image("settings")
@@ -244,7 +279,7 @@ struct Home: View {
                         .padding()
                         .background(userSettings.backgroundColour)
                                                                 
-                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit)
+                    OptionBar(showDictionary: $showDictionary, showMenu: $showMenu, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .if(userSettings.isDarkMode) { view in
                             view
@@ -318,6 +353,6 @@ struct Home: View {
 
 struct Home_Previews: PreviewProvider {
     static var previews: some View {
-        Home(showMenu: true)
+        Home(showMenu: false)
     }
 }

@@ -31,6 +31,7 @@ struct RoundedCorner: Shape {
 
 struct OnboardSubView: View {
     var data: OnboardingData
+    var id: Int
     @State var isAnimating = true
     
     func modifyText(text: String) -> LocalizedStringKey {
@@ -62,17 +63,19 @@ struct OnboardSubView: View {
 
             Spacer()
             
-            NavigationLink(destination: Home(showMenu: true).preferredColorScheme(.light)) {
-                Text("Welcome to ERA")
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(.white)
-                    .background(Color(hex: 0xCB4E25, alpha: 1))
-                    .font(.system(size: 14))
-                    .clipShape(Capsule())
-                    .fontWeight(.semibold)
+            if (id == 2) {
+                NavigationLink(destination: Home(showMenu: true).preferredColorScheme(.light)) {
+                    Text("Welcome to ERA")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(.white)
+                        .background(Color(hex: 0xCB4E25, alpha: 1))
+                        .font(.system(size: 14))
+                        .clipShape(Capsule())
+                        .fontWeight(.semibold)
+                }
+                .padding()
             }
-            .padding()
             
             Spacer()
         }
