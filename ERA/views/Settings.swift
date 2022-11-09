@@ -44,6 +44,17 @@ struct Settings: View {
     @EnvironmentObject var settings: UserCustomisations
     @EnvironmentObject var canvasSettings: CanvasSettings
     
+    // If enhanced reading is enabled, apply to each word within the string or return it
+    func modifyText(text: String) -> LocalizedStringKey {
+        var markdownStringArray: [String] = []
+        
+        for substring in text.split(separator: " ") {
+            markdownStringArray.append(enhanceText(text: String(substring)))
+        }
+
+        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
+    }
+    
     var body: some View {
         NavigationView {
             ScrollView {
@@ -105,7 +116,7 @@ struct Settings: View {
                                     .font(.system(size: 14))
                             })
 
-                            Text("Enhanced reading boldens the first half of every word which improves concentration")
+                            Text(modifyText(text: "Enhanced reading boldens the first half of every word which improves concentration"))
                                 .if(settings.isDarkMode) { view in
                                     view
                                         .foregroundColor(.white)
@@ -114,7 +125,6 @@ struct Settings: View {
                                     view
                                         .foregroundColor(.black)
                                 }
-                                .fontWeight(.semibold)
                                 .font(Font(settings.paragraphFont))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom)

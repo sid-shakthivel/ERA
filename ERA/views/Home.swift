@@ -189,9 +189,9 @@ struct Home: View {
                                 
                                 showFileExporter.toggle()
                             }, label: {
-                                Image(systemName: "square.and.arrow.up.fill")
+                                Image("export")
                                     .resizable()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 35)
                             })
                             .if(isShowingHelp) { view in
                                 view
@@ -209,7 +209,7 @@ struct Home: View {
                                 }, label: {
                                     Image("pause")
                                         .resizable()
-                                        .frame(width: 20, height: 20)
+                                        .frame(width: 25, height: 25)
                                         .invertOnDarkTheme()
                                 })
                                     .padding(.trailing)
@@ -224,9 +224,9 @@ struct Home: View {
                                     
                                     isPlayingAudio.toggle()
                                 }, label: {
-                                    Image("play-but-big")
+                                    Image("play")
                                         .resizable()
-                                        .frame(width: 20, height: 20)
+                                        .frame(width: 25, height: 25)
                                         .invertOnDarkTheme()
                                 })
                                     .padding(.trailing)
@@ -238,13 +238,17 @@ struct Home: View {
                                             }
                                     }
                             }
-                            
+                        }
+                        
+//                        Spacer()
+                        
+                        Group {
                             Button(action: {
                                 isShowingHelp.toggle()
                             }, label: {
-                                Image(systemName: "info.circle.fill")
+                                Image("info")
                                     .resizable()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 25, height: 25)
                             })
                             
                             NavigationLink(destination: Settings()) {
