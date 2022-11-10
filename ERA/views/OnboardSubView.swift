@@ -44,6 +44,8 @@ struct OnboardSubView: View {
         return LocalizedStringKey(markdownStringArray.joined(separator: " "))
     }
     
+    @EnvironmentObject var userSettings: UserCustomisations
+    
     var body: some View {
         VStack() {
             Spacer()
@@ -64,13 +66,13 @@ struct OnboardSubView: View {
             Spacer()
             
             if (id == 2) {
-                NavigationLink(destination: Home(showMenu: true).preferredColorScheme(.light)) {
+                NavigationLink(destination: Home(showMenu: true).preferredColorScheme(.light).environmentObject(userSettings)) {
                     Text("Welcome to ERA")
                         .padding()
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.white)
                         .background(Color(hex: 0xCB4E25, alpha: 1))
-                        .font(.system(size: 14))
+                        .font(.system(size: 18))
                         .clipShape(Capsule())
                         .fontWeight(.semibold)
                 }

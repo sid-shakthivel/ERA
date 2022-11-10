@@ -26,7 +26,6 @@ struct DetectThemeChange: ViewModifier {
     @EnvironmentObject var settings: UserCustomisations
 
     func body(content: Content) -> some View {
-        
         if(settings.isDarkMode){
             content.colorInvert()
         }else{
@@ -163,35 +162,37 @@ struct Home: View {
                                 view
                                     .foregroundColor(.black)
                             }
+                            .frame(width: geometryProxy.size.width / 2, alignment: .leading)
                         
                         Spacer()
                         
                         Group {
                             Button(action: {
                                 // Export to PDF
-                                let image = self.takeScreenshot(origin: geometryProxy.frame(in: .global).origin, size: geometryProxy.size)
+                                let outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("SwiftUI.pdf")
+                               let pageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                               let rootVC = UIApplication.shared.windows.first?.rootViewController
+
+                               //Render the PDF
+                               let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
+                               DispatchQueue.main.async {
+                                   do {
+                                       try pdfRenderer.writePDF(to: outputFileURL, withActions: { (context) in
+                                           context.beginPage()
+                                           rootVC?.view.layer.render(in: context.cgContext)
+                                       })
+                                       print("wrote file to: \(outputFileURL.path)")
+                                   } catch {
+                                       print("Could not create PDF file: \(error.localizedDescription)")
+                                   }
+                               }
                                 
-                                let pdfDocument = PDFDocument()
-                                let pdfPage = PDFPage(image: image)
-                                pdfDocument.insert(pdfPage!, at: 0)
-                                
-                                let data = pdfDocument.dataRepresentation()
-                                let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                                let docURL = documentDirectory.appendingPathComponent("ExamplePDF.pdf")
-                                
-                                do{
-                                    try data?.write(to: docURL)
-                                } catch(let error){
-                                    print("error is \(error.localizedDescription)")
-                                }
-                                
-                                document = PDFDoc(teest: docURL)
-                                
+                                document = PDFDoc(teest: outputFileURL)
                                 showFileExporter.toggle()
                             }, label: {
                                 Image("export")
                                     .resizable()
-                                    .frame(width: 25, height: 35)
+                                    .frame(width: 30, height: 35)
                             })
                             .if(isShowingHelp) { view in
                                 view
@@ -259,9 +260,7 @@ struct Home: View {
                             }
                         }
                     }
-                    .padding(.leading)
-                    .padding(.trailing)
-                    .padding(.bottom)
+                    .padding()
                     
                     Divider()
                     

@@ -57,7 +57,7 @@ struct OptionBar: View {
                     ZStack {
                         if isDrawing && canvasSettings.lineCap == .round {
                             Capsule()
-                                .fill(.red)
+                                .fill(Color(hex: 0xa6a6a6, alpha: 1))
                                 .frame(width: 80, height: 30)
                         }
                         
@@ -76,7 +76,7 @@ struct OptionBar: View {
                             })
                             .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
                                 view
-                                    .background(Color.red)
+                                    .background(Color(hex: 0xa6a6a6, alpha: 1))
                                     .clipShape(Circle())
                             })
 
@@ -97,7 +97,7 @@ struct OptionBar: View {
                     ZStack {
                         if isDrawing && canvasSettings.lineCap == .butt {
                             Capsule()
-                                .fill(.yellow)
+                                .fill(Color(hex: 0xa6a6a6, alpha: 1))
                                 .frame(width: 80, height: 30)
                         }
                         
@@ -123,7 +123,7 @@ struct OptionBar: View {
                                 }, label: {
                                     Image("edit-attributes")
                                         .resizable()
-                                        .frame(width: 25, height: 25)
+                                        .frame(width: 35, height: 30)
                                 })
                             }
                         }
@@ -187,7 +187,6 @@ struct OptionBar: View {
                         .invertOnDarkTheme()
                 })
 
-
                 Button(action: {
                     if canvasSettings.lastLine != nil {
                         canvasSettings.lines.append(canvasSettings.lastLine!)
@@ -205,6 +204,7 @@ struct OptionBar: View {
         }
         .onAppear(perform: setup_tooltips)
         .padding(.top)
+        .padding(.bottom)
     }
 }
 

@@ -286,34 +286,34 @@ struct Settings: View {
                             .padding(.bottom)
                         
                         Group {
-                            Toggle(isOn: $settings.isDarkMode, label: {
-                                Text("Dark Mode")
-                                    .if(settings.isDarkMode) { view in
-                                        view
-                                            .foregroundColor(.white)
-                                    }
-                                    .if(!settings.isDarkMode) { view in
-                                        view
-                                            .foregroundColor(.black)
-                                    }
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 14))
-                            })
-                            .onTapGesture {
-                                DispatchQueue.main.async{
-                                    if settings.backgroundColour == ColourConstants.lightModeBackground {
-                                        settings.backgroundColour = ColourConstants.darkModeBackground
-                                        settings.fontColour = .white
-                                        canvasSettings.selectedColour = .black
-                                        canvasSettings.selectedHighlighterColour = .black
-                                    } else if settings.backgroundColour == ColourConstants.darkModeBackground {
-                                        settings.backgroundColour = ColourConstants.lightModeBackground
-                                        settings.fontColour = .black
-                                        canvasSettings.selectedColour = .white
-                                        canvasSettings.selectedHighlighterColour = .white
-                                    }
-                                }
-                            }
+//                            Toggle(isOn: $settings.isDarkMode, label: {
+//                                Text("Dark Mode")
+//                                    .if(settings.isDarkMode) { view in
+//                                        view
+//                                            .foregroundColor(.white)
+//                                    }
+//                                    .if(!settings.isDarkMode) { view in
+//                                        view
+//                                            .foregroundColor(.black)
+//                                    }
+//                                    .fontWeight(.bold)
+//                                    .font(.system(size: 14))
+//                            })
+//                            .onTapGesture {
+//                                DispatchQueue.main.async{
+//                                    if settings.backgroundColour == ColourConstants.lightModeBackground {
+//                                        settings.backgroundColour = ColourConstants.darkModeBackground
+//                                        settings.fontColour = .white
+//                                        canvasSettings.selectedColour = .black
+//                                        canvasSettings.selectedHighlighterColour = .black
+//                                    } else if settings.backgroundColour == ColourConstants.darkModeBackground {
+//                                        settings.backgroundColour = ColourConstants.lightModeBackground
+//                                        settings.fontColour = .black
+//                                        canvasSettings.selectedColour = .white
+//                                        canvasSettings.selectedHighlighterColour = .white
+//                                    }
+//                                }
+//                            }
                         }
                     }
                     

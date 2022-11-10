@@ -148,7 +148,9 @@ struct DictionaryLookup: View {
                     }
             }
             
+            
             Spacer()
+                
                 
             switch state {
             case .Stationary:

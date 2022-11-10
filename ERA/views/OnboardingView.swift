@@ -16,12 +16,15 @@ struct OnboardingView: View {
     
     @State var currentTab: Int = 0
     
+    @EnvironmentObject var userSettings: UserCustomisations
+    
     var body: some View {
         NavigationView {
             TabView(selection: $currentTab) {
                 ForEach(onboardingScreenData) { data in
                     OnboardSubView(data: data, id: data.id)
                         .tag(data.id)
+                        .environmentObject(userSettings)
                 }
             }
                 .tabViewStyle(PageTabViewStyle())

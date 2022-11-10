@@ -59,29 +59,29 @@ struct Paragraph: View {
         } else {
             // Normal paragraph
             if isEditingText {
-//                ZStack {
-//                    TextEditor(text: $paragraphFormat.text)
-//                        .foregroundColor(userSettings.fontColour)
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .scrollContentBackground(.hidden)
-//                        .background(userSettings.backgroundColour)
-//                        .font(Font(userSettings.paragraphFont))
-//                        .frame(minHeight: 500)
-//                }
-//                .toolbar {
-//                    ToolbarItemGroup(placement: .keyboard) {
-//                        Button {
-//                            isEditingText = false
-//                        } label: {
-//                            Text("Done")
-//                                .foregroundColor(.accentColor)
-//                                .padding(.trailing)
-//                        }
-//                    }
-//                }
+                ZStack {
+                    TextEditor(text: $paragraphFormat.text)
+                        .foregroundColor(userSettings.fontColour)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .scrollContentBackground(.hidden)
+                        .background(userSettings.backgroundColour)
+                        .font(Font(userSettings.paragraphFont))
+                        .frame(minHeight: 500)
+                }
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Button {
+                            isEditingText = false
+                        } label: {
+                            Text("Done")
+                                .foregroundColor(.accentColor)
+                                .padding(.trailing)
+                        }
+                    }
+                }
                 
-                TextField(paragraphFormat.text, text: $paragraphFormat.text, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
+//                TextField(paragraphFormat.text, text: $paragraphFormat.text, axis: .vertical)
+//                    .textFieldStyle(.roundedBorder)
             } else {
                 Text(modifyText(text: paragraphFormat.text))
                     .foregroundColor(userSettings.fontColour)
