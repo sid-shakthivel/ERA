@@ -12,30 +12,56 @@ import PDFKit
 import AVFoundation
 
 struct PDFDoc: FileDocument {
-    // tell the system we support only plain text
+    // Tell the system we support only plain text
     static var readableContentTypes = [UTType.pdf]
 
-    // by default our document is empty
     var url = ""
 
-    // a simple initializer that creates new, empty documents
-    init(teest: URL) {
-        self.url = teest.path
+    // Simple initializer that creates new, empty documents
+    init(fileUrl: URL) {
+        self.url = fileUrl.path
     }
 
-    // this initializer loads data that has been saved previously
+    // Initializer loads data that has been saved previously
     init(configuration: ReadConfiguration) throws {
         url = ""
     }
 
-    // this will be called when the system wants to write our data to disk
+    // Called when the system wants to write our data to disk
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
         let file = try FileWrapper(url: URL(fileURLWithPath: url), options: .immediate)
         return file
     }
 }
 
-// Convert PDF to array of images which can be processed
+/*
+ 
+ */
+func convertScreenToPDF() -> PDFDoc {
+    let outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Example.pdf")
+   let pageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+   let rootVC = UIApplication.shared.windows.first?.rootViewController
+    
+    // Render the pdf
+    let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
+    
+    DispatchQueue.main.async {
+        do {
+            try pdfRenderer.writePDF(to: outputFileURL, withActions: { (context) in
+                context.beginPage()
+                rootVC?.view.layer.render(in: context.cgContext)
+            })
+        } catch {
+            
+        }
+    }
+    
+    return PDFDoc(fileUrl: outputFileURL)
+}
+
+/*
+ Converts a local PDF file into an array of UIImages which can be fed into convertPhotosToParagraphs
+ */
 func convertPDFToImages(url: URL) -> [UIImage] {
     var images: [UIImage] = []
     _ = url
@@ -46,14 +72,12 @@ func convertPDFToImages(url: URL) -> [UIImage] {
     }
 
     guard let document = CGPDFDocument(url as CFURL) else {
-        print("NO DOCUMENT")
         return images
     }
 
     print(document.numberOfPages)
 
     guard let page = document.page(at: 1) else {
-        print("NO PAGES?")
         return images
     }
 

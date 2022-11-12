@@ -20,6 +20,7 @@ extension View {
 
 struct ContentView: View {
     @StateObject var userSettings = UserCustomisations()
+    @FetchRequest(sortDescriptors: []) var userPreferences: FetchedResults<UserPreferences>
     
     var body: some View {
         if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
@@ -51,9 +52,6 @@ struct ContentView: View {
                         .preferredColorScheme(.light)
                 }
         }
-        
-//        OnboardingView()
-//            .preferredColorScheme(.light)
     }
 }
 

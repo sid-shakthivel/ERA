@@ -124,6 +124,8 @@ struct Home: View {
     
     let synth = AVSpeechSynthesizer()
     
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.id)]) var userPreferences: FetchedResults<UserPreferences>
+    
     // Speaks given text
     func speak_text() {
         let utterance = AVSpeechUtterance(string: scanResult.scannedText)
@@ -168,26 +170,10 @@ struct Home: View {
                         
                         Group {
                             Button(action: {
-                                // Export to PDF
-                                let outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("SwiftUI.pdf")
-                               let pageSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                               let rootVC = UIApplication.shared.windows.first?.rootViewController
-
-                               //Render the PDF
-                               let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
-                               DispatchQueue.main.async {
-                                   do {
-                                       try pdfRenderer.writePDF(to: outputFileURL, withActions: { (context) in
-                                           context.beginPage()
-                                           rootVC?.view.layer.render(in: context.cgContext)
-                                       })
-                                       print("wrote file to: \(outputFileURL.path)")
-                                   } catch {
-                                       print("Could not create PDF file: \(error.localizedDescription)")
-                                   }
-                               }
+//                                document = convertScreenToPDF()
                                 
-                                document = PDFDoc(teest: outputFileURL)
+                                print("hello there")
+                                
                                 showFileExporter.toggle()
                             }, label: {
                                 Image("export")
@@ -343,7 +329,7 @@ struct Home: View {
                     do {
                         let url = try result.get()
                         let images = convertPDFToImages(url: url)
-                        let result = testScanPDF(scan: images)
+                        let result = convertPhotosToParagraphs(scan: images)
                         self.scanResult.scannedTextList = result.0
                         self.scanResult.scannedText = result.1
                     } catch {

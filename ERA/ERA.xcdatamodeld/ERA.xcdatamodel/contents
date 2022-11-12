@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="22A380" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="UserPreferences" representedClassName="UserPreferences" syncable="YES" codeGenerationType="class">
+        <attribute name="fontColour" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="headingFont" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isDarkMode" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isEnhancedReading" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="paragraphFont" optional="YES" attributeType="String"/>
+        <attribute name="paragraphFontSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="pitch" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="rate" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="subHeadingFont" optional="YES" attributeType="String"/>
+        <attribute name="subParagraphFont" optional="YES" attributeType="String"/>
+        <attribute name="voice" optional="YES" attributeType="String"/>
+        <attribute name="volume" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+    </entity>
+</model>

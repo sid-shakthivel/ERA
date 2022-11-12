@@ -57,7 +57,7 @@ struct OptionBar: View {
                     ZStack {
                         if isDrawing && canvasSettings.lineCap == .round {
                             Capsule()
-                                .fill(Color(hex: 0xa6a6a6, alpha: 1))
+                                .fill(Color(UIColor(canvasSettings.selectedColour).inverted))
                                 .frame(width: 80, height: 30)
                         }
                         
@@ -76,7 +76,7 @@ struct OptionBar: View {
                             })
                             .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
                                 view
-                                    .background(Color(hex: 0xa6a6a6, alpha: 1))
+                                    .background(Color(UIColor(canvasSettings.selectedColour).inverted))
                                     .clipShape(Circle())
                             })
 
@@ -97,7 +97,7 @@ struct OptionBar: View {
                     ZStack {
                         if isDrawing && canvasSettings.lineCap == .butt {
                             Capsule()
-                                .fill(Color(hex: 0xa6a6a6, alpha: 1))
+                                .fill(Color(UIColor(canvasSettings.selectedHighlighterColour).inverted))
                                 .frame(width: 80, height: 30)
                         }
                         

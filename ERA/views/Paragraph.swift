@@ -7,10 +7,22 @@
 
 import SwiftUI
 import AVFoundation
+import NaturalLanguage
 
 // Converts text to enhanced reading format by bolding the first half of every word
 func enhanceText(text: String) -> String {
     var modifiedText = text
+    
+    let range = modifiedText.startIndex ..< modifiedText.endIndex
+    let tagger = NLTagger(tagSchemes: [.lexicalClass])
+    tagger.string = modifiedText
+    
+    tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lemma) { tag, range in
+        let stemForm = tag?.rawValue ?? String(text[range])
+        print(stemForm, terminator: "")
+        return true
+    }
+    
     let boldIndex = Int(ceil(Double(text.count) / 2)) + 1
     modifiedText.insert("*", at: modifiedText.startIndex)
     modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: 1))

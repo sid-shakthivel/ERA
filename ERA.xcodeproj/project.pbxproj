@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
+		351509C2291FF93100597FFD /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 351509C0291FF93100597FFD /* ERA.xcdatamodeld */; };
+		351509C629200D8100597FFD /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351509C529200D8100597FFD /* Persistence.swift */; };
 		3562C29929084C51004497D6 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3562C29829084C51004497D6 /* Paragraph.swift */; };
 		356A455028E5C47B0067999E /* ERAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* ERAApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
 		356A455428E5C47E0067999E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455328E5C47E0067999E /* Assets.xcassets */; };
 		356A455728E5C47E0067999E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455628E5C47E0067999E /* Preview Assets.xcassets */; };
-		356A455928E5C47E0067999E /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455828E5C47E0067999E /* Persistence.swift */; };
-		356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
@@ -30,14 +30,14 @@
 
 /* Begin PBXFileReference section */
 		35051C4F28FD551200315407 /* DictionaryLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryLookup.swift; sourceTree = "<group>"; };
+		351509C1291FF93100597FFD /* ERA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ERA.xcdatamodel; sourceTree = "<group>"; };
+		351509C529200D8100597FFD /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		3562C29829084C51004497D6 /* Paragraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paragraph.swift; sourceTree = "<group>"; };
 		356A454C28E5C47B0067999E /* ERA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ERA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356A454F28E5C47B0067999E /* ERAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERAApp.swift; sourceTree = "<group>"; };
 		356A455128E5C47B0067999E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		356A455328E5C47E0067999E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		356A455628E5C47E0067999E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		356A455828E5C47E0067999E /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BionicReading.xcdatamodel; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPickerWrapper.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
@@ -87,9 +87,9 @@
 				356A454F28E5C47B0067999E /* ERAApp.swift */,
 				356A455128E5C47B0067999E /* ContentView.swift */,
 				356A455328E5C47E0067999E /* Assets.xcassets */,
-				356A455828E5C47E0067999E /* Persistence.swift */,
-				356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */,
 				356A455528E5C47E0067999E /* Preview Content */,
+				351509C0291FF93100597FFD /* ERA.xcdatamodeld */,
+				351509C529200D8100597FFD /* Persistence.swift */,
 			);
 			path = ERA;
 			sourceTree = "<group>";
@@ -197,6 +197,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				351509C2291FF93100597FFD /* ERA.xcdatamodeld in Sources */,
+				351509C629200D8100597FFD /* Persistence.swift in Sources */,
 				35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
@@ -204,9 +206,7 @@
 				356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
-				356A455C28E5C47E0067999E /* BionicReading.xcdatamodeld in Sources */,
 				35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */,
-				356A455928E5C47E0067999E /* Persistence.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
@@ -448,13 +448,13 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		356A455A28E5C47E0067999E /* BionicReading.xcdatamodeld */ = {
+		351509C0291FF93100597FFD /* ERA.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */,
+				351509C1291FF93100597FFD /* ERA.xcdatamodel */,
 			);
-			currentVersion = 356A455B28E5C47E0067999E /* BionicReading.xcdatamodel */;
-			path = BionicReading.xcdatamodeld;
+			currentVersion = 351509C1291FF93100597FFD /* ERA.xcdatamodel */;
+			path = ERA.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

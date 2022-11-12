@@ -202,7 +202,7 @@ struct DictionaryLookup: View {
                                         Text(modifyText(text: definition.definition))
                                             .font(Font(userSettings.paragraphFont))
                                             .foregroundColor(userSettings.fontColour)
-                                        Text(modifyText(text: definition.example ?? "No Exmaple"))
+                                        Text(modifyText(text: definition.example ?? "No Example"))
                                             .font(Font(userSettings.subParagaphFont))
                                             .foregroundColor(userSettings.fontColour)
                                     }

@@ -48,7 +48,6 @@ class TestingStuff: ObservableObject, Hashable {
     Difference between X coordinate of current line and last line is greater then 0.04 (Indent)
  */
 func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextObservation, y_limit: CGFloat) -> Bool {
-    
     if boundingBoxes.count > 0 {
         let difference = abs(boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y)
         
@@ -60,79 +59,16 @@ func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextOb
     return false
 }
 
-func scanPhotos(scan: VNDocumentCameraScan) -> ([TestingStuff], String) {
-    var paragraphs: [TestingStuff] = []
-
-    var currentParagraph: [String] = []
-    var boundingBoxes: [CGPoint] = []
-    
-    var sum: CGFloat = 0
-    
-    let request = VNRecognizeTextRequest { request, error in
-        guard let observations = request.results as? [VNRecognizedTextObservation] else {
-            fatalError("Received invalid observations")
-        }
-        
-        // Calculate the average difference between heights of observations
-        for observation in observations {
-            if boundingBoxes.count > 0 {
-                sum += (boundingBoxes[boundingBoxes.count - 1].y - observation.topLeft.y)
-            }
-            
-            boundingBoxes.append(observation.topLeft)
-        }
-
-        let average: CGFloat = sum / CGFloat(boundingBoxes.count)
-        
-        boundingBoxes.removeAll()
-        
-        for observation in observations {
-            guard let bestCandidate = observation.topCandidates(1).first else {
-                continue
-            }
-
-            if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
-                if currentParagraph.count < 2 {
-                    // Heading
-                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: true))
-                } else {
-                    // Paragraph
-                    currentParagraph[currentParagraph.count-1] += "\n"
-                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: false))
-                }
-                
-                currentParagraph.removeAll()
-                boundingBoxes.removeAll()
-            }
-
-            currentParagraph.append(bestCandidate.string)
-            boundingBoxes.append(observation.topLeft)
-        }
-    }
-    
-    request.recognitionLevel = .accurate
-    request.usesLanguageCorrection = true
-    
-    let requests = [request]
-    
-    // For each photo within the scanned images, analyse and collate all the text
+func convertCameraDocumentScanToImages(scan: VNDocumentCameraScan) -> [UIImage] {
+    var imageList: [UIImage] = []
     for i in 0 ..< scan.pageCount {
         let img = scan.imageOfPage(at: i)
-        guard let cgImage = img.cgImage else { continue }
-
-        let requestHandler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-        try? requestHandler.perform(requests)
+        imageList.append(img)
     }
-    
-    var text: String = ""
-    for paragraph in paragraphs {
-        text += paragraph.text
-    }
-    
-    return (paragraphs, text)
+    return imageList
 }
 
-func testScanPDF(scan: [UIImage]) -> ([TestingStuff], String) {
+func convertPhotosToParagraphs(scan: [UIImage]) -> ([TestingStuff], String) {
     var paragraphs: [TestingStuff] = []
 
     var currentParagraph: [String] = []
@@ -202,8 +138,9 @@ func testScanPDF(scan: [UIImage]) -> ([TestingStuff], String) {
     return (paragraphs, text)
 }
 
+
 /*
- To implement a view controller in swiftui, it must be wrapped inside a UIViewControllerRepresentable
+ To implement a view controller within SwiftUI, it must be wrapped inside a UIViewControllerRepresentable
  VNDocumentCameraViewController hasn't been ported to swiftui yet and thus this process must ensue
  */
 struct DocumentCameraView: UIViewControllerRepresentable {
@@ -248,9 +185,10 @@ struct DocumentCameraView: UIViewControllerRepresentable {
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan)
         {
             parent.presentationMode.wrappedValue.dismiss()
-            let queue = DispatchQueue(label: "textRecognitionQueue", qos: .userInitiated)
-            queue.async {
-                let result = scanPhotos(scan: scan)
+            DispatchQueue.main.async {
+                let photoList = convertCameraDocumentScanToImages(scan: scan)
+                let result = convertPhotosToParagraphs(scan: photoList)
+                
                 self.parent.scanResult.scannedTextList = result.0
                 self.parent.scanResult.scannedText = result.1
             }
