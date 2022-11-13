@@ -23,7 +23,7 @@ extension Color {
 }
 
 struct DetectThemeChange: ViewModifier {
-    @EnvironmentObject var settings: UserCustomisations
+    @EnvironmentObject var settings: UserPreferences
 
     func body(content: Content) -> some View {
         if(settings.isDarkMode){
@@ -49,9 +49,9 @@ extension UIColor {
 }
 
 class ScanResult: ObservableObject {
-    @Published var scannedTextList: [TestingStuff] = []
-    @Published var exampleHeading: TestingStuff = TestingStuff(text: "Example", isHeading: true)
-    @Published var exampleText: TestingStuff = TestingStuff(text: "Welcome to ERA", isHeading: false)
+    @Published var scannedTextList: [RetrievedParagraph] = []
+    @Published var exampleHeading: RetrievedParagraph = RetrievedParagraph(text: "Example", isHeading: true)
+    @Published var exampleText: RetrievedParagraph = RetrievedParagraph(text: "Welcome to ERA", isHeading: false)
     @Published var scannedText: String = "Welcome to ERA"
 }
 
@@ -63,35 +63,6 @@ class CanvasSettings: ObservableObject {
     @Published var lineWidth: Double = 5
     @Published var isRubbing: Bool = false
     @Published var lineCap: CGLineCap = .round
-}
-
-extension UIView {
-    var screenShot: UIImage {
-        let rect = self.bounds
-        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
-        let context: CGContext = UIGraphicsGetCurrentContext()!
-        self.layer.render(in: context)
-        let capturedImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return capturedImage
-    }
-}
-
-extension View {
-    func takeScreenshot(origin: CGPoint, size: CGSize) -> UIImage {
-        let window = UIWindow(frame: CGRect(origin: origin, size: size))
-        let hosting = UIHostingController(rootView: self)
-        hosting.view.frame = window.frame
-        window.addSubview(hosting.view)
-        window.makeKeyAndVisible()
-        return hosting.view.screenShot
-    }
-}
-
-extension String {
-    var alphanumeric: String {
-        return self.components(separatedBy: CharacterSet.alphanumerics.inverted).joined().lowercased()
-    }
 }
 
 struct Line {
@@ -106,7 +77,7 @@ struct Home: View {
     @State var showDocumentCameraView = false
     @State var showFileImporter = false
     @State var showFileExporter = false
-    @State var showMenu: Bool
+    @State var showMenu: Bool = false
     @State var showDictionary: Bool = false
     @State var showPencilEdit: Bool = false
     
@@ -120,13 +91,14 @@ struct Home: View {
     @State var isPlayingAudio: Bool = false
     @State var isShowingHelp: Bool = false
     
-    @EnvironmentObject var userSettings: UserCustomisations
+    @StateObject var userSettings = UserPreferences()
+    
+    @Environment(\.scenePhase) var scenePhase
+    
+    @State var tooltipConfig = DefaultTooltipConfig()
     
     let synth = AVSpeechSynthesizer()
     
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.id)]) var userPreferences: FetchedResults<UserPreferences>
-    
-    // Speaks given text
     func speak_text() {
         let utterance = AVSpeechUtterance(string: scanResult.scannedText)
         utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
@@ -140,12 +112,15 @@ struct Home: View {
         synth.stopSpeaking(at: .immediate)
     }
 
-    @State var tooltipConfig = DefaultTooltipConfig()
     
     func setup_tooltips() {
         tooltipConfig.enableAnimation = true
         tooltipConfig.animationOffset = 10
         tooltipConfig.animationTime = 1
+    }
+    
+    func initialisation() {
+        setup_tooltips()
     }
     
     var body: some View {
@@ -170,10 +145,7 @@ struct Home: View {
                         
                         Group {
                             Button(action: {
-//                                document = convertScreenToPDF()
-                                
-                                print("hello there")
-                                
+                                document = convertScreenToPDF()
                                 showFileExporter.toggle()
                             }, label: {
                                 Image("export")
@@ -226,8 +198,6 @@ struct Home: View {
                                     }
                             }
                         }
-                        
-//                        Spacer()
                         
                         Group {
                             Button(action: {
@@ -318,7 +288,8 @@ struct Home: View {
                         .background(ColourConstants.lightModeBackground)
                 }
             }
-            .onAppear(perform: setup_tooltips)
+                .preferredColorScheme(.light)
+                .onAppear(perform: initialisation)
                 .environmentObject(userSettings)
                 .environmentObject(scanResult)
                 .environmentObject(canvasSettings)
@@ -367,12 +338,23 @@ struct Home: View {
                        Swift.print("Something went wrong…")
                    }
                }
+               .gesture(
+                MagnificationGesture()
+                    .onChanged { newScale in
+                        let test = CGFloat(userSettings.paragraphFontSize) * newScale
+
+                        userSettings.paragraphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: test)
+                        userSettings.headingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(test * 1.5))
+                        userSettings.subheadingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(test * 1.25))
+                        userSettings.subParagaphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(test * 0.75))
+                    }
+               )
         }
     }
 }
 
-struct Home_Previews: PreviewProvider {
-    static var previews: some View {
-        Home(showMenu: false)
-    }
-}
+//struct Home_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Home(showMenu: false)
+//    }
+//}

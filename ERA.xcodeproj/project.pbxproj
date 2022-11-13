@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
-		351509C2291FF93100597FFD /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 351509C0291FF93100597FFD /* ERA.xcdatamodeld */; };
-		351509C629200D8100597FFD /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351509C529200D8100597FFD /* Persistence.swift */; };
 		3562C29929084C51004497D6 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3562C29829084C51004497D6 /* Paragraph.swift */; };
 		356A455028E5C47B0067999E /* ERAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* ERAApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
@@ -30,8 +28,6 @@
 
 /* Begin PBXFileReference section */
 		35051C4F28FD551200315407 /* DictionaryLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryLookup.swift; sourceTree = "<group>"; };
-		351509C1291FF93100597FFD /* ERA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ERA.xcdatamodel; sourceTree = "<group>"; };
-		351509C529200D8100597FFD /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		3562C29829084C51004497D6 /* Paragraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paragraph.swift; sourceTree = "<group>"; };
 		356A454C28E5C47B0067999E /* ERA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ERA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356A454F28E5C47B0067999E /* ERAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERAApp.swift; sourceTree = "<group>"; };
@@ -88,8 +84,6 @@
 				356A455128E5C47B0067999E /* ContentView.swift */,
 				356A455328E5C47E0067999E /* Assets.xcassets */,
 				356A455528E5C47E0067999E /* Preview Content */,
-				351509C0291FF93100597FFD /* ERA.xcdatamodeld */,
-				351509C529200D8100597FFD /* Persistence.swift */,
 			);
 			path = ERA;
 			sourceTree = "<group>";
@@ -197,8 +191,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				351509C2291FF93100597FFD /* ERA.xcdatamodeld in Sources */,
-				351509C629200D8100597FFD /* Persistence.swift in Sources */,
 				35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
@@ -446,19 +438,6 @@
 			productName = SwiftUITooltip;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		351509C0291FF93100597FFD /* ERA.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				351509C1291FF93100597FFD /* ERA.xcdatamodel */,
-			);
-			currentVersion = 351509C1291FF93100597FFD /* ERA.xcdatamodel */;
-			path = ERA.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 356A454428E5C47B0067999E /* Project object */;
 }

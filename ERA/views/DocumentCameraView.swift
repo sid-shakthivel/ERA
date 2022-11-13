@@ -10,31 +10,9 @@ import VisionKit
 import Vision
 import AVFoundation
 
-struct ParagraphFormat: Hashable {
+struct RetrievedParagraph: Hashable {
     var text: String
     var isHeading: Bool
-    
-    init(text: String, isHeading: Bool) {
-        self.text = text
-        self.isHeading = isHeading
-    }
-}
-
-class TestingStuff: ObservableObject, Hashable {
-    static func == (lhs: TestingStuff, rhs: TestingStuff) -> Bool {
-        lhs.identifier == rhs.identifier
-    }
-    
-    var identifier: String {
-        return UUID().uuidString
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(identifier)
-    }
-    
-    @Published var text: String
-    @Published var isHeading: Bool
     
     init(text: String, isHeading: Bool) {
         self.text = text
@@ -60,6 +38,7 @@ func checkNewParagraph(boundingBoxes: [CGPoint], observation: VNRecognizedTextOb
 }
 
 func convertCameraDocumentScanToImages(scan: VNDocumentCameraScan) -> [UIImage] {
+    // Collate all pages within scan into an array of UIImages to be fed under OCR
     var imageList: [UIImage] = []
     for i in 0 ..< scan.pageCount {
         let img = scan.imageOfPage(at: i)
@@ -68,8 +47,8 @@ func convertCameraDocumentScanToImages(scan: VNDocumentCameraScan) -> [UIImage] 
     return imageList
 }
 
-func convertPhotosToParagraphs(scan: [UIImage]) -> ([TestingStuff], String) {
-    var paragraphs: [TestingStuff] = []
+func convertPhotosToParagraphs(scan: [UIImage]) -> ([RetrievedParagraph], String) {
+    var paragraphs: [RetrievedParagraph] = []
 
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
@@ -93,7 +72,8 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([TestingStuff], String) {
         let average: CGFloat = sum / CGFloat(boundingBoxes.count)
         
         boundingBoxes.removeAll()
-
+        
+        // Analyse each observation to determine whether it's a paragraph or heading and whether an observation is part of a paragraph or not
         for observation in observations {
             guard let bestCandidate = observation.topCandidates(1).first else {
                 continue
@@ -102,10 +82,10 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([TestingStuff], String) {
             if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
                 if currentParagraph.count < 2 {
                     // Heading
-                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: true))
+                    paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: true))
                 } else {
                     // Paragraph
-                    paragraphs.append(TestingStuff(text: currentParagraph.joined(separator: ""), isHeading: false))
+                    paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: false))
                 }
                 
                 currentParagraph.removeAll()
@@ -122,7 +102,7 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([TestingStuff], String) {
     
     let requests = [request]
     
-    // For each photo within the scanned images, analyse and collate all the text
+    // For each photo within the scanned images, analyse and collate all the text together
     for image in scan {
         guard let cgImage = image.cgImage else { continue }
 
@@ -145,7 +125,7 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([TestingStuff], String) {
  */
 struct DocumentCameraView: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var settings: UserCustomisations
+    @ObservedObject var settings: UserPreferences
     @ObservedObject var scanResult: ScanResult
 
     func updateUIViewController(_ viewController: VNDocumentCameraViewController, context: Context) {}

@@ -1,5 +1,5 @@
 //
-//  Test.swift
+//  FontPickerWrapper.swift
 //  ERA
 //
 //  Created by Siddharth Shakthivel Muthu Pandian on 06/11/2022.
@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FontPickerWrapper: View {
     @Binding var isShowingFontPicker: Bool
-    @EnvironmentObject var settings: UserCustomisations
+    @EnvironmentObject var settings: UserPreferences
     
     var body: some View {
         VStack {
@@ -40,7 +40,7 @@ struct FontPickerWrapper: View {
 
 struct CustomFontPicker: UIViewControllerRepresentable {
     typealias UIViewControllerType = UIFontPickerViewController
-    @EnvironmentObject var settings: UserCustomisations
+    @EnvironmentObject var settings: UserPreferences
     
     @Environment(\.presentationMode) var presentationMode
     

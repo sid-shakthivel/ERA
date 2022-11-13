@@ -35,7 +35,7 @@ struct PDFDoc: FileDocument {
 }
 
 /*
- 
+ Converts a swiftui view into a pdf which can be saved
  */
 func convertScreenToPDF() -> PDFDoc {
     let outputFileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("Example.pdf")
@@ -97,3 +97,17 @@ func convertPDFToImages(url: URL) -> [UIImage] {
     return images
 }
 
+
+func encodeColor(colour: Color) throws -> Data {
+    let uiColour = UIColor(colour)
+    return try NSKeyedArchiver.archivedData(
+        withRootObject: uiColour,
+        requiringSecureCoding: true
+    )
+}
+
+func decodeColor(from data: Data) throws -> Color {
+    let uiColour = try NSKeyedUnarchiver
+            .unarchiveTopLevelObjectWithData(data) as? UIColor
+    return Color(uiColor: uiColour ?? UIColor(red: 0, green: 0, blue: 0, alpha: 1))
+}

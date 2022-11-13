@@ -13,22 +13,6 @@ struct OnboardingData: Hashable, Identifiable {
     let mainText: String
 }
 
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape( RoundedCorner(radius: radius, corners: corners) )
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
-    }
-}
-
 struct OnboardSubView: View {
     var data: OnboardingData
     var id: Int
@@ -44,7 +28,7 @@ struct OnboardSubView: View {
         return LocalizedStringKey(markdownStringArray.joined(separator: " "))
     }
     
-    @EnvironmentObject var userSettings: UserCustomisations
+    @EnvironmentObject var userSettings: UserPreferences
     
     var body: some View {
         VStack() {
@@ -66,7 +50,7 @@ struct OnboardSubView: View {
             Spacer()
             
             if (id == 2) {
-                NavigationLink(destination: Home(showMenu: true).preferredColorScheme(.light).environmentObject(userSettings)) {
+                NavigationLink(destination: Home().preferredColorScheme(.light).environmentObject(userSettings)) {
                     Text("Welcome to ERA")
                         .padding()
                         .frame(maxWidth: .infinity)

@@ -11,7 +11,7 @@ struct Menu: View {
     @Environment(\.presentationMode) var presentationMode
     
     @EnvironmentObject var canvasSettings: CanvasSettings
-    @EnvironmentObject var userSettings: UserCustomisations
+    @EnvironmentObject var userSettings: UserPreferences
     
     @Binding var showDocumentCameraView: Bool
     @Binding var showFileImporter: Bool

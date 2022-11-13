@@ -61,7 +61,7 @@ enum ErrorMessages {
 }
 
 struct DictionaryLookup: View {
-    @EnvironmentObject var userSettings: UserCustomisations
+    @EnvironmentObject var userSettings: UserPreferences
     
     @State var wordData: Word?
     @State var state: Status = Status.Fetching

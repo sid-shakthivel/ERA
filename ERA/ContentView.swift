@@ -19,9 +19,6 @@ extension View {
 }
 
 struct ContentView: View {
-    @StateObject var userSettings = UserCustomisations()
-    @FetchRequest(sortDescriptors: []) var userPreferences: FetchedResults<UserPreferences>
-    
     var body: some View {
         if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
             // show your onboarding view
@@ -30,27 +27,9 @@ struct ContentView: View {
                     // set the value for next call
                     UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
                 }
-                .environmentObject(userSettings)
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.dark)
-                }
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.light)
-                }
-        } else {
-            Home(showMenu: false)
                 .preferredColorScheme(.light)
-                .environmentObject(userSettings)
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.dark)
-                }
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.light)
-                }
+        } else {
+            Home()
         }
     }
 }
@@ -58,6 +37,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-//            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

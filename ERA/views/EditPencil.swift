@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EditPencil: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
-    @EnvironmentObject var settings: UserCustomisations
+    @EnvironmentObject var settings: UserPreferences
     
     let colours: [Color] = [.black, .red, .green, .yellow, .blue, .brown]
     
