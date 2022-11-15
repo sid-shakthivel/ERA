@@ -31,7 +31,7 @@ extension Color {
     }
 }
 
-struct DetectThemeChange: ViewModifier {
+struct InvertOnThemeChange: ViewModifier {
     @EnvironmentObject var userPreferences: UserPreferences
 
     func body(content: Content) -> some View {
@@ -43,9 +43,28 @@ struct DetectThemeChange: ViewModifier {
     }
 }
 
+struct BackgroundThemeChange: ViewModifier {
+    @EnvironmentObject var userPreferences: UserPreferences
+    
+    func body(content: Content) -> some View {
+        if (userPreferences.isDarkMode) {
+            content
+                .background(ColourConstants.darkModeBackground)
+        }
+        else {
+            content
+                .background(ColourConstants.lightModeBackground)
+        }
+    }
+}
+
 extension View {
     func invertOnDarkTheme() -> some View {
-        modifier(DetectThemeChange())
+        modifier(InvertOnThemeChange())
+    }
+    
+    func invertBackgroundOnDarkTheme() -> some View {
+        modifier(BackgroundThemeChange())
     }
 }
 

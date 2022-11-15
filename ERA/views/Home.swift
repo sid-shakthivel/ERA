@@ -91,19 +91,11 @@ struct Home: View {
                 VStack {
                     HStack {
                         Text("Easy Reading Assistant")
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .fontWeight(.bold)
                             .textCase(.uppercase)
-                            .if(userSettings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!userSettings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
                             .frame(width: geometryProxy.size.width / 2, alignment: .leading)
-                        
-                        Spacer()
                         
                         Group {
                             Button(action: {
@@ -114,12 +106,32 @@ struct Home: View {
                                     .resizable()
                                     .frame(width: 30, height: 35)
                             })
-                            .if(isShowingHelp) { view in
-                                view
-                                    .tooltip(.left, config: tooltipConfig) {
-                                        Text("Export PDF")
-                                            .font(Font(userSettings.subParagaphFont))
-                                    }
+                                .if(isShowingHelp) { view in
+                                    view
+                                        .tooltip(.left, config: tooltipConfig) {
+                                            Text("Export PDF")
+                                                .font(Font(userSettings.subParagaphFont))
+                                        }
+                                }
+                                
+                            if isEditingText {
+                                Button(action: {
+                                    isEditingText = false
+                                    isDrawing = false
+                                }, label: {
+                                    Image("stop-edit")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                })
+                            } else {
+                                Button(action: {
+                                    isEditingText = true
+                                    isDrawing = false
+                                }, label: {
+                                    Image("edit")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                })
                             }
                             
                             if isPlayingAudio {
@@ -133,7 +145,6 @@ struct Home: View {
                                         .frame(width: 25, height: 25)
                                         .invertOnDarkTheme()
                                 })
-                                    .padding(.trailing)
                             } else {
                                 // Present play button and allow text to be played
                                 Button(action: {
@@ -150,7 +161,6 @@ struct Home: View {
                                         .frame(width: 25, height: 25)
                                         .invertOnDarkTheme()
                                 })
-                                    .padding(.trailing)
                                     .if(isShowingHelp) { view in
                                         view
                                             .tooltip(.bottom, config: tooltipConfig) {
@@ -159,9 +169,7 @@ struct Home: View {
                                             }
                                     }
                             }
-                        }
-                        
-                        Group {
+                            
                             Button(action: {
                                 isShowingHelp.toggle()
                             }, label: {

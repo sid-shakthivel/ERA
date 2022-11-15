@@ -66,6 +66,8 @@ class UserPreferences: ObservableObject, Codable {
 
         try container.encode(paragraphFont.fontName, forKey: .paragraphFontName)
         
+        print(paragraphFont.fontName)
+        
         try container.encode(voice, forKey: .voice)
         try container.encode(pitch, forKey: .pitch)
         try container.encode(rate, forKey: .rate)
@@ -92,10 +94,18 @@ class UserPreferences: ObservableObject, Codable {
         // Retrieve font name
         let fontName = try container.decode(String.self, forKey: .paragraphFontName)
         
-        paragraphFont = UIFont(name: fontName, size: CGFloat(paragraphFontSize))!
-        headingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.5))!
-        subheadingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.25))!
-        subParagaphFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 0.75))!
+        // If font is standard font of .SFUI-Regular, system font API must be used
+        if fontName == ".SFUI-Regular" {
+            paragraphFont = UIFont.systemFont(ofSize: CGFloat(paragraphFontSize))
+            headingFont = UIFont.systemFont(ofSize: CGFloat(Double(paragraphFontSize) * 1.5))
+            subheadingFont = UIFont.systemFont(ofSize: CGFloat(Double(paragraphFontSize) * 1.25))
+            subParagaphFont = UIFont.systemFont(ofSize: CGFloat(Double(paragraphFontSize) * 0.75))
+        } else {
+            paragraphFont = UIFont(name: fontName, size: CGFloat(paragraphFontSize))!
+            headingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.5))!
+            subheadingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.25))!
+            subParagaphFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 0.75))!
+        }
         
         voice = try container.decode(String.self, forKey: .voice)
         pitch = try container.decode(Float.self, forKey: .pitch)
@@ -300,8 +310,6 @@ struct Settings: View {
                                 })
                         }
                     }
-//                        .padding(.trailing)
-//                        .padding(.leading)
 
                     Group {
                         Text("Background Settings")
