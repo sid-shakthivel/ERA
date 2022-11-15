@@ -11,11 +11,13 @@ struct EditPencil: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @EnvironmentObject var settings: UserPreferences
     
+    @State var drawingToolName: String
+    
     let colours: [Color] = [.black, .red, .green, .yellow, .blue, .brown]
     
     var body: some View {
         VStack {
-            Text("Pencil")
+            Text("\(drawingToolName)")
                 .foregroundColor(.black)
                 .font(.system(size: 24))
                 .fontWeight(.semibold)
@@ -85,6 +87,6 @@ struct EditPencil: View {
 
 struct EditDraw_Previews: PreviewProvider {
     static var previews: some View {
-        EditPencil()
+        EditPencil(drawingToolName: "Pencil")
     }
 }

@@ -14,7 +14,7 @@ import AVFoundation
 class UserPreferences: ObservableObject, Codable {
     // For Codable to work, enum of properties need to be listed
     enum CodingKeys: CodingKey {
-        case paragraphFontSize, fontColour, backgroundColour, isEnhancedReading, isDarkMode, paragraphFontName, voice, pitch, rate, volume
+        case paragraphFontSize, fontColour, backgroundColour, isEnhancedReading, isDarkMode, paragraphFontName, voice, pitch, rate, volume, lineSpacing
     }
     
     // All other font sizes and relative to this main font size
@@ -34,13 +34,14 @@ class UserPreferences: ObservableObject, Codable {
     @Published var subheadingFont: UIFont = UIFont.systemFont(ofSize: 20)
     @Published var subParagaphFont: UIFont = UIFont.systemFont(ofSize: 12)
     
-    @Published var lineSpacing: Int = 0
-    
-    // TTS Settings
+    // TTS settings
     @Published var voice: String = "en-GB"
     @Published var pitch: Float = 1.0
     @Published var rate: Float = 0.5
     @Published var volume: Float = 1.0
+    
+    // Line spacing
+    @Published var lineSpacing: Int = 0
 
     // Save settings from the observable object to user settings
     func saveSettings(userPreferences: UserPreferences) {
@@ -69,6 +70,8 @@ class UserPreferences: ObservableObject, Codable {
         try container.encode(pitch, forKey: .pitch)
         try container.encode(rate, forKey: .rate)
         try container.encode(volume, forKey: .volume)
+        
+        try container.encode(lineSpacing, forKey: .lineSpacing)
     }
     
     // Conform to decode
@@ -98,6 +101,8 @@ class UserPreferences: ObservableObject, Codable {
         pitch = try container.decode(Float.self, forKey: .pitch)
         rate = try container.decode(Float.self, forKey: .rate)
         volume = try container.decode(Float.self, forKey: .volume)
+        
+        lineSpacing = try container.decode(Int.self, forKey: .lineSpacing)
     }
     
     // Setup a new userPreferences class using JSON within UserDefaults
@@ -118,6 +123,7 @@ class UserPreferences: ObservableObject, Codable {
                 pitch = loadedUserPreferences.pitch
                 rate = loadedUserPreferences.rate
                 volume = loadedUserPreferences.volume
+                lineSpacing = loadedUserPreferences.lineSpacing
                 return
             }
         }
@@ -176,7 +182,7 @@ struct Settings: View {
                                     .invertOnDarkTheme()
                             })
 
-                            Text(modifyText(condition: settings.isEnhancedReading, text: "Enhanced reading boldens the first half of every word which improves concentration"))
+                            Text(modifyText(condition: true, text: "Enhanced reading boldens the first half of every word which improves concentration"))
                                 .font(Font(settings.paragraphFont))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom)
@@ -294,6 +300,8 @@ struct Settings: View {
                                 })
                         }
                     }
+//                        .padding(.trailing)
+//                        .padding(.leading)
 
                     Group {
                         Text("Background Settings")

@@ -281,10 +281,20 @@ struct Home: View {
                     DocumentCameraView(settings: userSettings, scanResult: scanResult)
                 })
                 .sheet(isPresented: $showPencilEdit, content: {
-                    EditPencil()
-                        .environmentObject(canvasSettings)
-                        .presentationDetents([.fraction(0.30)])
-                        .presentationDragIndicator(.visible)
+                    
+                    if canvasSettings.lineCap == .round {
+                        EditPencil(drawingToolName: "Pencil")
+                            .environmentObject(canvasSettings)
+                            .environmentObject(userSettings)
+                            .presentationDetents([.fraction(0.30)])
+                            .presentationDragIndicator(.visible)
+                    } else {
+                        EditPencil(drawingToolName: "Highlighter")
+                            .environmentObject(canvasSettings)
+                            .environmentObject(userSettings)
+                            .presentationDetents([.fraction(0.30)])
+                            .presentationDragIndicator(.visible)
+                    }
                 })
                 .sheet(isPresented: $showMenu, content: {
                     Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)

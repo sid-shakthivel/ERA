@@ -11,6 +11,7 @@ import SwiftUITooltip
 struct OptionBar: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @EnvironmentObject var settings: UserPreferences
+    @EnvironmentObject var scanData: ScanResult
     
     @Binding var showDictionary: Bool
     @Binding var showMenu: Bool
@@ -166,15 +167,21 @@ struct OptionBar: View {
 
             Spacer()
 
-            Group {
-                Button(action: {
-                    canvasSettings.lines = []
-                }, label: {
-                    Image("bin")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .invertOnDarkTheme()
-                })
+            Group {                
+                Image("bin")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+                    .invertOnDarkTheme()
+                    .onTapGesture(count: 1) {
+                       // On single tap clear the canvas
+                        canvasSettings.lines = []
+                    }
+                    .onLongPressGesture {
+                        // On long press remove all text
+                        scanData.scannedText = ""
+                        scanData.scannedTextList = []
+                    }
+                
 
                 Button(action: {
                     if canvasSettings.lines.count >= 1 {
