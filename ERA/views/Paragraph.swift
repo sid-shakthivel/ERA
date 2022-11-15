@@ -7,51 +7,11 @@
 
 import SwiftUI
 import AVFoundation
-import NaturalLanguage
-
-// Converts text to enhanced reading format by bolding the first half of every word
-func enhanceText(text: String) -> String {
-    var modifiedText = text
-    
-//    let range = modifiedText.startIndex ..< modifiedText.endIndex
-//    let tagger = NLTagger(tagSchemes: [.lexicalClass])
-//    tagger.string = modifiedText
-//
-//    tagger.enumerateTags(in: text.startIndex..<text.endIndex, unit: .word, scheme: .lemma) { tag, range in
-//        let stemForm = tag?.rawValue ?? String(text[range])
-//        print(stemForm, terminator: "")
-//        return true
-//    }
-    
-    let boldIndex = Int(ceil(Double(text.count) / 2)) + 1
-    modifiedText.insert("*", at: modifiedText.startIndex)
-    modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: 1))
-    
-    modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 1))
-    modifiedText.insert("*", at: modifiedText.index(modifiedText.startIndex, offsetBy: boldIndex + 2))
-    
-    return modifiedText
-}
 
 struct Paragraph: View {
     @Binding var paragraphFormat: RetrievedParagraph
     @EnvironmentObject var userSettings: UserPreferences
     @Binding var isEditingText: Bool
-        
-    // If enhanced reading is enabled, apply to each word within the string or return it
-    func modifyText(text: String) -> LocalizedStringKey {
-        if (userSettings.isEnhancedReading) {
-            var markdownStringArray: [String] = []
-            
-            for substring in text.split(separator: " ") {
-                markdownStringArray.append(enhanceText(text: String(substring)))
-            }
-
-            return LocalizedStringKey(markdownStringArray.joined(separator: " "))
-        }
-        
-        return LocalizedStringKey(text)
-    }
     
     var body: some View {
         if paragraphFormat.isHeading {
@@ -95,9 +55,10 @@ struct Paragraph: View {
 //                TextField(paragraphFormat.text, text: $paragraphFormat.text, axis: .vertical)
 //                    .textFieldStyle(.roundedBorder)
             } else {
-                Text(modifyText(text: paragraphFormat.text))
+                Text(modifyText(condition: userSettings.isDarkMode, text: paragraphFormat.text))
                     .foregroundColor(userSettings.fontColour)
                     .font(Font(userSettings.paragraphFont))
+                    .lineSpacing(CGFloat(userSettings.lineSpacing))
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
         }

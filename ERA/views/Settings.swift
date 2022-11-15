@@ -8,13 +8,6 @@
 import SwiftUI
 import AVFoundation
 
-struct ColourConstants {
-    static let lightModeBackground = Color(hex: 0xFFF9F0, alpha: 1)
-    static let darkModeBackground = Color(hex: 0x0B1F29, alpha: 1)
-    static let lightModeLighter = Color(hex: 0xFFFFFF, alpha: 1)
-    static let darkModeLighter = Color(hex: 0x061015, alpha: 1)
-}
-
 /*
  UserPreferences contains all settings which the user can modify/set
  */
@@ -25,7 +18,7 @@ class UserPreferences: ObservableObject, Codable {
     }
     
     // All other font sizes and relative to this main font size
-    @Published var paragraphFontSize: Int
+    @Published var paragraphFontSize: Int = 16
     
     // Colours
     @Published var fontColour: Color = .black
@@ -40,6 +33,8 @@ class UserPreferences: ObservableObject, Codable {
     @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
     @Published var subheadingFont: UIFont = UIFont.systemFont(ofSize: 20)
     @Published var subParagaphFont: UIFont = UIFont.systemFont(ofSize: 12)
+    
+    @Published var lineSpacing: Int = 0
     
     // TTS Settings
     @Published var voice: String = "en-GB"
@@ -63,7 +58,7 @@ class UserPreferences: ObservableObject, Codable {
         try container.encode(paragraphFontSize, forKey: .paragraphFontSize)
         
         try container.encode(encodeColor(colour: fontColour), forKey: .fontColour)
-        try container.encode(encodeColor(colour: backgroundColour), forKey: .fontColour)
+        try container.encode(encodeColor(colour: backgroundColour), forKey: .backgroundColour)
         
         try container.encode(isEnhancedReading, forKey: .isEnhancedReading)
         try container.encode(isDarkMode, forKey: .isDarkMode)
@@ -82,22 +77,14 @@ class UserPreferences: ObservableObject, Codable {
         
         paragraphFontSize = try container.decode(Int.self, forKey: .paragraphFontSize)
         
-        print("worked a bit")
-        
-//        let _fontColour = try container.decode(Data.self, forKey: .fontColour)
-//        let _backgroundColour = try container.decode(Data.self, forKey: .backgroundColour)
-        
-        print("worked a bit")
+        let fontColourEncoded = try container.decode(Data.self, forKey: .fontColour)
+        let backgroundColourEncoded = try container.decode(Data.self, forKey: .backgroundColour)
 
-        fontColour = .black
-        backgroundColour = .white
-        
-        print("worked a bit")
+        fontColour = try decodeColor(from: fontColourEncoded)
+        backgroundColour = try decodeColor(from: backgroundColourEncoded)
         
         isEnhancedReading = try container.decode(Bool.self, forKey: .isEnhancedReading)
         isDarkMode = try container.decode(Bool.self, forKey: .isDarkMode)
-        
-        print("worked a bit")
         
         // Retrieve font name
         let fontName = try container.decode(String.self, forKey: .paragraphFontName)
@@ -107,48 +94,34 @@ class UserPreferences: ObservableObject, Codable {
         subheadingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.25))!
         subParagaphFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 0.75))!
         
-        print("worked a bit")
-        
         voice = try container.decode(String.self, forKey: .voice)
         pitch = try container.decode(Float.self, forKey: .pitch)
         rate = try container.decode(Float.self, forKey: .rate)
         volume = try container.decode(Float.self, forKey: .volume)
-        
-        print("worked a bit")
     }
     
+    // Setup a new userPreferences class using JSON within UserDefaults
     init() {
-        if let testing = UserDefaults.standard.object(forKey: "userPreferences") as? Data {
-            print(testing)
+        if let decodedUserPreferences = UserDefaults.standard.object(forKey: "userPreferences") as? Data {
             let decoder = JSONDecoder()
-            if let loadedUserPreferences = try? decoder.decode(UserPreferences.self, from: testing) {
-                backgroundColour = loadedUserPreferences.backgroundColour
+            if let loadedUserPreferences = try? decoder.decode(UserPreferences.self, from: decodedUserPreferences) {
                 paragraphFontSize = loadedUserPreferences.paragraphFontSize
-                
-                print("Shouldn't be 16")
-                
+                fontColour = loadedUserPreferences.fontColour
+                backgroundColour = loadedUserPreferences.backgroundColour
+                isEnhancedReading = loadedUserPreferences.isEnhancedReading
+                isDarkMode = loadedUserPreferences.isDarkMode
+                paragraphFont = loadedUserPreferences.paragraphFont
+                headingFont = loadedUserPreferences.headingFont
+                subheadingFont = loadedUserPreferences.subheadingFont
+                subParagaphFont = loadedUserPreferences.subParagaphFont
+                voice = loadedUserPreferences.voice
+                pitch = loadedUserPreferences.pitch
+                rate = loadedUserPreferences.rate
+                volume = loadedUserPreferences.volume
                 return
             }
         }
-        
-        print("else'd value")
-        paragraphFontSize = 16
     }
-}
-
-// Load settings from user defaults into the struct on initialisation
-func loadSettings() -> UserPreferences {
-    if let userPreferences = UserDefaults.standard.object(forKey: "userPreferences") as? Data {
-        let decoder = JSONDecoder()
-        if let loadedUserPreferences = try? decoder.decode(UserPreferences.self, from: userPreferences) {
-            print("hello")
-            return loadedUserPreferences
-        }
-    }
-    
-    print("oh oh no")
-    
-    return UserPreferences()
 }
 
 struct Settings: View {
@@ -159,17 +132,6 @@ struct Settings: View {
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserPreferences
     @EnvironmentObject var canvasSettings: CanvasSettings
-    
-    // If enhanced reading is enabled, apply to each word within the string or return it
-    func modifyText(text: String) -> LocalizedStringKey {
-        var markdownStringArray: [String] = []
-        
-        for substring in text.split(separator: " ") {
-            markdownStringArray.append(enhanceText(text: String(substring)))
-        }
-
-        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
-    }
     
     var body: some View {
         NavigationView {
@@ -184,14 +146,8 @@ struct Settings: View {
                             .invertOnDarkTheme()
 
                         Text("Settings")
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .font(.system(size: 14))
                             .fontWeight(.bold)
                             .textCase(.uppercase)
@@ -205,60 +161,36 @@ struct Settings: View {
                 VStack {
                     Group {
                         Text("Font Settings")
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
                             .fontWeight(.bold)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
 
                         Group {
                             Toggle(isOn: $settings.isEnhancedReading, label: {
                                 Text("Enhanced Reading")
-                                    .if(settings.isDarkMode) { view in
-                                        view
-                                            .foregroundColor(.white)
-                                    }
-                                    .if(!settings.isDarkMode) { view in
-                                        view
-                                            .foregroundColor(.black)
-                                    }
+                                    .foregroundColor(.black)
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))
+                                    .invertOnDarkTheme()
                             })
 
-                            Text(modifyText(text: "Enhanced reading boldens the first half of every word which improves concentration"))
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                            Text(modifyText(condition: settings.isEnhancedReading, text: "Enhanced reading boldens the first half of every word which improves concentration"))
                                 .font(Font(settings.paragraphFont))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom)
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                         }
 
                         Group {
                             Text("Font Selection")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .invertOnDarkTheme()
 
                             Button(action: {
                                 isShowingFontPicker.toggle()
@@ -282,14 +214,8 @@ struct Settings: View {
 
                         Group {
                             Text("Font Size")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -321,14 +247,8 @@ struct Settings: View {
 
                         Group {
                             Text("Font Colour")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -343,18 +263,42 @@ struct Settings: View {
                                 .background(Color(hex: 0xFFFFFF, alpha: 1))
                                 .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
                         }
+                        
+                        Group {
+                            Text("Line Spacing")
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
+                                .fontWeight(.bold)
+                                .font(.system(size: 14))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Picker(selection: $settings.lineSpacing, content: {
+                                ForEach(0...20, id: \.self) { number in
+                                    HStack {
+                                        Text("\(number)")
+                                            .font(.system(size: 14))
+                                            .fontWeight(.regular)
+                                            .foregroundColor(.black)
+                                            .padding()
+                                    }
+                                }
+                            }, label: {
+
+                            })
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .accentColor(.black)
+                                .background(Color(hex: 0xFFFFFF, alpha: 1))
+                                .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                                .onChange(of: settings.lineSpacing, perform: { newLineSpacing in
+                                    print("Gonna change line length")
+                                })
+                        }
                     }
 
                     Group {
                         Text("Background Settings")
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .fontWeight(.bold)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -362,14 +306,8 @@ struct Settings: View {
                             .padding(.bottom)
 
                         Text("Background Colour")
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .fontWeight(.bold)
                             .font(.system(size: 14))
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -387,14 +325,8 @@ struct Settings: View {
                     
                     Group {
                         Text("App Settings")
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .fontWeight(.bold)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -402,47 +334,41 @@ struct Settings: View {
                             .padding(.bottom)
                         
                         Group {
-//                            Toggle(isOn: $settings.isDarkMode, label: {
-//                                Text("Dark Mode")
-//                                    .if(settings.isDarkMode) { view in
-//                                        view
-//                                            .foregroundColor(.white)
-//                                    }
-//                                    .if(!settings.isDarkMode) { view in
-//                                        view
-//                                            .foregroundColor(.black)
-//                                    }
-//                                    .fontWeight(.bold)
-//                                    .font(.system(size: 14))
-//                            })
-//                            .onTapGesture {
-//                                DispatchQueue.main.async{
-//                                    if settings.backgroundColour == ColourConstants.lightModeBackground {
-//                                        settings.backgroundColour = ColourConstants.darkModeBackground
-//                                        settings.fontColour = .white
-//                                        canvasSettings.selectedColour = .black
-//                                        canvasSettings.selectedHighlighterColour = .black
-//                                    } else if settings.backgroundColour == ColourConstants.darkModeBackground {
-//                                        settings.backgroundColour = ColourConstants.lightModeBackground
-//                                        settings.fontColour = .black
-//                                        canvasSettings.selectedColour = .white
-//                                        canvasSettings.selectedHighlighterColour = .white
-//                                    }
-//                                }
-//                            }
+                            Toggle(isOn: $settings.isDarkMode, label: {
+                                Text("Dark Mode")
+                                    .if(settings.isDarkMode) { view in
+                                        view
+                                            .foregroundColor(.white)
+                                    }
+                                    .if(!settings.isDarkMode) { view in
+                                        view
+                                            .foregroundColor(.black)
+                                    }
+                                    .fontWeight(.bold)
+                                    .font(.system(size: 14))
+                            })
+                            .onTapGesture {
+                                DispatchQueue.main.async{
+                                    if settings.backgroundColour == ColourConstants.lightModeBackground {
+                                        settings.backgroundColour = ColourConstants.darkModeBackground
+                                        settings.fontColour = .white
+                                        canvasSettings.selectedColour = .black
+                                        canvasSettings.selectedHighlighterColour = .black
+                                    } else if settings.backgroundColour == ColourConstants.darkModeBackground {
+                                        settings.backgroundColour = ColourConstants.lightModeBackground
+                                        settings.fontColour = .black
+                                        canvasSettings.selectedColour = .white
+                                        canvasSettings.selectedHighlighterColour = .white
+                                    }
+                                }
+                            }
                         }
                     }
                     
                     Group {
                         Text("Text to Speech")
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.white)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .foregroundColor(.black)
-                            }
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .fontWeight(.bold)
                             .font(.system(size: 24))
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -451,14 +377,8 @@ struct Settings: View {
 
                         Group {
                             Text("Pitch")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -466,14 +386,8 @@ struct Settings: View {
                             Slider(value: $settings.pitch, in: 0.5...2)
 
                             Text("Volume")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -481,14 +395,8 @@ struct Settings: View {
                             Slider(value: $settings.volume, in: 0...1)
 
                             Text("Rate")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -498,14 +406,8 @@ struct Settings: View {
 
                         Group {
                             Text("Accent")
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.white)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .foregroundColor(.black)
-                                }
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -539,42 +441,37 @@ struct Settings: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                     })
+                        .invertOnDarkTheme()
+                        .tint(Color(hex: 0x19242D, alpha: 1))
                         .frame(maxHeight: .infinity, alignment: .bottomLeading)
                         .buttonStyle(.borderedProminent)
                     
-//                    Button(action: {
-//                        // Resets settings back to default
-//                        settings.paragraphFontSize = 16;
-//                        settings.fontColour = .black
-//                        settings.isEnhancedReading = false
-//                        settings.paragraphFont = UIFont.systemFont(ofSize: 16)
-//                        settings.headingFont = UIFont.systemFont(ofSize: 24)
-//                        settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)
-//                        settings.volume = 1
-//                        settings.pitch = 1
-//                        settings.rate = 0.5
-//                        settings.voice = "en-GB"
-//
-//                    }, label: {
-//                        Text("Reset")
-//                            .textCase(.uppercase)
-//                            .foregroundColor(.white)
-//                            .font(.system(size: 14))
-//                            .fontWeight(.semibold)
-//                            .frame(maxWidth: .infinity)
-//                            .padding()
-//                    })
-//                        .frame(maxHeight: .infinity, alignment: .bottomLeading)
-//                        .if(settings.isDarkMode) { view in
-//                            view
-//                                .tint(Color(hex: 0x9da5a9, alpha: 1))
-//                        }
-//                        .if(!settings.isDarkMode) { view in
-//                            view
-//                                .tint(Color(hex: 0x19242D, alpha: 1))
-//                        }
-//                        .buttonStyle(.borderedProminent)
-                    
+                    Button(action: {
+                        // Resets settings back to default
+                        settings.paragraphFontSize = 16;
+                        settings.fontColour = .black
+                        settings.isEnhancedReading = false
+                        settings.paragraphFont = UIFont.systemFont(ofSize: 16)
+                        settings.headingFont = UIFont.systemFont(ofSize: 24)
+                        settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)
+                        settings.volume = 1
+                        settings.pitch = 1
+                        settings.rate = 0.5
+                        settings.voice = "en-GB"
+
+                    }, label: {
+                        Text("Reset")
+                            .textCase(.uppercase)
+                            .foregroundColor(.white)
+                            .font(.system(size: 14))
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                    })
+                        .invertOnDarkTheme()
+                        .tint(Color(hex: 0x19242D, alpha: 1))
+                        .frame(maxHeight: .infinity, alignment: .bottomLeading)
+                        .buttonStyle(.borderedProminent)
                 }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding()

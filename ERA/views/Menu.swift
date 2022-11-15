@@ -26,21 +26,17 @@ struct Menu: View {
                } label: {
                    HStack {
                        Image("scan")
+                           .invertOnDarkTheme()
                        
                        Text("Scan Document")
-                           .if(userSettings.isDarkMode) { view in
-                               view
-                                   .foregroundColor(.white)
-                           }
-                           .if(!userSettings.isDarkMode) { view in
-                               view
-                                   .foregroundColor(.black)
-                           }
+                           .foregroundColor(.black)
+                           .invertOnDarkTheme()
                            .textCase(.uppercase)
                            .fontWeight(.semibold)
                            .font(.system(size: 14))
                        
                        Image("arrow-right")
+                           .invertOnDarkTheme()
                            .frame(maxWidth: .infinity, alignment: .trailing)
                    }
                    .padding()
@@ -58,21 +54,17 @@ struct Menu: View {
                } label: {
                    HStack {
                        Image("upload")
+                           .invertOnDarkTheme()
                        
                        Text("Upload Document")
-                           .if(userSettings.isDarkMode) { view in
-                               view
-                                   .foregroundColor(.white)
-                           }
-                           .if(!userSettings.isDarkMode) { view in
-                               view
-                                   .foregroundColor(.black)
-                           }
+                           .foregroundColor(.black)
+                           .invertOnDarkTheme()
                            .fontWeight(.semibold)
                            .textCase(.uppercase)
                            .font(.system(size: 14))
                        
                        Image("arrow-right")
+                           .invertOnDarkTheme()
                            .frame(maxWidth: .infinity, alignment: .trailing)
                    }
                        .padding()
@@ -90,21 +82,17 @@ struct Menu: View {
                } label: {
                    HStack {
                        Image("book")
+                           .invertOnDarkTheme()
                        
                        Text("Dictionary")
-                           .if(userSettings.isDarkMode) { view in
-                               view
-                                   .foregroundColor(.white)
-                           }
-                           .if(!userSettings.isDarkMode) { view in
-                               view
-                                   .foregroundColor(.black)
-                           }
+                           .foregroundColor(.black)
+                           .invertOnDarkTheme()
                            .textCase(.uppercase)
                            .fontWeight(.semibold)
                            .font(.system(size: 14))
                        
                        Image("arrow-right")
+                           .invertOnDarkTheme()
                            .frame(maxWidth: .infinity, alignment: .trailing)
                    }
                    .padding()

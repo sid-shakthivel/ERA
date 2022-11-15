@@ -68,21 +68,6 @@ struct DictionaryLookup: View {
     @State var errorMessage: ErrorMessages = ErrorMessages.Nothing
     @State var textInput: String = ""
     
-    // If enhanced reading is enabled, apply to each word within the string or return it
-    func modifyText(text: String) -> LocalizedStringKey {
-        if (userSettings.isEnhancedReading) {
-            var markdownStringArray: [String] = []
-            
-            for substring in text.split(separator: " ") {
-                markdownStringArray.append(enhanceText(text: String(substring)))
-            }
-
-            return LocalizedStringKey(markdownStringArray.joined(separator: " "))
-        }
-        
-        return LocalizedStringKey(text)
-    }
-    
     func fetchData() {
         guard let url = URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/" + textInput) else {
             state = .Failure
@@ -125,29 +110,24 @@ struct DictionaryLookup: View {
     }
 
     var body: some View {
-        Group {
+        VStack {
             VStack(alignment: .leading) {
                 Text("Dictionary")
-                    .if(userSettings.isDarkMode) { view in
-                        view
-                            .foregroundColor(.white)
-                    }
-                    .if(!userSettings.isDarkMode) { view in
-                        view
-                            .foregroundColor(.black)
-                    }
+                    .foregroundColor(.black)
+                    .invertOnDarkTheme()
                     .fontWeight(.bold)
                     .font(.system(size: 24))
                     .padding()
                 
                 TextField("Enter a word", text: $textInput)
+                    .foregroundColor(.black)
+                    .invertOnDarkTheme()
                     .padding(.horizontal)
                     .onSubmit {
                         state = .Fetching
                         fetchData()
                     }
             }
-            
             
             Spacer()
                 
@@ -162,33 +142,52 @@ struct DictionaryLookup: View {
                         .scaleEffect(2)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(userSettings.backgroundColour)
+                .if(userSettings.isDarkMode) { view in
+                    view
+                        .background(ColourConstants.darkModeBackground)
+                }
+                .if(!userSettings.isDarkMode) { view in
+                    view
+                        .background(ColourConstants.lightModeBackground)
+                }
                 .padding()
             case .Failure:
                 VStack {
                     switch errorMessage {
                     case .NoInternet:
                         Text("Dictionary requires internet")
-                            .foregroundColor(userSettings.fontColour)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .font(Font(userSettings.headingFont))
                             .fontWeight(.bold)
                     case .UnknownWord, .Nothing:
                         Text("Word not found!?")
-                            .foregroundColor(userSettings.fontColour)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
                             .font(Font(userSettings.headingFont))
                             .fontWeight(.bold)
                     }
+                }
+                .if(userSettings.isDarkMode) { view in
+                    view
+                        .background(ColourConstants.darkModeBackground)
+                }
+                .if(!userSettings.isDarkMode) { view in
+                    view
+                        .background(ColourConstants.lightModeBackground)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .Success:
                 VStack {
                     Text("\(wordData?.word ?? "Unknown")")
-                        .foregroundColor(userSettings.fontColour)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
                         .font(Font(userSettings.headingFont))
                         .fontWeight(.bold)
                     
                     Text("\(wordData?.phonetic ?? "Unknown")")
-                        .foregroundColor(userSettings.fontColour)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
                         .font(Font(userSettings.subheadingFont))
                     
                     TabView {
@@ -199,33 +198,58 @@ struct DictionaryLookup: View {
                                     .fontWeight(.bold)
                                 ForEach(meaning.definitions, id: \.self) { definition in
                                     VStack(alignment: .leading) {
-                                        Text(modifyText(text: definition.definition))
+                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: definition.definition))
                                             .font(Font(userSettings.paragraphFont))
-                                            .foregroundColor(userSettings.fontColour)
-                                        Text(modifyText(text: definition.example ?? "No Example"))
+                                            .foregroundColor(.black)
+                                            .invertOnDarkTheme()
+                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: definition.example ?? "No Example"))
                                             .font(Font(userSettings.subParagaphFont))
-                                            .foregroundColor(userSettings.fontColour)
+                                            .foregroundColor(.black)
+                                            .invertOnDarkTheme()
+                                        
                                     }
-                                    .listRowBackground(userSettings.backgroundColour)
+                                    .if(userSettings.isDarkMode) { view in
+                                        view
+                                            .listRowBackground(ColourConstants.darkModeBackground)
+                                    }
+                                    .if(!userSettings.isDarkMode) { view in
+                                        view
+                                            .listRowBackground(ColourConstants.lightModeBackground)
+                                    }
                                 }
                             }
                         }
-                        .scrollContentBackground(.hidden)
-                        .background(userSettings.backgroundColour)
-                        .tabItem {
-                            Label("Defintions", systemImage: "pencil.circle")
-                        }
+                            .scrollContentBackground(.hidden)
+                            .if(userSettings.isDarkMode) { view in
+                                view
+                                    .background(ColourConstants.darkModeBackground)
+                            }
+                            .if(!userSettings.isDarkMode) { view in
+                                view
+                                    .background(ColourConstants.lightModeBackground)
+                            }
+                            .tabItem {
+                                Label("Defintions", systemImage: "pencil.circle")
+                            }
                         
                         List {
                             Text("Synonyms")
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 ForEach(meaning.synonyms, id: \.self) { synonym in
                                     VStack(alignment: .leading) {
-                                        Text(modifyText(text: synonym))
+                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: synonym))
                                             .font(Font(userSettings.paragraphFont))
-                                            .foregroundColor(userSettings.fontColour)
+                                            .foregroundColor(.black)
+                                            .invertOnDarkTheme()
                                     }
-                                    .listRowBackground(userSettings.backgroundColour)
+                                        .if(userSettings.isDarkMode) { view in
+                                            view
+                                                .listRowBackground(ColourConstants.darkModeBackground)
+                                        }
+                                        .if(!userSettings.isDarkMode) { view in
+                                            view
+                                                .listRowBackground(ColourConstants.lightModeBackground)
+                                        }
                                 }
                             }
                             
@@ -233,33 +257,56 @@ struct DictionaryLookup: View {
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 ForEach(meaning.antonyms, id: \.self) { antonym in
                                     VStack(alignment: .leading) {
-                                        Text(modifyText(text: antonym))
+                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: antonym))
                                             .font(Font(userSettings.paragraphFont))
-                                            .foregroundColor(userSettings.fontColour)
+                                            .foregroundColor(.black)
+                                            .invertOnDarkTheme()
                                     }
-                                    .listRowBackground(userSettings.backgroundColour)
+                                        .if(userSettings.isDarkMode) { view in
+                                            view
+                                                .listRowBackground(ColourConstants.darkModeBackground)
+                                        }
+                                        .if(!userSettings.isDarkMode) { view in
+                                            view
+                                                .listRowBackground(ColourConstants.lightModeBackground)
+                                        }
                                 }
                             }
                         }
                         .scrollContentBackground(.hidden)
-                        .background(userSettings.backgroundColour)
+                        .listRowBackground(userSettings.backgroundColour)
+                        .if(userSettings.isDarkMode) { view in
+                            view
+                                .background(ColourConstants.darkModeBackground)
+                        }
+                        .if(!userSettings.isDarkMode) { view in
+                            view
+                                .background(ColourConstants.lightModeBackground)
+                        }
                         .tabItem {
                             Label("Synonyms", systemImage: "pencil")
                         }
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                .background(userSettings.backgroundColour)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                    .if(userSettings.isDarkMode) { view in
+                        view
+                            .background(ColourConstants.darkModeBackground)
+                    }
+                    .if(!userSettings.isDarkMode) { view in
+                        view
+                            .background(ColourConstants.lightModeBackground)
+                    }
             }
         }
-        .if(userSettings.isDarkMode) { view in
-            view
-                .background(ColourConstants.darkModeBackground)
-        }
-        .if(!userSettings.isDarkMode) { view in
-            view
-                .background(ColourConstants.lightModeBackground)
-        }
+            .if(userSettings.isDarkMode) { view in
+                view
+                    .background(ColourConstants.darkModeBackground)
+            }
+            .if(!userSettings.isDarkMode) { view in
+                view
+                    .background(ColourConstants.lightModeBackground)
+            }
     }
 }
 

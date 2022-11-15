@@ -18,16 +18,6 @@ struct OnboardSubView: View {
     var id: Int
     @State var isAnimating = true
     
-    func modifyText(text: String) -> LocalizedStringKey {
-        var markdownStringArray: [String] = []
-        
-        for substring in text.split(separator: " ") {
-            markdownStringArray.append(enhanceText(text: String(substring)))
-        }
-
-        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
-    }
-    
     @EnvironmentObject var userSettings: UserPreferences
     
     var body: some View {
@@ -41,7 +31,7 @@ struct OnboardSubView: View {
             
             Spacer()
 
-            Text(modifyText(text: data.mainText))
+            Text(modifyText(condition: true, text: data.mainText))
                 .foregroundColor(Color(hex: 0x000000))
                 .font(.system(size: 24))
                 .multilineTextAlignment(.center)
@@ -50,7 +40,7 @@ struct OnboardSubView: View {
             Spacer()
             
             if (id == 2) {
-                NavigationLink(destination: Home().preferredColorScheme(.light).environmentObject(userSettings)) {
+                NavigationLink(destination: Home()) {
                     Text("Welcome to ERA")
                         .padding()
                         .frame(maxWidth: .infinity)

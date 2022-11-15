@@ -10,6 +10,98 @@ import UniformTypeIdentifiers
 import SwiftUI
 import PDFKit
 import AVFoundation
+import NaturalLanguage
+
+struct ColourConstants {
+    static let lightModeBackground = Color(hex: 0xFFF9F0, alpha: 1)
+    static let darkModeBackground = Color(hex: 0x0B1F29, alpha: 1)
+    static let lightModeLighter = Color(hex: 0xFFFFFF, alpha: 1)
+    static let darkModeLighter = Color(hex: 0x061015, alpha: 1)
+}
+
+extension Color {
+    init(hex: UInt, alpha: Double = 1) {
+        self.init(
+            .sRGB,
+            red: Double((hex >> 16) & 0xff) / 255,
+            green: Double((hex >> 08) & 0xff) / 255,
+            blue: Double((hex >> 00) & 0xff) / 255,
+            opacity: alpha
+        )
+    }
+}
+
+struct DetectThemeChange: ViewModifier {
+    @EnvironmentObject var userPreferences: UserPreferences
+
+    func body(content: Content) -> some View {
+        if (userPreferences.isDarkMode) {
+            content.colorInvert()
+        } else{
+            content
+        }
+    }
+}
+
+extension View {
+    func invertOnDarkTheme() -> some View {
+        modifier(DetectThemeChange())
+    }
+}
+
+extension UIColor {
+    var inverted: UIColor {
+        var r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0, a: CGFloat = 0.0
+        self.getRed(&r, green: &g, blue: &b, alpha: &a)
+        return UIColor(red: (1 - r), green: (1 - g), blue: (1 - b), alpha: a) // Assuming you want the same alpha value.
+    }
+}
+
+/*
+ Takes a string and boldens first half of word if it meets requirements
+ */
+func enhanceWord(word: String) -> String {
+    var mutWord = word
+    
+    /*
+     Word must be over 3 characters to be important
+     */
+    if mutWord.count > 3 {
+        // Perform NLP to determine word class as only important words such as nouns, verbs, and adverbs should be boldened
+        let tagger = NLTagger(tagSchemes: [.lexicalClass])
+        
+        tagger.string = mutWord
+        let tag = tagger.tag(at: mutWord.startIndex, unit: .word, scheme: .lexicalClass)
+        
+        if tag.0?.rawValue == "Noun" || tag.0?.rawValue == "Verb" || tag.0?.rawValue == "Adverb" || tag.0?.rawValue == "Adjective" || tag.0?.rawValue == "OtherWord" {
+            let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
+            mutWord.insert("*", at: mutWord.startIndex)
+            mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: 1))
+            
+            mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 1))
+            mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 2))
+        }
+    }
+    
+    return mutWord
+}
+
+/*
+ For a specific condition, perform enhanced reading algorithm upon every word
+ */
+func modifyText(condition: Bool, text: String) -> LocalizedStringKey {
+    if condition {
+        var markdownStringArray: [String] = []
+        
+        for substring in text.split(separator: " ") {
+            markdownStringArray.append(enhanceWord(word: String(substring)))
+        }
+
+        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
+    } else {
+        return LocalizedStringKey(text)
+    }
+}
 
 struct PDFDoc: FileDocument {
     // Tell the system we support only plain text

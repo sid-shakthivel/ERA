@@ -10,44 +10,6 @@ import AVFoundation
 import PDFKit
 import SwiftUITooltip
 
-extension Color {
-    init(hex: UInt, alpha: Double = 1) {
-        self.init(
-            .sRGB,
-            red: Double((hex >> 16) & 0xff) / 255,
-            green: Double((hex >> 08) & 0xff) / 255,
-            blue: Double((hex >> 00) & 0xff) / 255,
-            opacity: alpha
-        )
-    }
-}
-
-struct DetectThemeChange: ViewModifier {
-    @EnvironmentObject var settings: UserPreferences
-
-    func body(content: Content) -> some View {
-        if(settings.isDarkMode){
-            content.colorInvert()
-        }else{
-            content
-        }
-    }
-}
-
-extension View {
-    func invertOnDarkTheme() -> some View {
-        modifier(DetectThemeChange())
-    }
-}
-
-extension UIColor {
-    var inverted: UIColor {
-        var r: CGFloat = 0.0, g: CGFloat = 0.0, b: CGFloat = 0.0, a: CGFloat = 0.0
-        self.getRed(&r, green: &g, blue: &b, alpha: &a)
-        return UIColor(red: (1 - r), green: (1 - g), blue: (1 - b), alpha: a) // Assuming you want the same alpha value.
-    }
-}
-
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [RetrievedParagraph] = []
     @Published var exampleHeading: RetrievedParagraph = RetrievedParagraph(text: "Example", isHeading: true)
@@ -216,7 +178,8 @@ struct Home: View {
                             }
                         }
                     }
-                    .padding()
+                    .padding(.trailing)
+                    .padding(.leading)
                     
                     Divider()
                     
@@ -288,7 +251,14 @@ struct Home: View {
                         .background(ColourConstants.lightModeBackground)
                 }
             }
-                .preferredColorScheme(.light)
+                .if(!userSettings.isDarkMode) { view in
+                    view
+                        .preferredColorScheme(.light)
+                }
+                .if(userSettings.isDarkMode) { view in
+                    view
+                        .preferredColorScheme(.dark)
+                }
                 .onAppear(perform: initialisation)
                 .environmentObject(userSettings)
                 .environmentObject(scanResult)
@@ -319,6 +289,7 @@ struct Home: View {
                 .sheet(isPresented: $showMenu, content: {
                     Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
                         .environmentObject(canvasSettings)
+                        .environmentObject(userSettings)
                         .presentationDetents([.fraction(0.30)])
                         .presentationDragIndicator(.visible)
                 })
@@ -341,12 +312,12 @@ struct Home: View {
                .gesture(
                 MagnificationGesture()
                     .onChanged { newScale in
-                        let test = CGFloat(userSettings.paragraphFontSize) * newScale
+                        let newFontSize = CGFloat(userSettings.paragraphFontSize) * newScale
 
-                        userSettings.paragraphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: test)
-                        userSettings.headingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(test * 1.5))
-                        userSettings.subheadingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(test * 1.25))
-                        userSettings.subParagaphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(test * 0.75))
+                        userSettings.paragraphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: newFontSize)
+                        userSettings.headingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(newFontSize * 1.5))
+                        userSettings.subheadingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(newFontSize * 1.25))
+                        userSettings.subParagaphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(newFontSize * 0.75))
                     }
                )
         }
