@@ -12,9 +12,11 @@ import SwiftUITooltip
 
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [RetrievedParagraph] = []
-    @Published var exampleHeading: RetrievedParagraph = RetrievedParagraph(text: "Example", isHeading: true)
-    @Published var exampleText: RetrievedParagraph = RetrievedParagraph(text: "Welcome to ERA", isHeading: false)
     @Published var scannedText: String = "Welcome to ERA"
+    
+    @Published var scanHeading: RetrievedParagraph = RetrievedParagraph(text: "Welcome to ERA", isHeading: true)
+    @Published var scanText: RetrievedParagraph = RetrievedParagraph(text: "Hello there", isHeading: false)
+    
 }
 
 class CanvasSettings: ObservableObject {
@@ -73,7 +75,6 @@ struct Home: View {
     func stop_speaking() {
         synth.stopSpeaking(at: .immediate)
     }
-
     
     func setup_tooltips() {
         tooltipConfig.enableAnimation = true
@@ -195,8 +196,8 @@ struct Home: View {
                         ScrollView(.vertical, showsIndicators: true) {
                             if scanResult.scannedTextList.count < 1 {
                                 // View generated on intial startup (editable)
-                                Paragraph(paragraphFormat: $scanResult.exampleHeading, isEditingText: $isEditingText)
-                                Paragraph(paragraphFormat: $scanResult.exampleText, isEditingText: $isEditingText)
+                                Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText)
+                                Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText)
                             } else {
                                 // View generated on scan/imported PDF
                                 ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
@@ -250,14 +251,7 @@ struct Home: View {
                                 .background(ColourConstants.lightModeLighter)
                         }
                 }
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.darkModeBackground)
-                }
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.lightModeBackground)
-                }
+                .invertBackgroundOnDarkTheme()
             }
                 .if(!userSettings.isDarkMode) { view in
                     view

@@ -64,7 +64,7 @@ struct OptionBar: View {
                         
                         HStack {
                             Button(action: {
-                                isDrawing = true
+                                isDrawing = true 
                                 isShowingPencil = true
                                 isShowingHighlighter = false
                                 canvasSettings.lineCap = .round
@@ -73,7 +73,6 @@ struct OptionBar: View {
                                 Image(systemName: "pencil.tip")
                                     .font(.title)
                                     .foregroundColor(canvasSettings.selectedColour)
-                                    .invertOnDarkTheme()
                             })
                             .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
                                 view
@@ -113,7 +112,6 @@ struct OptionBar: View {
                                 Image(systemName: "highlighter")
                                     .font(.title)
                                     .foregroundColor(canvasSettings.selectedHighlighterColour)
-                                    .invertOnDarkTheme()
                             })
 
                             if isShowingHighlighter {

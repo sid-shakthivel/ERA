@@ -142,14 +142,7 @@ struct DictionaryLookup: View {
                         .scaleEffect(2)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.darkModeBackground)
-                }
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.lightModeBackground)
-                }
+                .invertBackgroundOnDarkTheme()
                 .padding()
             case .Failure:
                 VStack {
@@ -168,14 +161,7 @@ struct DictionaryLookup: View {
                             .fontWeight(.bold)
                     }
                 }
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.darkModeBackground)
-                }
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.lightModeBackground)
-                }
+                .invertBackgroundOnDarkTheme()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .Success:
                 VStack {
@@ -206,28 +192,13 @@ struct DictionaryLookup: View {
                                             .font(Font(userSettings.subParagaphFont))
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
-                                        
                                     }
-                                    .if(userSettings.isDarkMode) { view in
-                                        view
-                                            .listRowBackground(ColourConstants.darkModeBackground)
-                                    }
-                                    .if(!userSettings.isDarkMode) { view in
-                                        view
-                                            .listRowBackground(ColourConstants.lightModeBackground)
-                                    }
+                                    .invertBackgroundOnDarkTheme()
                                 }
                             }
                         }
                             .scrollContentBackground(.hidden)
-                            .if(userSettings.isDarkMode) { view in
-                                view
-                                    .background(ColourConstants.darkModeBackground)
-                            }
-                            .if(!userSettings.isDarkMode) { view in
-                                view
-                                    .background(ColourConstants.lightModeBackground)
-                            }
+                            .invertBackgroundOnDarkTheme()
                             .tabItem {
                                 Label("Defintions", systemImage: "pencil.circle")
                             }
@@ -242,14 +213,7 @@ struct DictionaryLookup: View {
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
                                     }
-                                        .if(userSettings.isDarkMode) { view in
-                                            view
-                                                .listRowBackground(ColourConstants.darkModeBackground)
-                                        }
-                                        .if(!userSettings.isDarkMode) { view in
-                                            view
-                                                .listRowBackground(ColourConstants.lightModeBackground)
-                                        }
+                                        .invertBackgroundOnDarkTheme()
                                 }
                             }
                             
@@ -262,51 +226,23 @@ struct DictionaryLookup: View {
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
                                     }
-                                        .if(userSettings.isDarkMode) { view in
-                                            view
-                                                .listRowBackground(ColourConstants.darkModeBackground)
-                                        }
-                                        .if(!userSettings.isDarkMode) { view in
-                                            view
-                                                .listRowBackground(ColourConstants.lightModeBackground)
-                                        }
+                                        .invertBackgroundOnDarkTheme()
                                 }
                             }
                         }
-                        .scrollContentBackground(.hidden)
-                        .listRowBackground(userSettings.backgroundColour)
-                        .if(userSettings.isDarkMode) { view in
-                            view
-                                .background(ColourConstants.darkModeBackground)
-                        }
-                        .if(!userSettings.isDarkMode) { view in
-                            view
-                                .background(ColourConstants.lightModeBackground)
-                        }
-                        .tabItem {
-                            Label("Synonyms", systemImage: "pencil")
-                        }
+                            .scrollContentBackground(.hidden)
+                            .listRowBackground(userSettings.backgroundColour)
+                            .invertBackgroundOnDarkTheme()
+                            .tabItem {
+                                Label("Synonyms", systemImage: "pencil")
+                            }
                     }
                 }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    .if(userSettings.isDarkMode) { view in
-                        view
-                            .background(ColourConstants.darkModeBackground)
-                    }
-                    .if(!userSettings.isDarkMode) { view in
-                        view
-                            .background(ColourConstants.lightModeBackground)
-                    }
+                    .invertBackgroundOnDarkTheme()
             }
         }
-            .if(userSettings.isDarkMode) { view in
-                view
-                    .background(ColourConstants.darkModeBackground)
-            }
-            .if(!userSettings.isDarkMode) { view in
-                view
-                    .background(ColourConstants.lightModeBackground)
-            }
+            .invertBackgroundOnDarkTheme()
     }
 }
 

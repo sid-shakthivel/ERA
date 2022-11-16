@@ -26,7 +26,20 @@ class UserPreferences: ObservableObject, Codable {
     
     // Toggles for specific settings
     @Published var isEnhancedReading: Bool = false
-    @Published var isDarkMode: Bool = false
+    @Published var isDarkMode: Bool = false {
+        didSet {
+            if isDarkMode {
+                // Set other settings to reflect dark mode
+                self.backgroundColour = ColourConstants.darkModeBackground
+                self.fontColour = .white
+            } else {
+                // Set other setting to reflect light mode
+                self.backgroundColour = ColourConstants.lightModeBackground
+                self.fontColour = .black
+                
+            }
+        }
+    }
     
     // Sets indivudal fonts for each category
     @Published var paragraphFont: UIFont = UIFont.systemFont(ofSize: 16)
@@ -124,7 +137,6 @@ class UserPreferences: ObservableObject, Codable {
                 fontColour = loadedUserPreferences.fontColour
                 backgroundColour = loadedUserPreferences.backgroundColour
                 isEnhancedReading = loadedUserPreferences.isEnhancedReading
-                isDarkMode = loadedUserPreferences.isDarkMode
                 paragraphFont = loadedUserPreferences.paragraphFont
                 headingFont = loadedUserPreferences.headingFont
                 subheadingFont = loadedUserPreferences.subheadingFont
@@ -134,6 +146,7 @@ class UserPreferences: ObservableObject, Codable {
                 rate = loadedUserPreferences.rate
                 volume = loadedUserPreferences.volume
                 lineSpacing = loadedUserPreferences.lineSpacing
+                isDarkMode = loadedUserPreferences.isDarkMode
                 return
             }
         }
@@ -198,6 +211,9 @@ struct Settings: View {
                                 .padding(.bottom)
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
+                                .onChange(of: settings.isEnhancedReading) { value in
+                                    print("hello")
+                                }
                         }
 
                         Group {
@@ -352,31 +368,21 @@ struct Settings: View {
                         Group {
                             Toggle(isOn: $settings.isDarkMode, label: {
                                 Text("Dark Mode")
-                                    .if(settings.isDarkMode) { view in
-                                        view
-                                            .foregroundColor(.white)
-                                    }
-                                    .if(!settings.isDarkMode) { view in
-                                        view
-                                            .foregroundColor(.black)
-                                    }
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))
                             })
-                            .onTapGesture {
-                                DispatchQueue.main.async{
-                                    if settings.backgroundColour == ColourConstants.lightModeBackground {
-                                        settings.backgroundColour = ColourConstants.darkModeBackground
-                                        settings.fontColour = .white
-                                        canvasSettings.selectedColour = .black
-                                        canvasSettings.selectedHighlighterColour = .black
-                                    } else if settings.backgroundColour == ColourConstants.darkModeBackground {
-                                        settings.backgroundColour = ColourConstants.lightModeBackground
-                                        settings.fontColour = .black
-                                        canvasSettings.selectedColour = .white
-                                        canvasSettings.selectedHighlighterColour = .white
-                                    }
-                                }
+                        }
+                        .onChange(of: settings.isDarkMode) { isDarkMode in
+                            if isDarkMode {
+                                // Set other settings to dark mode
+                                canvasSettings.selectedColour = .white
+                                canvasSettings.selectedHighlighterColour = .white
+                            } else {
+                                // Set other settings to light mode
+                                canvasSettings.selectedColour = .black
+                                canvasSettings.selectedHighlighterColour = .black
                             }
                         }
                     }
@@ -469,12 +475,13 @@ struct Settings: View {
                         settings.isEnhancedReading = false
                         settings.paragraphFont = UIFont.systemFont(ofSize: 16)
                         settings.headingFont = UIFont.systemFont(ofSize: 24)
-                        settings.backgroundColour = Color(hex: 0xFFF9F0, alpha: 1)
+                        settings.backgroundColour = ColourConstants.lightModeBackground
                         settings.volume = 1
                         settings.pitch = 1
                         settings.rate = 0.5
                         settings.voice = "en-GB"
-
+                        settings.lineSpacing = 0
+                        settings.saveSettings(userPreferences: settings)
                     }, label: {
                         Text("Reset")
                             .textCase(.uppercase)
@@ -492,15 +499,8 @@ struct Settings: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding()
             }
-                .if(settings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.darkModeBackground)
-                }
-                .if(!settings.isDarkMode) { view in
-                    view
-                        .background(ColourConstants.lightModeBackground)
-                }
-                .sheet(isPresented: $isShowingFontPicker) {                    
+                .invertBackgroundOnDarkTheme()
+                .sheet(isPresented: $isShowingFontPicker) {
                     FontPickerWrapper(isShowingFontPicker: $isShowingFontPicker)
                 }
         }

@@ -100,14 +100,8 @@ struct Menu: View {
                .frame(maxWidth: .infinity, alignment: .leading)
            }
        }
-            .if(userSettings.isDarkMode) { view in
-                view
-                    .background(ColourConstants.darkModeBackground)
-            }
-            .if(!userSettings.isDarkMode) { view in
-                view
-                    .background(ColourConstants.lightModeLighter)
-            }
+            .frame(maxHeight: .infinity)
+            .invertBackgroundOnDarkTheme()
     }
 }
 

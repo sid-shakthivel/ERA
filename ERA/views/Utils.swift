@@ -49,10 +49,12 @@ struct BackgroundThemeChange: ViewModifier {
     func body(content: Content) -> some View {
         if (userPreferences.isDarkMode) {
             content
+                .listRowBackground(ColourConstants.darkModeBackground)
                 .background(ColourConstants.darkModeBackground)
         }
         else {
             content
+                .listRowBackground(ColourConstants.lightModeBackground)
                 .background(ColourConstants.lightModeBackground)
         }
     }
@@ -185,25 +187,27 @@ func convertPDFToImages(url: URL) -> [UIImage] {
     guard let document = CGPDFDocument(url as CFURL) else {
         return images
     }
+    
+    // Loop through the first 10 pages within the PDF and create an array of images
+    for i in 1...10 {
+        guard let page = document.page(at: i) else {
+            return images
+        }
+        
+        let pageRect = page.getBoxRect(.mediaBox)
+        let renderer = UIGraphicsImageRenderer(size: pageRect.size)
+        
+        let img = renderer.image { ctx in
+            UIColor.white.set()
+            ctx.fill(pageRect)
 
-    print(document.numberOfPages)
+            ctx.cgContext.translateBy(x: 0.0, y: pageRect.size.height)
+            ctx.cgContext.scaleBy(x: 1.0, y: -1.0)
 
-    guard let page = document.page(at: 1) else {
-        return images
+            ctx.cgContext.drawPDFPage(page)
+        }
+        images.append(img)
     }
-
-    let pageRect = page.getBoxRect(.mediaBox)
-    let renderer = UIGraphicsImageRenderer(size: pageRect.size)
-    let img = renderer.image { ctx in
-        UIColor.white.set()
-        ctx.fill(pageRect)
-
-        ctx.cgContext.translateBy(x: 0.0, y: pageRect.size.height)
-        ctx.cgContext.scaleBy(x: 1.0, y: -1.0)
-
-        ctx.cgContext.drawPDFPage(page)
-    }
-    images.append(img)
 
     return images
 }

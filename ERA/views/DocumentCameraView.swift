@@ -95,6 +95,14 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([RetrievedParagraph], String
             currentParagraph.append(bestCandidate.string)
             boundingBoxes.append(observation.topLeft)
         }
+        
+        if currentParagraph.count < 2 {
+            // Heading
+            paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: true))
+        } else {
+            // Paragraph
+            paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: false))
+        }
     }
     
     request.recognitionLevel = .accurate

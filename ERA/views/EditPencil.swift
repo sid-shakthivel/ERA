@@ -24,28 +24,27 @@ struct EditPencil: View {
             
             VStack {
                 HStack {
-//                    ForEach(colours, id: \.self) { colour in
-//                        Button(action: {
-//                            canvasSettings.selectedColour = colour
-//                        }, label: {
-//                            Image(systemName: "circle.fill")
-//                                .foregroundColor(colour)
-//                                .font(.title)
-//                                .border(.blue)
-//                        })
-//
-//                        Spacer()
-//                    }
+                    ForEach(colours, id: \.self) { colour in
+                        Button(action: {
+                            canvasSettings.selectedColour = colour
+                        }, label: {
+                            Image(systemName: "circle.fill")
+                                .foregroundColor(colour)
+                                .font(.title)
+                                .if(colour == canvasSettings.selectedColour) { view in
+                                        view.overlay(
+                                            RoundedRectangle(cornerRadius: 16)
+                                                .stroke(.gray, lineWidth: 2)
+                                        )
+                                }
+                        })
+
+                        Spacer()
+                    }
                     
                     Text("Colour")
-                        .if(settings.isDarkMode) { view in
-                            view
-                                .foregroundColor(.white)
-                        }
-                        .if(!settings.isDarkMode) { view in
-                            view
-                                .foregroundColor(.black)
-                        }
+                        .foregroundColor(.white)
+                        .invertOnDarkTheme()
                         .font(.system(size: 16))
                         .fontWeight(.semibold)
                         .padding()
