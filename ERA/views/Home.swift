@@ -116,9 +116,10 @@ struct Home: View {
                                 }
                                 
                             if isEditingText {
+                                // Needs to save changes
                                 Button(action: {
                                     isEditingText = false
-                                    isDrawing = false
+                                    isDrawing = false 
                                 }, label: {
                                     Image("stop-edit")
                                         .resizable()
@@ -162,22 +163,7 @@ struct Home: View {
                                         .frame(width: 25, height: 25)
                                         .invertOnDarkTheme()
                                 })
-                                    .if(isShowingHelp) { view in
-                                        view
-                                            .tooltip(.bottom, config: tooltipConfig) {
-                                                Text("Play/Pause")
-                                                    .font(Font(userSettings.subParagaphFont))
-                                            }
-                                    }
                             }
-                            
-                            Button(action: {
-                                isShowingHelp.toggle()
-                            }, label: {
-                                Image("info")
-                                    .resizable()
-                                    .frame(width: 25, height: 25)
-                            })
                             
                             NavigationLink(destination: Settings()) {
                                 Image("settings")
@@ -196,12 +182,12 @@ struct Home: View {
                         ScrollView(.vertical, showsIndicators: true) {
                             if scanResult.scannedTextList.count < 1 {
                                 // View generated on intial startup (editable)
-                                Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText)
-                                Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText)
+                                Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
+                                Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
                             } else {
                                 // View generated on scan/imported PDF
                                 ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
-                                    Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText)
+                                    Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
                                     Text("")
                                 }
                             }

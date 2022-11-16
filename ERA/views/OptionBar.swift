@@ -64,7 +64,7 @@ struct OptionBar: View {
                         
                         HStack {
                             Button(action: {
-                                isDrawing = true 
+                                isDrawing = true
                                 isShowingPencil = true
                                 isShowingHighlighter = false
                                 canvasSettings.lineCap = .round
@@ -205,6 +205,16 @@ struct OptionBar: View {
                 })
             }
 
+            Spacer()
+            
+            Button(action: {
+                isShowingHelp.toggle()
+            }, label: {
+                Image("info")
+                    .resizable()
+                    .frame(width: 30, height: 30)
+            })
+            
             Spacer()
         }
         .onAppear(perform: setup_tooltips)

@@ -13,60 +13,59 @@ struct Paragraph: View {
     @EnvironmentObject var userSettings: UserPreferences
     @Binding var isEditingText: Bool
     
+    @State var textToEdit: String
+    
     var body: some View {
-        if paragraphFormat.isHeading {
-            // Heading
-            if isEditingText {
-                TextField(paragraphFormat.text, text: $paragraphFormat.text)
-                    .foregroundColor(userSettings.fontColour)
-                    .font(Font(userSettings.headingFont))
-                    .fontWeight(.bold)
-            } else {
-                Text(paragraphFormat.text)
-                    .foregroundColor(userSettings.fontColour)
-                    .font(Font(userSettings.headingFont))
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-        } else {
-            // Normal paragraph
-            if isEditingText {
-                ZStack {
-                    TextEditor(text: $paragraphFormat.text)
+        Group {
+            if paragraphFormat.isHeading {
+                // Heading
+                if isEditingText {
+                    TextField(textToEdit, text: $textToEdit)
                         .foregroundColor(userSettings.fontColour)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .scrollContentBackground(.hidden)
-                        .background(userSettings.backgroundColour)
-                        .font(Font(userSettings.paragraphFont))
-                        .frame(minHeight: 500)
-                }
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Button {
-                            isEditingText = false
-                        } label: {
-                            Text("Done")
-                                .foregroundColor(.accentColor)
-                                .padding(.trailing)
+                        .font(Font(userSettings.headingFont))
+                        .fontWeight(.bold)
+                        .onChange(of: textToEdit) { newValue in
+                            paragraphFormat.text = newValue
                         }
-                    }
+                } else {
+                    Text(paragraphFormat.text)
+                        .foregroundColor(userSettings.fontColour)
+                        .font(Font(userSettings.headingFont))
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                
-//                TextField(paragraphFormat.text, text: $paragraphFormat.text, axis: .vertical)
-//                    .textFieldStyle(.roundedBorder)
             } else {
-                Text(modifyText(condition: userSettings.isDarkMode, text: paragraphFormat.text))
-                    .foregroundColor(userSettings.fontColour)
-                    .font(Font(userSettings.paragraphFont))
-                    .lineSpacing(CGFloat(userSettings.lineSpacing))
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                // Normal paragraph
+                if isEditingText {
+                    ZStack {
+                        TextEditor(text: $textToEdit)
+                            .foregroundColor(userSettings.fontColour)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .scrollContentBackground(.hidden)
+                            .background(userSettings.backgroundColour)
+                            .font(Font(userSettings.paragraphFont))
+                            .frame(minHeight: 500)
+                    }
+                } else {
+                    Text(modifyText(condition: userSettings.isDarkMode, text: paragraphFormat.text))
+                        .foregroundColor(userSettings.fontColour)
+                        .font(Font(userSettings.paragraphFont))
+                        .lineSpacing(CGFloat(userSettings.lineSpacing))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
         }
+            .onChange(of: isEditingText) { newValue in
+                // If user goes from editing text to not editing text, the modified text needs to be altered
+                if !newValue {
+                    paragraphFormat.text = textToEdit
+                }
+            }
     }
 }
 
 struct Paragraph_Previews: PreviewProvider {
     static var previews: some View {
-        Paragraph(paragraphFormat: .constant(RetrievedParagraph(text: "Hello World", isHeading: false)), isEditingText: .constant(false))
+        Paragraph(paragraphFormat: .constant(RetrievedParagraph(text: "Hello World", isHeading: false)), isEditingText: .constant(false), textToEdit: "Hello World")
     }
 }
