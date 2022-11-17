@@ -232,3 +232,22 @@ func decodeColor(from data: Data) throws -> Color {
             .unarchiveTopLevelObjectWithData(data) as? UIColor
     return Color(uiColor: uiColour ?? UIColor(red: 0, green: 0, blue: 0, alpha: 1))
 }
+
+class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
+    @Published var isPlayingAudio: Bool = false
+
+    override init() {
+        super.init()
+        synth.delegate = self
+    }
+    
+    func speak(words: String) {
+        synth.speak(.init(string: words))
+    }
+    
+    public let synth: AVSpeechSynthesizer = .init()
+    
+    func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        isPlayingAudio = false
+    }
+}

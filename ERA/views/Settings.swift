@@ -26,24 +26,7 @@ class UserPreferences: ObservableObject, Codable {
     
     // Toggles for specific settings
     @Published var isEnhancedReading: Bool = false
-    @Published var isDarkMode: Bool = false {
-        didSet {
-            if isDarkMode {
-                // Set other settings to reflect dark mode
-                
-                if self.backgroundColour == ColourConstants.lightModeBackground {
-                    self.backgroundColour = ColourConstants.darkModeBackground
-                    self.fontColour = .white
-                }
-            } else {
-                // Set other setting to reflect light mode
-                if self.backgroundColour == ColourConstants.darkModeBackground {
-                    self.backgroundColour = ColourConstants.lightModeBackground
-                    self.fontColour = .black
-                }
-            }
-        }
-    }
+    @Published var isDarkMode: Bool = false
     
     // Sets indivudal fonts for each category
     @Published var paragraphFont: UIFont = UIFont.systemFont(ofSize: 16)
@@ -149,6 +132,11 @@ class UserPreferences: ObservableObject, Codable {
                 volume = loadedUserPreferences.volume
                 lineSpacing = loadedUserPreferences.lineSpacing
                 isDarkMode = loadedUserPreferences.isDarkMode
+                
+                if backgroundColour == ColourConstants.darkModeBackground || backgroundColour == ColourConstants.lightModeBackground {
+                    print("excellant")
+                }
+                
                 return
             }
         }
@@ -185,7 +173,8 @@ struct Settings: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
+                .padding(.trailing)
+                .padding(.leading)
 
                 Divider()
                 
@@ -238,7 +227,7 @@ struct Settings: View {
                                 .padding()
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(hex: 0x0b1f29, alpha: 1))
+                            .background(ColourConstants.darkModeLighter)
                             .cornerRadius(10)
                             .overlay(
                                        RoundedRectangle(cornerRadius: 10)
@@ -392,15 +381,39 @@ struct Settings: View {
                                     .font(.system(size: 14))
                             })
                         }
-                        .onChange(of: settings.isDarkMode) { isDarkMode in
+                        .onChange(of: settings.isDarkMode) { isDarkMode in                            
                             if isDarkMode {
-                                // Set other settings to dark mode
+                                // Set other settings to reflect dark mode
                                 canvasSettings.selectedColour = .white
                                 canvasSettings.selectedHighlighterColour = .white
                             } else {
-                                // Set other settings to light mode
-                                canvasSettings.selectedColour = .black
-                                canvasSettings.selectedHighlighterColour = .black
+                                // Set other setting to reflect light mode
+                                canvasSettings.selectedColour = .white
+                                canvasSettings.selectedHighlighterColour = .white
+                            }
+                            
+                            do {
+                                if isDarkMode {
+                                    // Set other settings to dark mode
+                                    let test = try encodeColor(colour: ColourConstants.lightModeBackground)
+                                    let best = try decodeColor(from: test)
+                                    
+                                    if best == settings.backgroundColour || ColourConstants.lightModeBackground == settings.backgroundColour {
+                                        settings.backgroundColour = ColourConstants.darkModeBackground
+                                        settings.fontColour = .white
+                                    }
+                                } else {
+                                    // Set other settings to light mode
+                                    let test = try encodeColor(colour: ColourConstants.darkModeBackground)
+                                    let best = try decodeColor(from: test)
+                                    
+                                    if best == settings.backgroundColour || ColourConstants.darkModeBackground == settings.backgroundColour {
+                                        settings.backgroundColour = ColourConstants.lightModeBackground
+                                        settings.fontColour = .black
+                                    }
+                                }
+                            } catch {
+                                
                             }
                         }
                     }

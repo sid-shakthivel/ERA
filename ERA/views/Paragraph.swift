@@ -64,11 +64,9 @@ struct Paragraph: View {
                         paragraphFormat.text = textToEdit
                         
                         // Scanned text must be altered too by replacing the paragraph with the edited version
-    //                    scanResult.scannedText = scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: textToEdit)
-                        
-                        print(scanResult.scannedText)
-                        print(paragraphFormat.text)
-                        print(scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: paragraphFormat.text))
+                        if !paragraphFormat.isHeading {
+                            scanResult.scannedText = scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: textToEdit)
+                        }
                     }
                 }
             }

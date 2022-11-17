@@ -140,6 +140,7 @@ struct DocumentCameraView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> VNDocumentCameraViewController {
         let viewController = VNDocumentCameraViewController()
+        
         viewController.delegate = context.coordinator
         return viewController
     }

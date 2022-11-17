@@ -38,7 +38,7 @@ struct OptionBar: View {
             Button(action: {
                 showMenu.toggle()
             }, label: {
-                Image("hamburger")
+                Image("menu")
                     .resizable()
                     .frame(width: 25, height: 25)
                     .invertOnDarkTheme()
@@ -86,9 +86,10 @@ struct OptionBar: View {
                                     isShowingPencil = false
                                     canvasSettings.isRubbing = false
                                 }, label: {
-                                    Image("edit-attributes")
+                                    Image("edit-pencil")
                                         .resizable()
-                                        .frame(width: 25, height: 25)
+                                        .frame(width: 35, height: 30)
+                                        .invertOnDarkTheme()
                                 })
                             }
                         }
@@ -120,9 +121,10 @@ struct OptionBar: View {
                                     canvasSettings.isRubbing = false
                                     isDrawing = false
                                 }, label: {
-                                    Image("edit-attributes")
+                                    Image("edit-pencil")
                                         .resizable()
                                         .frame(width: 35, height: 30)
+                                        .invertOnDarkTheme()
                                 })
                             }
                         }
@@ -135,7 +137,7 @@ struct OptionBar: View {
                     isShowingHighlighter = false
                     isShowingPencil = false
                 }, label: {
-                    Image("tick")
+                    Image("close-canvas")
                         .resizable()
                         .frame(width: 30, height: 30)
                         .invertOnDarkTheme()
@@ -221,6 +223,15 @@ struct OptionBar: View {
         .onAppear(perform: setup_tooltips)
         .padding(.top)
         .padding(.bottom)
+        .onAppear() {
+            if settings.isDarkMode && canvasSettings.selectedColour == .black {
+                canvasSettings.selectedColour = .white
+                canvasSettings.selectedHighlighterColour = .white
+            } else if !settings.isDarkMode && canvasSettings.selectedColour == .white {
+                canvasSettings.selectedColour = .black
+                canvasSettings.selectedHighlighterColour = .black
+            }
+        }
     }
 }
 

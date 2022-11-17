@@ -12,7 +12,7 @@ import SwiftUITooltip
 
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [RetrievedParagraph] = []
-    @Published var scannedText: String = "Hello There"
+    @Published var scannedText: String = "Hello there"
     
     @Published var scanHeading: RetrievedParagraph = RetrievedParagraph(text: "Welcome to ERA", isHeading: true)
     @Published var scanText: RetrievedParagraph = RetrievedParagraph(text: "Hello there", isHeading: false)
@@ -52,7 +52,6 @@ struct Home: View {
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
-    @State var isPlayingAudio: Bool = false
     @State var isShowingHelp: Bool = false
     
     @StateObject var userSettings = UserPreferences()
@@ -61,7 +60,7 @@ struct Home: View {
     
     @State var tooltipConfig = DefaultTooltipConfig()
     
-    let synth = AVSpeechSynthesizer()
+    @StateObject var speaker = Speaker()
     
     func speak_text() {
         let utterance = AVSpeechUtterance(string: scanResult.scannedText)
@@ -69,11 +68,11 @@ struct Home: View {
         utterance.volume = userSettings.volume
         utterance.pitchMultiplier = userSettings.pitch
         utterance.rate = userSettings.rate
-        synth.speak(utterance)
+        speaker.synth.speak(utterance)
     }
     
     func stop_speaking() {
-        synth.stopSpeaking(at: .immediate)
+        speaker.synth.stopSpeaking(at: .immediate)
     }
     
     func setup_tooltips() {
@@ -139,11 +138,11 @@ struct Home: View {
                                 })
                             }
                             
-                            if isPlayingAudio {
+                            if speaker.isPlayingAudio {
                                 Button(action: {
                                     // Check whether the speaker is paused or not
-                                    synth.pauseSpeaking(at: AVSpeechBoundary.immediate)
-                                    isPlayingAudio.toggle()
+                                    speaker.synth.pauseSpeaking(at: AVSpeechBoundary.immediate)
+                                    speaker.isPlayingAudio.toggle()
                                 }, label: {
                                     Image("pause")
                                         .resizable()
@@ -153,13 +152,12 @@ struct Home: View {
                             } else {
                                 // Present play button and allow text to be played
                                 Button(action: {
-                                    if synth.isPaused {
-                                        synth.continueSpeaking()
+                                    if speaker.synth.isPaused {
+                                        speaker.synth.continueSpeaking()
                                     } else {
                                         self.speak_text()
                                     }
-                                    
-                                    isPlayingAudio.toggle()
+                                    speaker.isPlayingAudio.toggle()
                                 }, label: {
                                     Image("play")
                                         .resizable()
@@ -313,7 +311,7 @@ struct Home: View {
                .gesture(
                 MagnificationGesture()
                     .onChanged { newScale in
-                        let newFontSize = CGFloat(userSettings.paragraphFontSize) * newScale
+                        let newFontSize = min(CGFloat(userSettings.paragraphFontSize) * newScale, 1.5)
 
                         userSettings.paragraphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: newFontSize)
                         userSettings.headingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(newFontSize * 1.5))

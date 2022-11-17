@@ -25,7 +25,7 @@ struct Menu: View {
                    showDocumentCameraView.toggle()
                } label: {
                    HStack {
-                       Image("scan")
+                       Image("scan-document")
                            .invertOnDarkTheme()
                        
                        Text("Scan Document")
@@ -53,7 +53,7 @@ struct Menu: View {
                    }
                } label: {
                    HStack {
-                       Image("upload")
+                       Image("upload-pdf")
                            .invertOnDarkTheme()
                        
                        Text("Upload Document")

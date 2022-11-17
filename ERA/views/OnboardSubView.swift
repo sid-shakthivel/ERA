@@ -46,7 +46,7 @@ struct OnboardSubView: View {
                         .frame(maxWidth: .infinity)
                         .foregroundColor(.white)
                         .background(Color(hex: 0xCB4E25, alpha: 1))
-                        .font(.system(size: 18))
+                        .font(.system(size: 24))
                         .clipShape(Capsule())
                         .fontWeight(.semibold)
                 }
