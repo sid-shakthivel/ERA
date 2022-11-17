@@ -19,6 +19,12 @@ struct ColourConstants {
     static let darkModeLighter = Color(hex: 0x061015, alpha: 1)
 }
 
+extension String {
+    var withoutSpecialCharacters: String {
+        return self.components(separatedBy: CharacterSet.symbols).joined(separator: "")
+    }
+}
+
 extension Color {
     init(hex: UInt, alpha: Double = 1) {
         self.init(

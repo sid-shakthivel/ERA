@@ -213,6 +213,7 @@ struct OptionBar: View {
                 Image("info")
                     .resizable()
                     .frame(width: 30, height: 30)
+                    .invertOnDarkTheme()
             })
             
             Spacer()

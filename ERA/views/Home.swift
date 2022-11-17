@@ -12,7 +12,7 @@ import SwiftUITooltip
 
 class ScanResult: ObservableObject {
     @Published var scannedTextList: [RetrievedParagraph] = []
-    @Published var scannedText: String = "Welcome to ERA"
+    @Published var scannedText: String = "Hello There"
     
     @Published var scanHeading: RetrievedParagraph = RetrievedParagraph(text: "Welcome to ERA", isHeading: true)
     @Published var scanText: RetrievedParagraph = RetrievedParagraph(text: "Hello there", isHeading: false)
@@ -106,6 +106,7 @@ struct Home: View {
                                 Image("export")
                                     .resizable()
                                     .frame(width: 30, height: 35)
+                                    .invertOnDarkTheme()
                             })
                                 .if(isShowingHelp) { view in
                                     view
@@ -121,18 +122,20 @@ struct Home: View {
                                     isEditingText = false
                                     isDrawing = false 
                                 }, label: {
-                                    Image("stop-edit")
+                                    Image("stop-editing")
                                         .resizable()
                                         .frame(width: 30, height: 30)
+                                        .invertOnDarkTheme()
                                 })
                             } else {
                                 Button(action: {
                                     isEditingText = true
                                     isDrawing = false
                                 }, label: {
-                                    Image("edit")
+                                    Image("edit-text")
                                         .resizable()
                                         .frame(width: 30, height: 30)
+                                        .invertOnDarkTheme()
                                 })
                             }
                             

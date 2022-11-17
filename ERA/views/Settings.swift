@@ -30,13 +30,17 @@ class UserPreferences: ObservableObject, Codable {
         didSet {
             if isDarkMode {
                 // Set other settings to reflect dark mode
-                self.backgroundColour = ColourConstants.darkModeBackground
-                self.fontColour = .white
+                
+                if self.backgroundColour == ColourConstants.lightModeBackground {
+                    self.backgroundColour = ColourConstants.darkModeBackground
+                    self.fontColour = .white
+                }
             } else {
                 // Set other setting to reflect light mode
-                self.backgroundColour = ColourConstants.lightModeBackground
-                self.fontColour = .black
-                
+                if self.backgroundColour == ColourConstants.darkModeBackground {
+                    self.backgroundColour = ColourConstants.lightModeBackground
+                    self.fontColour = .black
+                }
             }
         }
     }
@@ -78,8 +82,6 @@ class UserPreferences: ObservableObject, Codable {
         try container.encode(isDarkMode, forKey: .isDarkMode)
 
         try container.encode(paragraphFont.fontName, forKey: .paragraphFontName)
-        
-        print(paragraphFont.fontName)
         
         try container.encode(voice, forKey: .voice)
         try container.encode(pitch, forKey: .pitch)
@@ -206,14 +208,10 @@ struct Settings: View {
                             })
 
                             Text(modifyText(condition: true, text: "Enhanced reading boldens the first half of every word which improves concentration"))
-                                .font(Font(settings.paragraphFont))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(.bottom)
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .onChange(of: settings.isEnhancedReading) { value in
-                                    print("hello")
-                                }
                         }
 
                         Group {
@@ -231,7 +229,7 @@ struct Settings: View {
                                     Text("\(settings.paragraphFont.fontName)")
                                         .font(.system(size: 14))
                                         .fontWeight(.regular)
-                                        .foregroundColor(.black)
+                                        .foregroundColor(.white)
 
                                     Spacer()
 
@@ -240,8 +238,12 @@ struct Settings: View {
                                 .padding()
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(hex: 0xFFFFFF, alpha: 1))
-                            .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                            .background(Color(hex: 0x0b1f29, alpha: 1))
+                            .cornerRadius(10)
+                            .overlay(
+                                       RoundedRectangle(cornerRadius: 10)
+                                           .stroke(Color(hex: 0x546269, alpha: 1), lineWidth: 1)
+                                   )
                         }
 
                         Group {
@@ -268,7 +270,11 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .accentColor(.black)
                                 .background(Color(hex: 0xFFFFFF, alpha: 1))
-                                .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                                .cornerRadius(10)
+                                .overlay(
+                                           RoundedRectangle(cornerRadius: 10)
+                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                       )
                                 .onChange(of: settings.paragraphFontSize, perform: { newFontSize in
                                     settings.paragraphFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(settings.paragraphFontSize))
                                     settings.headingFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.5))
@@ -293,7 +299,11 @@ struct Settings: View {
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(Color(hex: 0xFFFFFF, alpha: 1))
-                                .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                                .cornerRadius(10)
+                                .overlay(
+                                           RoundedRectangle(cornerRadius: 10)
+                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                       )
                         }
                         
                         Group {
@@ -320,7 +330,11 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .accentColor(.black)
                                 .background(Color(hex: 0xFFFFFF, alpha: 1))
-                                .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                                .cornerRadius(10)
+                                .overlay(
+                                           RoundedRectangle(cornerRadius: 10)
+                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                       )
                                 .onChange(of: settings.lineSpacing, perform: { newLineSpacing in
                                     print("Gonna change line length")
                                 })
@@ -352,7 +366,11 @@ struct Settings: View {
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color(hex: 0xFFFFFF, alpha: 1))
-                            .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                            .cornerRadius(10)
+                            .overlay(
+                                       RoundedRectangle(cornerRadius: 10)
+                                           .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                   )
                     }
                     
                     Group {
@@ -447,7 +465,11 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .accentColor(.black)
                                 .background(Color(hex: 0xFFFFFF, alpha: 1))
-                                .border(Color(hex: 0xF2EDE4, alpha: 1), width: 1)
+                                .cornerRadius(10)
+                                .overlay(
+                                           RoundedRectangle(cornerRadius: 10)
+                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                       )
                                 .padding(.bottom)
                         }
                     }
@@ -481,6 +503,7 @@ struct Settings: View {
                         settings.rate = 0.5
                         settings.voice = "en-GB"
                         settings.lineSpacing = 0
+                        settings.isDarkMode = false
                         settings.saveSettings(userPreferences: settings)
                     }, label: {
                         Text("Reset")

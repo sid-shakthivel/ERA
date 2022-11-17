@@ -69,6 +69,8 @@ struct DictionaryLookup: View {
     @State var textInput: String = ""
     
     func fetchData() {
+        textInput = cleanString(of: textInput)
+        
         guard let url = URL(string: "https://api.dictionaryapi.dev/api/v2/entries/en/" + textInput) else {
             state = .Failure
             return
@@ -109,6 +111,15 @@ struct DictionaryLookup: View {
        task.resume()
     }
 
+    // Strips string of whitespace and special characters
+    func cleanString(of text: String) -> String {
+        var modifiedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        modifiedText = modifiedText.withoutSpecialCharacters
+        let removeCharacters: Set<Character> = [".", ":", ","]
+        modifiedText.removeAll(where: { removeCharacters.contains($0) } )
+        return modifiedText
+    }
+    
     var body: some View {
         VStack {
             VStack(alignment: .leading) {

@@ -10,10 +10,11 @@ import AVFoundation
 
 struct Paragraph: View {
     @Binding var paragraphFormat: RetrievedParagraph
-    @EnvironmentObject var userSettings: UserPreferences
     @Binding var isEditingText: Bool
-    
     @State var textToEdit: String
+    
+    @EnvironmentObject var userSettings: UserPreferences
+    @EnvironmentObject var scanResult: ScanResult
     
     var body: some View {
         Group {
@@ -56,9 +57,19 @@ struct Paragraph: View {
             }
         }
             .onChange(of: isEditingText) { newValue in
-                // If user goes from editing text to not editing text, the modified text needs to be altered
                 if !newValue {
-                    paragraphFormat.text = textToEdit
+                    // If user goes from editing text to not editing text, the modified text needs to be altered
+                    DispatchQueue.main.async {
+                        let oldParagraphText = paragraphFormat.text
+                        paragraphFormat.text = textToEdit
+                        
+                        // Scanned text must be altered too by replacing the paragraph with the edited version
+    //                    scanResult.scannedText = scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: textToEdit)
+                        
+                        print(scanResult.scannedText)
+                        print(paragraphFormat.text)
+                        print(scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: paragraphFormat.text))
+                    }
                 }
             }
     }
