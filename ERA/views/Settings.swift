@@ -131,12 +131,7 @@ class UserPreferences: ObservableObject, Codable {
                 rate = loadedUserPreferences.rate
                 volume = loadedUserPreferences.volume
                 lineSpacing = loadedUserPreferences.lineSpacing
-                isDarkMode = loadedUserPreferences.isDarkMode
-                
-                if backgroundColour == ColourConstants.darkModeBackground || backgroundColour == ColourConstants.lightModeBackground {
-                    print("excellant")
-                }
-                
+                isDarkMode = loadedUserPreferences.isDarkMode                
                 return
             }
         }
@@ -218,7 +213,8 @@ struct Settings: View {
                                     Text("\(settings.paragraphFont.fontName)")
                                         .font(.system(size: 14))
                                         .fontWeight(.regular)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(.black)
+                                        .invertOnDarkTheme()
 
                                     Spacer()
 
@@ -227,12 +223,27 @@ struct Settings: View {
                                 .padding()
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(ColourConstants.darkModeLighter)
+                            .if(settings.isDarkMode) { view in
+                                view
+                                    .background(ColourConstants.darkModeLighter)
+                            }
+                            .if(!settings.isDarkMode) { view in
+                                view
+                                    .background(ColourConstants.lightModeLighter)
+                            }
                             .cornerRadius(10)
-                            .overlay(
-                                       RoundedRectangle(cornerRadius: 10)
-                                           .stroke(Color(hex: 0x546269, alpha: 1), lineWidth: 1)
-                                   )
+                            .if(!settings.isDarkMode) { view in
+                                view.overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                )
+                            }
+                            .if(settings.isDarkMode) { view in
+                                view.overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                )
+                            }
                         }
 
                         Group {
@@ -249,7 +260,8 @@ struct Settings: View {
                                         Text("\(number)")
                                             .font(.system(size: 14))
                                             .fontWeight(.regular)
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
+                                            .invertOnDarkTheme()
                                             .padding()
                                     }
                                 }
@@ -257,13 +269,29 @@ struct Settings: View {
 
                             })
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .accentColor(.black)
-                                .background(Color(hex: 0xFFFFFF, alpha: 1))
+                                .if(settings.isDarkMode) { view in
+                                    view
+                                        .accentColor(.white)
+                                        .background(ColourConstants.darkModeLighter)
+                                }
+                                .if(!settings.isDarkMode) { view in
+                                    view
+                                        .accentColor(.black)
+                                        .background(ColourConstants.lightModeLighter)
+                                }
                                 .cornerRadius(10)
-                                .overlay(
-                                           RoundedRectangle(cornerRadius: 10)
-                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
-                                       )
+                                .if(!settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .if(settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                    )
+                                }
                                 .onChange(of: settings.paragraphFontSize, perform: { newFontSize in
                                     settings.paragraphFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(settings.paragraphFontSize))
                                     settings.headingFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.5))
@@ -287,12 +315,27 @@ struct Settings: View {
                             }
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(hex: 0xFFFFFF, alpha: 1))
+                                .if(settings.isDarkMode) { view in
+                                    view
+                                        .background(ColourConstants.darkModeLighter)
+                                }
+                                .if(!settings.isDarkMode) { view in
+                                    view
+                                        .background(ColourConstants.lightModeLighter)
+                                }
                                 .cornerRadius(10)
-                                .overlay(
-                                           RoundedRectangle(cornerRadius: 10)
-                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
-                                       )
+                                .if(!settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .if(settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                    )
+                                }
                         }
                         
                         Group {
@@ -310,6 +353,7 @@ struct Settings: View {
                                             .font(.system(size: 14))
                                             .fontWeight(.regular)
                                             .foregroundColor(.black)
+                                            .invertOnDarkTheme()
                                             .padding()
                                     }
                                 }
@@ -317,16 +361,30 @@ struct Settings: View {
 
                             })
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .accentColor(.black)
-                                .background(Color(hex: 0xFFFFFF, alpha: 1))
+                                
+                                .if(settings.isDarkMode) { view in
+                                    view
+                                        .accentColor(.white)
+                                        .background(ColourConstants.darkModeLighter)
+                                }
+                                .if(!settings.isDarkMode) { view in
+                                    view
+                                        .accentColor(.black)
+                                        .background(ColourConstants.lightModeLighter)
+                                }
                                 .cornerRadius(10)
-                                .overlay(
-                                           RoundedRectangle(cornerRadius: 10)
-                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
-                                       )
-                                .onChange(of: settings.lineSpacing, perform: { newLineSpacing in
-                                    print("Gonna change line length")
-                                })
+                                .if(!settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .if(settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                    )
+                                }
                         }
                     }
 
@@ -354,12 +412,27 @@ struct Settings: View {
                         }
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color(hex: 0xFFFFFF, alpha: 1))
+                            .if(settings.isDarkMode) { view in
+                                view
+                                    .background(ColourConstants.darkModeLighter)
+                            }
+                            .if(!settings.isDarkMode) { view in
+                                view
+                                    .background(ColourConstants.lightModeLighter)
+                            }
                             .cornerRadius(10)
-                            .overlay(
-                                       RoundedRectangle(cornerRadius: 10)
-                                           .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
-                                   )
+                            .if(!settings.isDarkMode) { view in
+                                view.overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                )
+                            }
+                            .if(settings.isDarkMode) { view in
+                                view.overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                )
+                            }
                     }
                     
                     Group {
@@ -381,7 +454,7 @@ struct Settings: View {
                                     .font(.system(size: 14))
                             })
                         }
-                        .onChange(of: settings.isDarkMode) { isDarkMode in                            
+                        .onChange(of: settings.isDarkMode) { isDarkMode in
                             if isDarkMode {
                                 // Set other settings to reflect dark mode
                                 canvasSettings.selectedColour = .white
@@ -460,10 +533,10 @@ struct Settings: View {
                         Group {
                             Text("Accent")
                                 .foregroundColor(.black)
-                                .invertOnDarkTheme()
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
+                                .invertOnDarkTheme()
 
                             Picker(selection: $settings.voice, content: {
                                 ForEach(languages, id: \.self) {
@@ -476,13 +549,29 @@ struct Settings: View {
                                 .pickerStyle(.menu)
                                 .labelsHidden()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .accentColor(.black)
-                                .background(Color(hex: 0xFFFFFF, alpha: 1))
+                                .if(settings.isDarkMode) { view in
+                                    view
+                                        .accentColor(.white)
+                                        .background(ColourConstants.darkModeLighter)
+                                }
+                                .if(!settings.isDarkMode) { view in
+                                    view
+                                        .accentColor(.black)
+                                        .background(ColourConstants.lightModeLighter)
+                                }
                                 .cornerRadius(10)
-                                .overlay(
-                                           RoundedRectangle(cornerRadius: 10)
-                                               .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
-                                       )
+                                .if(!settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .if(settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                    )
+                                }
                                 .padding(.bottom)
                         }
                     }
@@ -498,8 +587,12 @@ struct Settings: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                     })
-                        .invertOnDarkTheme()
-                        .tint(Color(hex: 0x19242D, alpha: 1))
+                        .if(settings.isDarkMode) { view in
+                            view.tint(Color(hex: 0xDF4D0F, alpha: 1))
+                        }
+                        .if(!settings.isDarkMode) { view in
+                            view.tint(Color(hex: 0x19242D, alpha: 1))
+                        }
                         .frame(maxHeight: .infinity, alignment: .bottomLeading)
                         .buttonStyle(.borderedProminent)
                     
@@ -527,8 +620,12 @@ struct Settings: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                     })
-                        .invertOnDarkTheme()
-                        .tint(Color(hex: 0x19242D, alpha: 1))
+                        .if(settings.isDarkMode) { view in
+                            view.tint(Color(hex: 0xDF4D0F, alpha: 1))
+                        }
+                        .if(!settings.isDarkMode) { view in
+                            view.tint(Color(hex: 0x19242D, alpha: 1))
+                        }
                         .frame(maxHeight: .infinity, alignment: .bottomLeading)
                         .buttonStyle(.borderedProminent)
                 }

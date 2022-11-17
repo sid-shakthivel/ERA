@@ -48,7 +48,7 @@ struct Paragraph: View {
                             .frame(minHeight: 500)
                     }
                 } else {
-                    Text(modifyText(condition: userSettings.isDarkMode, text: paragraphFormat.text))
+                    Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
                         .foregroundColor(userSettings.fontColour)
                         .font(Font(userSettings.paragraphFont))
                         .lineSpacing(CGFloat(userSettings.lineSpacing))
