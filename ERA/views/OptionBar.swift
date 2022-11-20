@@ -206,17 +206,19 @@ struct OptionBar: View {
                         .invertOnDarkTheme()
                 })
             }
-
-            Spacer()
             
-            Button(action: {
-                isShowingHelp.toggle()
-            }, label: {
-                Image("info")
-                    .resizable()
-                    .frame(width: 30, height: 30)
-                    .invertOnDarkTheme()
-            })
+            if !isShowingHighlighter || !isShowingPencil {
+                Spacer()
+                
+                Button(action: {
+                    isShowingHelp.toggle()
+                }, label: {
+                    Image("info")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .invertOnDarkTheme()
+                })
+            }
             
             Spacer()
         }

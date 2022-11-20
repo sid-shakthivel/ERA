@@ -10,14 +10,46 @@ import AVFoundation
 import PDFKit
 import SwiftUITooltip
 
-class ScanResult: ObservableObject {
-    @Published var scannedTextList: [RetrievedParagraph] = []
-    @Published var scannedText: String = "Hello there"
+public class ScanResult: NSObject, ObservableObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool = true
+
+    enum CodingKeys: String {
+        case scannedTextList = "text"
+        case scannedText = "scannedText"
+        case scanHeading = "scanHeading"
+        case scanText = "scanText"
+    }
     
-    @Published var scanHeading: RetrievedParagraph = RetrievedParagraph(text: "Welcome to ERA", isHeading: true)
-    @Published var scanText: RetrievedParagraph = RetrievedParagraph(text: "Hello there", isHeading: false)
+    @Published var scannedTextList: [SavedParagraph]
+    @Published var scannedText: String
+    @Published var scanHeading: SavedParagraph
+    @Published var scanText: SavedParagraph
     
+    init(scannedTextList: [SavedParagraph] = [], scannedText: String = exampleText, scanHeading: SavedParagraph = SavedParagraph(text: exampleHeading, isHeading: true), scanText: SavedParagraph = SavedParagraph(text: exampleText, isHeading: false)) {
+        self.scannedTextList = scannedTextList
+        self.scannedText = scannedText
+        self.scanHeading = scanHeading
+        self.scanText = scanText
+    }
+    
+    public func encode(with coder: NSCoder) {
+        coder.encode(scannedTextList, forKey: CodingKeys.scannedTextList.rawValue)
+        coder.encode(scannedText, forKey: CodingKeys.scannedText.rawValue)
+        coder.encode(scanHeading, forKey: CodingKeys.scanHeading.rawValue)
+        coder.encode(scanText, forKey: CodingKeys.scanText.rawValue)
+    }
+    
+    public required convenience init?(coder: NSCoder) {
+        let mScannedTextList = coder.decodeObject(of: [NSArray.self, SavedParagraph.self], forKey: CodingKeys.scannedTextList.rawValue) as! [SavedParagraph]
+        let mScannedText = coder.decodeObject(forKey: CodingKeys.scannedText.rawValue) as? String ?? ""
+        let mScanHeading = coder.decodeObject(of: SavedParagraph.self, forKey: CodingKeys.scanHeading.rawValue)!
+        let mScanText = coder.decodeObject(of: SavedParagraph.self, forKey: CodingKeys.scanText.rawValue)!
+        
+        self.init(scannedTextList: mScannedTextList, scannedText: mScannedText, scanHeading: mScanHeading, scanText: mScanText)
+    }
 }
+
+
 
 class CanvasSettings: ObservableObject {
     @Published var selectedColour: Color = .black
@@ -63,6 +95,13 @@ struct Home: View {
     @StateObject var speaker = Speaker()
     
     func speak_text() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback,mode: .default)
+        } catch let error {
+            print("This error message from SpeechSynthesizer \(error.localizedDescription)")
+        }
+            
+        
         let utterance = AVSpeechUtterance(string: scanResult.scannedText)
         utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
         utterance.volume = userSettings.volume
@@ -231,7 +270,7 @@ struct Home: View {
                         .environmentObject(canvasSettings)
                         .if(userSettings.isDarkMode) { view in
                             view
-                                .background(ColourConstants.darkModeLighter)
+                                .background(ColourConstants.darkModeDarker)
                         }
                         .if(!userSettings.isDarkMode) { view in
                             view
@@ -260,8 +299,8 @@ struct Home: View {
                         let url = try result.get()
                         let images = convertPDFToImages(url: url)
                         let result = convertPhotosToParagraphs(scan: images)
-                        self.scanResult.scannedTextList = result.0
-                        self.scanResult.scannedText = result.1
+//                        self.scanResult.scannedTextList = result.0
+//                        self.scanResult.scannedText = result.1
                     } catch {
                         print("OH DEAR")
                     }

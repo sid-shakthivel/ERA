@@ -225,7 +225,7 @@ struct Settings: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .if(settings.isDarkMode) { view in
                                 view
-                                    .background(ColourConstants.darkModeLighter)
+                                    .background(ColourConstants.darkModeDarker)
                             }
                             .if(!settings.isDarkMode) { view in
                                 view
@@ -272,7 +272,7 @@ struct Settings: View {
                                 .if(settings.isDarkMode) { view in
                                     view
                                         .accentColor(.white)
-                                        .background(ColourConstants.darkModeLighter)
+                                        .background(ColourConstants.darkModeDarker)
                                 }
                                 .if(!settings.isDarkMode) { view in
                                     view
@@ -317,7 +317,7 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .if(settings.isDarkMode) { view in
                                     view
-                                        .background(ColourConstants.darkModeLighter)
+                                        .background(ColourConstants.darkModeDarker)
                                 }
                                 .if(!settings.isDarkMode) { view in
                                     view
@@ -365,7 +365,7 @@ struct Settings: View {
                                 .if(settings.isDarkMode) { view in
                                     view
                                         .accentColor(.white)
-                                        .background(ColourConstants.darkModeLighter)
+                                        .background(ColourConstants.darkModeDarker)
                                 }
                                 .if(!settings.isDarkMode) { view in
                                     view
@@ -414,7 +414,7 @@ struct Settings: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .if(settings.isDarkMode) { view in
                                 view
-                                    .background(ColourConstants.darkModeLighter)
+                                    .background(ColourConstants.darkModeDarker)
                             }
                             .if(!settings.isDarkMode) { view in
                                 view
@@ -552,7 +552,7 @@ struct Settings: View {
                                 .if(settings.isDarkMode) { view in
                                     view
                                         .accentColor(.white)
-                                        .background(ColourConstants.darkModeLighter)
+                                        .background(ColourConstants.darkModeDarker)
                                 }
                                 .if(!settings.isDarkMode) { view in
                                     view
@@ -588,7 +588,7 @@ struct Settings: View {
                             .padding()
                     })
                         .if(settings.isDarkMode) { view in
-                            view.tint(Color(hex: 0xDF4D0F, alpha: 1))
+                            view.tint(ColourConstants.darkModeDarker)
                         }
                         .if(!settings.isDarkMode) { view in
                             view.tint(Color(hex: 0x19242D, alpha: 1))
@@ -621,7 +621,7 @@ struct Settings: View {
                             .padding()
                     })
                         .if(settings.isDarkMode) { view in
-                            view.tint(Color(hex: 0xDF4D0F, alpha: 1))
+                            view.tint(ColourConstants.darkModeDarker)
                         }
                         .if(!settings.isDarkMode) { view in
                             view.tint(Color(hex: 0x19242D, alpha: 1))

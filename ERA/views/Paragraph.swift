@@ -9,7 +9,7 @@ import SwiftUI
 import AVFoundation
 
 struct Paragraph: View {
-    @Binding var paragraphFormat: RetrievedParagraph
+    @Binding var paragraphFormat: SavedParagraph
     @Binding var isEditingText: Bool
     @State var textToEdit: String
     
@@ -73,8 +73,8 @@ struct Paragraph: View {
     }
 }
 
-struct Paragraph_Previews: PreviewProvider {
-    static var previews: some View {
-        Paragraph(paragraphFormat: .constant(RetrievedParagraph(text: "Hello World", isHeading: false)), isEditingText: .constant(false), textToEdit: "Hello World")
-    }
-}
+//struct Paragraph_Previews: PreviewProvider {
+//    static var previews: some View {
+//        Paragraph(paragraphFormat: .constant(SavedParagraph(text: "Hello World", isHeading: false)), isEditingText: .constant(false), textToEdit: "Hello World")
+//    }
+//}

@@ -12,11 +12,14 @@ import PDFKit
 import AVFoundation
 import NaturalLanguage
 
+let exampleText = "When the Himalayan peasant meets the he-bear in his pride. He shouts to scare the monster, who will often turn aside. But the she-bear thus accosted rends the peasant tooth and nail. For the female of the species is more deadly than the male."
+let exampleHeading = "The Female of the Species"
+
 struct ColourConstants {
     static let lightModeBackground = Color(hex: 0xFFF9F0, alpha: 1)
     static let darkModeBackground = Color(hex: 0x0B1F29, alpha: 1)
     static let lightModeLighter = Color(hex: 0xFFFFFF, alpha: 1)
-    static let darkModeLighter = Color(hex: 0x061015, alpha: 1)
+    static let darkModeDarker = Color(hex: 0x061015, alpha: 1)
 }
 
 extension String {
@@ -249,5 +252,20 @@ class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
     
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         isPlayingAudio = false
+    }
+}
+
+@objc(ScanResultAttributeTransformer)
+class ScanResultAttributeTransformer: NSSecureUnarchiveFromDataTransformer {
+    override static var allowedTopLevelClasses: [AnyClass] {
+        [ScanResult.self]
+    }
+    
+    static func register() {
+        let className = String(describing: ScanResultAttributeTransformer.self)
+        let name = NSValueTransformerName(className)
+        let transformer = ScanResultAttributeTransformer()
+        
+        ValueTransformer.setValueTransformer(transformer, forName: name)
     }
 }

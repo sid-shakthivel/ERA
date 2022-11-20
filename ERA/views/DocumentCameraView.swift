@@ -20,6 +20,36 @@ struct RetrievedParagraph: Hashable {
     }
 }
 
+// Ensure SavedParagraph is a subclass of NSObject in order to be serialised
+class SavedParagraph: NSObject, NSSecureCoding {
+    var text: String
+    var isHeading: Bool
+    
+    enum CodingKeys: String {
+        case text = "text"
+        case isHeading = "isHeading"
+    }
+    
+    static var supportsSecureCoding: Bool = true
+    
+    init(text: String, isHeading: Bool) {
+        self.text = text
+        self.isHeading = isHeading
+    }
+    
+    public func encode(with coder: NSCoder) {
+        coder.encode(text, forKey: CodingKeys.text.rawValue)
+        coder.encode(isHeading, forKey: CodingKeys.isHeading.rawValue)
+    }
+    
+    public required convenience init?(coder: NSCoder) {
+        let mText = coder.decodeObject(forKey: CodingKeys.text.rawValue) as? String ?? ""
+        let mIsHeading = coder.decodeBool(forKey: CodingKeys.isHeading.rawValue)
+        
+        self.init(text: mText, isHeading: mIsHeading)
+    }
+}
+
 /*
     Paragraph is on a new line if:
     Difference between Y coordinate of current line and last line is greater then 0.05 (Maybe this value can be relative???)
@@ -178,7 +208,7 @@ struct DocumentCameraView: UIViewControllerRepresentable {
                 let photoList = convertCameraDocumentScanToImages(scan: scan)
                 let result = convertPhotosToParagraphs(scan: photoList)
                 
-                self.parent.scanResult.scannedTextList = result.0
+//                self.parent.scanResult.scannedTextList = result.0
                 self.parent.scanResult.scannedText = result.1
             }
         }

@@ -16,7 +16,10 @@
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */; };
 		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
+		3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3585B8B029292A910087BA67 /* FileExplorer.swift */; };
 		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
+		35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */; };
+		35AAB699292A84DC002B0D72 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB698292A84DC002B0D72 /* DataController.swift */; };
 		35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57A290AB41C00FC5588 /* OptionBar.swift */; };
 		35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */; };
 		35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57E290ACA4400FC5588 /* OnboardingView.swift */; };
@@ -37,7 +40,10 @@
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPickerWrapper.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		3585B8B029292A910087BA67 /* FileExplorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorer.swift; sourceTree = "<group>"; };
 		3598E738291066FF00F449F6 /* EditPencil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPencil.swift; sourceTree = "<group>"; };
+		35AAB696292A61FB002B0D72 /* ERA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ERA.xcdatamodel; sourceTree = "<group>"; };
+		35AAB698292A84DC002B0D72 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		35BCD57A290AB41C00FC5588 /* OptionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBar.swift; sourceTree = "<group>"; };
 		35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardSubView.swift; sourceTree = "<group>"; };
@@ -78,12 +84,14 @@
 		356A454E28E5C47B0067999E /* ERA */ = {
 			isa = PBXGroup;
 			children = (
+				35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */,
 				35805C4B28FB5DE900217169 /* views */,
 				35B36E9728E639B2009DF703 /* Info.plist */,
 				356A454F28E5C47B0067999E /* ERAApp.swift */,
 				356A455128E5C47B0067999E /* ContentView.swift */,
 				356A455328E5C47E0067999E /* Assets.xcassets */,
 				356A455528E5C47E0067999E /* Preview Content */,
+				35AAB698292A84DC002B0D72 /* DataController.swift */,
 			);
 			path = ERA;
 			sourceTree = "<group>";
@@ -111,6 +119,7 @@
 				3598E738291066FF00F449F6 /* EditPencil.swift */,
 				35BEE0DF2913E2B5006AAD86 /* Utils.swift */,
 				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
+				3585B8B029292A910087BA67 /* FileExplorer.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -191,16 +200,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */,
 				35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
 				35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */,
 				356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
+				35AAB699292A84DC002B0D72 /* DataController.swift in Sources */,
 				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
 				35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
+				3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				3598E739291066FF00F449F6 /* EditPencil.swift in Sources */,
@@ -341,8 +353,10 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -377,8 +391,10 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UIStatusBarStyle = "";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_UISupportsDocumentBrowser = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -438,6 +454,19 @@
 			productName = SwiftUITooltip;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				35AAB696292A61FB002B0D72 /* ERA.xcdatamodel */,
+			);
+			currentVersion = 35AAB696292A61FB002B0D72 /* ERA.xcdatamodel */;
+			path = ERA.xcdatamodeld;
+			sourceTree = SOURCE_ROOT;
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 356A454428E5C47B0067999E /* Project object */;
 }

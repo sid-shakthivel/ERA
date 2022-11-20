@@ -19,18 +19,22 @@ extension View {
 }
 
 struct ContentView: View {
+    @Environment(\.managedObjectContext) var moc
+    
     var body: some View {
-        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
-            // show your onboarding view
-            OnboardingView()
-                .onAppear() {
-                    // set the value for next call
-                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
-                }
-                .preferredColorScheme(.light)
-        } else {
-            Home()
-        }
+//        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
+//            // show your onboarding view
+//            OnboardingView()
+//                .onAppear() {
+//                    // set the value for next call
+//                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
+//                }
+//                .preferredColorScheme(.light)
+//        } else {
+//            Home()
+//        }
+        
+        FileExplorer()
     }
 }
 
