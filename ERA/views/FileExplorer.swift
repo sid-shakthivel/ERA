@@ -18,15 +18,11 @@ struct FileExplorer: View {
      */
     @FetchRequest(sortDescriptors: []) var files: FetchedResults<ScanTest>
     
+    @State var showMenu: Bool = false
     @State var showDocumentCameraView = false
     @State var showFileImporter = false
-    @State var showFileExporter = false
-    @State var showMenu: Bool = false
     @State var showDictionary: Bool = false
-    @State var showPencilEdit: Bool = false
-    
-    @StateObject var scanResult = ScanResult() // Needs to be removed
-    
+        
     var body: some View {
         GeometryReader { geometryProxy in
             VStack {
@@ -54,7 +50,28 @@ struct FileExplorer: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 30) {
                         ForEach(files, id: \.id) { file in
-                            Text(file.title ?? "")
+                            VStack {
+                                getFirstImageFromData(data: file.images!)?
+                                    .resizable()
+                                    .frame(width: 100, height: 200)
+                                
+                                Text("\(file.title ?? "Unknown Title")")
+                            }
+                                .contextMenu {
+                                    Button {
+                                        // Delete an entry from core data
+                                        moc.delete(file)
+                                        try? moc.save()
+                                    } label: {
+                                        Text("Delete")
+                                    }
+
+                                    Button {
+                                        print("Will edit someday")
+                                    } label: {
+                                        Text("Edit")
+                                    }
+                                }
                         }
                     }
                     
@@ -108,6 +125,13 @@ struct FileExplorer: View {
                     newScanResult.id = UUID()
                     newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
                     newScanResult.title = "Scan" + DateFormatter().string(from: Date())
+                    
+                    let imageDataArray = convertImagesToData(images: images)
+                    
+                    let colatedImageData = try NSKeyedArchiver.archivedData(withRootObject: imageDataArray, requiringSecureCoding: true)
+                    
+                    newScanResult.images = colatedImageData
+                    
                     try? moc.save()
                     
                 } catch {

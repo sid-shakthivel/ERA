@@ -2,6 +2,7 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="22A380" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ScanTest" representedClassName="ScanTest" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="images" optional="YES" attributeType="Binary"/>
         <attribute name="scanResult" optional="YES" attributeType="Transformable" valueTransformerName="ScanResultAttributeTransformer" customClassName="ScanResult"/>
         <attribute name="title" optional="YES" attributeType="String"/>
     </entity>

@@ -282,3 +282,32 @@ extension View {
         }
     }
 }
+
+func convertImagesToData(images: [UIImage]) -> [Data] {
+    var dataArray: [Data] = []
+    for image in images {
+        dataArray.append(image.pngData()!)
+    }
+    return dataArray
+}
+
+func convertDataToImages(dataArray: [Data]) -> [Image] {
+    var imagesArray = [Image]()
+    for data in dataArray {
+        let uiImage = UIImage(data: data)!
+        imagesArray.append(Image(uiImage: uiImage))
+    }
+    return imagesArray
+}
+
+func getFirstImageFromData(data: Data) -> Image? {
+    do {
+        var dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as! [Data]
+        var imageArray = convertDataToImages(dataArray: dataArray)
+        return imageArray[0]
+    } catch {
+        print("issue")
+    }
+    
+    return nil
+}
