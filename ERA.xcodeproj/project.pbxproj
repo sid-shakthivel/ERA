@@ -15,7 +15,7 @@
 		356A455728E5C47E0067999E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 356A455628E5C47E0067999E /* Preview Assets.xcassets */; };
 		356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A456428E5C61A0067999E /* DocumentCameraView.swift */; };
 		356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */; };
-		35805C4D28FB5E0300217169 /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* Home.swift */; };
+		35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* DocumentEditor.swift */; };
 		3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3585B8B029292A910087BA67 /* FileExplorer.swift */; };
 		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
 		35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */; };
@@ -27,6 +27,7 @@
 		35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* Menu.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
 		35E6F1B0291A806600E7FBDE /* SwiftUITooltip in Frameworks */ = {isa = PBXBuildFile; productRef = 35E6F1AF291A806600E7FBDE /* SwiftUITooltip */; };
+		35F6B594292AD79D007BE260 /* EditDocumentProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +40,7 @@
 		356A455628E5C47E0067999E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		356A456428E5C61A0067999E /* DocumentCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentCameraView.swift; sourceTree = "<group>"; };
 		356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPickerWrapper.swift; sourceTree = "<group>"; };
-		35805C4C28FB5E0300217169 /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
+		35805C4C28FB5E0300217169 /* DocumentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentEditor.swift; sourceTree = "<group>"; };
 		3585B8B029292A910087BA67 /* FileExplorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorer.swift; sourceTree = "<group>"; };
 		3598E738291066FF00F449F6 /* EditPencil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPencil.swift; sourceTree = "<group>"; };
 		35AAB696292A61FB002B0D72 /* ERA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ERA.xcdatamodel; sourceTree = "<group>"; };
@@ -51,6 +52,7 @@
 		35BEE0DF2913E2B5006AAD86 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		35C5FA5B2905E9B20007ABEB /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentProperties.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,7 +111,7 @@
 			children = (
 				356A456428E5C61A0067999E /* DocumentCameraView.swift */,
 				35D3B9B428F327E800CA578D /* Settings.swift */,
-				35805C4C28FB5E0300217169 /* Home.swift */,
+				35805C4C28FB5E0300217169 /* DocumentEditor.swift */,
 				35051C4F28FD551200315407 /* DictionaryLookup.swift */,
 				35C5FA5B2905E9B20007ABEB /* Menu.swift */,
 				3562C29829084C51004497D6 /* Paragraph.swift */,
@@ -120,6 +122,7 @@
 				35BEE0DF2913E2B5006AAD86 /* Utils.swift */,
 				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
 				3585B8B029292A910087BA67 /* FileExplorer.swift */,
+				35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -208,11 +211,12 @@
 				356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35AAB699292A84DC002B0D72 /* DataController.swift in Sources */,
-				35805C4D28FB5E0300217169 /* Home.swift in Sources */,
+				35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */,
 				35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
 				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
 				3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */,
+				35F6B594292AD79D007BE260 /* EditDocumentProperties.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				3598E739291066FF00F449F6 /* EditPencil.swift in Sources */,

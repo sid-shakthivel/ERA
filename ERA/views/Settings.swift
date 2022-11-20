@@ -312,6 +312,18 @@ struct Settings: View {
                                 RoundedRectangle(cornerRadius: 5, style: .circular)
                                     .fill(settings.fontColour)
                                     .frame(width: 20, height: 20)
+                                    .if(!settings.isDarkMode) { view in
+                                        view.overlay(
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                        )
+                                    }
+                                    .if(settings.isDarkMode) { view in
+                                        view.overlay(
+                                            RoundedRectangle(cornerRadius: 5)
+                                                .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                        )
+                                    }
                             }
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -409,6 +421,18 @@ struct Settings: View {
                             RoundedRectangle(cornerRadius: 5, style: .circular)
                                 .fill(settings.backgroundColour)
                                 .frame(width: 20, height: 20)
+                                .if(!settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .if(settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 5)
+                                            .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                    )
+                                }
                         }
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -457,12 +481,12 @@ struct Settings: View {
                         .onChange(of: settings.isDarkMode) { isDarkMode in
                             if isDarkMode {
                                 // Set other settings to reflect dark mode
-                                canvasSettings.selectedColour = .white
-                                canvasSettings.selectedHighlighterColour = .white
+//                                canvasSettings.selectedColour = .white
+//                                canvasSettings.selectedHighlighterColour = .white
                             } else {
                                 // Set other setting to reflect light mode
-                                canvasSettings.selectedColour = .white
-                                canvasSettings.selectedHighlighterColour = .white
+//                                canvasSettings.selectedColour = .white
+//                                canvasSettings.selectedHighlighterColour = .white
                             }
                             
                             do {

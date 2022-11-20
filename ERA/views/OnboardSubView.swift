@@ -40,7 +40,7 @@ struct OnboardSubView: View {
             Spacer()
             
             if (id == 2) {
-                NavigationLink(destination: Home()) {
+                NavigationLink(destination: FileExplorer()) {
                     Text("Welcome to ERA")
                         .padding()
                         .frame(maxWidth: .infinity)

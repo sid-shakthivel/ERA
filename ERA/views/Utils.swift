@@ -302,12 +302,65 @@ func convertDataToImages(dataArray: [Data]) -> [Image] {
 
 func getFirstImageFromData(data: Data) -> Image? {
     do {
-        var dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as! [Data]
-        var imageArray = convertDataToImages(dataArray: dataArray)
+        let dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as! [Data]
+        let imageArray = convertDataToImages(dataArray: dataArray)
         return imageArray[0]
     } catch {
         print("issue")
     }
     
     return nil
+}
+
+public class ScanResult: NSObject, ObservableObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool = true
+
+    enum CodingKeys: String {
+        case scannedTextList = "text"
+        case scannedText = "scannedText"
+        case scanHeading = "scanHeading"
+        case scanText = "scanText"
+    }
+    
+    @Published var scannedTextList: [SavedParagraph]
+    @Published var scannedText: String
+    @Published var scanHeading: SavedParagraph
+    @Published var scanText: SavedParagraph
+    
+    init(scannedTextList: [SavedParagraph] = [], scannedText: String = exampleText, scanHeading: SavedParagraph = SavedParagraph(text: exampleHeading, isHeading: true), scanText: SavedParagraph = SavedParagraph(text: exampleText, isHeading: false)) {
+        self.scannedTextList = scannedTextList
+        self.scannedText = scannedText
+        self.scanHeading = scanHeading
+        self.scanText = scanText
+    }
+    
+    public func encode(with coder: NSCoder) {
+        coder.encode(scannedTextList, forKey: CodingKeys.scannedTextList.rawValue)
+        coder.encode(scannedText, forKey: CodingKeys.scannedText.rawValue)
+        coder.encode(scanHeading, forKey: CodingKeys.scanHeading.rawValue)
+        coder.encode(scanText, forKey: CodingKeys.scanText.rawValue)
+    }
+    
+    public required convenience init?(coder: NSCoder) {
+        let mScannedTextList = coder.decodeObject(of: [NSArray.self, SavedParagraph.self], forKey: CodingKeys.scannedTextList.rawValue) as! [SavedParagraph]
+        let mScannedText = coder.decodeObject(forKey: CodingKeys.scannedText.rawValue) as? String ?? ""
+        let mScanHeading = coder.decodeObject(of: SavedParagraph.self, forKey: CodingKeys.scanHeading.rawValue)!
+        let mScanText = coder.decodeObject(of: SavedParagraph.self, forKey: CodingKeys.scanText.rawValue)!
+        
+        self.init(scannedTextList: mScannedTextList, scannedText: mScannedText, scanHeading: mScanHeading, scanText: mScanText)
+    }
+}
+
+func getDate() -> String {
+    // Create Date
+    let date = Date()
+
+    // Create Date Formatter
+    let dateFormatter = DateFormatter()
+
+    // Set Date Format
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+    // Convert Date to String
+    return dateFormatter.string(from: date)
 }

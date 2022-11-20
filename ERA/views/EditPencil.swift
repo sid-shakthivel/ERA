@@ -42,13 +42,6 @@ struct EditPencil: View {
                         Spacer()
                     }
                     
-                    Text("Colour")
-                        .foregroundColor(.white)
-                        .invertOnDarkTheme()
-                        .font(.system(size: 16))
-                        .fontWeight(.semibold)
-                        .padding()
-                    
                     Spacer()
                     
                     if canvasSettings.lineCap == .round {

@@ -14,7 +14,6 @@ struct OptionBar: View {
     @EnvironmentObject var scanData: ScanResult
     
     @Binding var showDictionary: Bool
-    @Binding var showMenu: Bool
     @Binding var isDrawing: Bool
     @Binding var isEditing: Bool
     @Binding var showPencilEdit: Bool
@@ -36,9 +35,9 @@ struct OptionBar: View {
             Spacer()
             
             Button(action: {
-                showMenu.toggle()
+                showDictionary.toggle()
             }, label: {
-                Image("menu")
+                Image("book")
                     .resizable()
                     .frame(width: 25, height: 25)
                     .invertOnDarkTheme()
@@ -46,7 +45,7 @@ struct OptionBar: View {
             .if(isShowingHelp) { view in
                 view
                     .tooltip(.top, config: tooltipConfig) {
-                        Text("Menu")
+                        Text("Dictionary")
                             .font(Font(settings.subParagaphFont))
                     }
                 }
@@ -239,6 +238,6 @@ struct OptionBar: View {
 
 struct OptionBar_Previews: PreviewProvider {
     static var previews: some View {
-        OptionBar(showDictionary: .constant(false), showMenu: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false), isShowingHelp: .constant(false))
+        OptionBar(showDictionary: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false), isShowingHelp: .constant(false))
     }
 }
