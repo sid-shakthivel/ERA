@@ -130,9 +130,14 @@ struct DictionaryLookup: View {
                     .font(.system(size: 24))
                     .padding()
                 
-                TextField("Enter a word", text: $textInput)
+                TextField("", text: $textInput)
                     .foregroundColor(.black)
                     .invertOnDarkTheme()
+                    .placeholder(when: textInput.isEmpty) {
+                        Text("Enter a word")
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                    }
                     .padding(.horizontal)
                     .onSubmit {
                         state = .Fetching
@@ -148,9 +153,15 @@ struct DictionaryLookup: View {
                 Text("")
             case .Fetching:
                 VStack {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0x0B1F29, alpha: 1)))
-                        .scaleEffect(2)
+                    if userSettings.isDarkMode {
+                        ProgressView()
+                            .scaleEffect(2)
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0xf4e0d6, alpha: 1)))
+                    } else {
+                        ProgressView()
+                            .scaleEffect(2)
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0x0B1F29, alpha: 1)))
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .invertBackgroundOnDarkTheme()

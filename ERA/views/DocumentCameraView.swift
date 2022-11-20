@@ -77,8 +77,8 @@ func convertCameraDocumentScanToImages(scan: VNDocumentCameraScan) -> [UIImage] 
     return imageList
 }
 
-func convertPhotosToParagraphs(scan: [UIImage]) -> ([RetrievedParagraph], String) {
-    var paragraphs: [RetrievedParagraph] = []
+func convertPhotosToParagraphs(scan: [UIImage]) -> ([SavedParagraph], String) {
+    var paragraphs: [SavedParagraph] = []
 
     var currentParagraph: [String] = []
     var boundingBoxes: [CGPoint] = []
@@ -112,10 +112,10 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([RetrievedParagraph], String
             if checkNewParagraph(boundingBoxes: boundingBoxes, observation: observation, y_limit: average) {
                 if currentParagraph.count < 2 {
                     // Heading
-                    paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: true))
+                    paragraphs.append(SavedParagraph(text: currentParagraph.joined(separator: ""), isHeading: true))
                 } else {
                     // Paragraph
-                    paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: false))
+                    paragraphs.append(SavedParagraph(text: currentParagraph.joined(separator: ""), isHeading: false))
                 }
                 
                 currentParagraph.removeAll()
@@ -128,10 +128,10 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([RetrievedParagraph], String
         
         if currentParagraph.count < 2 {
             // Heading
-            paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: true))
+            paragraphs.append(SavedParagraph(text: currentParagraph.joined(separator: ""), isHeading: true))
         } else {
             // Paragraph
-            paragraphs.append(RetrievedParagraph(text: currentParagraph.joined(separator: ""), isHeading: false))
+            paragraphs.append(SavedParagraph(text: currentParagraph.joined(separator: ""), isHeading: false))
         }
     }
     
@@ -163,8 +163,7 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([RetrievedParagraph], String
  */
 struct DocumentCameraView: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var settings: UserPreferences
-    @ObservedObject var scanResult: ScanResult
+    @Environment(\.managedObjectContext) var moc
 
     func updateUIViewController(_ viewController: VNDocumentCameraViewController, context: Context) {}
 
@@ -192,7 +191,6 @@ struct DocumentCameraView: UIViewControllerRepresentable {
         }
 
         func documentCameraViewController(_ controller: VNDocumentCameraViewController, didFailWithError error: Error) {
-            // Perhaps in the future out a message to user
             parent.presentationMode.wrappedValue.dismiss()
         }
 
@@ -208,8 +206,11 @@ struct DocumentCameraView: UIViewControllerRepresentable {
                 let photoList = convertCameraDocumentScanToImages(scan: scan)
                 let result = convertPhotosToParagraphs(scan: photoList)
                 
-//                self.parent.scanResult.scannedTextList = result.0
-                self.parent.scanResult.scannedText = result.1
+                let newScanResult = ScanTest(context: self.parent.moc)
+                newScanResult.id = UUID()
+                newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
+                newScanResult.title = "Scan" + DateFormatter().string(from: Date())
+                try? self.parent.moc.save()
             }
         }
     }

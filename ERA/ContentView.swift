@@ -21,6 +21,8 @@ extension View {
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
     
+    @StateObject var userSettings = UserPreferences()
+    
     var body: some View {
 //        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
 //            // show your onboarding view
@@ -35,6 +37,15 @@ struct ContentView: View {
 //        }
         
         FileExplorer()
+            .environmentObject(userSettings)
+            .if(!userSettings.isDarkMode) { view in
+                view
+                    .preferredColorScheme(.light)
+            }
+            .if(userSettings.isDarkMode) { view in
+                view
+                    .preferredColorScheme(.dark)
+            }
     }
 }
 

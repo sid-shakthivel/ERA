@@ -49,8 +49,6 @@ public class ScanResult: NSObject, ObservableObject, NSSecureCoding {
     }
 }
 
-
-
 class CanvasSettings: ObservableObject {
     @Published var selectedColour: Color = .black
     @Published var selectedHighlighterColour: Color = Color(hex: 0x000000, alpha: 0.5)
@@ -81,12 +79,11 @@ struct Home: View {
     
     @StateObject var scanResult = ScanResult()
     @StateObject var canvasSettings = CanvasSettings()
+    @StateObject var userSettings = UserPreferences()
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
     @State var isShowingHelp: Bool = false
-    
-    @StateObject var userSettings = UserPreferences()
     
     @Environment(\.scenePhase) var scenePhase
     
@@ -294,20 +291,20 @@ struct Home: View {
                 .navigationBarTitle("")
                 .navigationBarBackButtonHidden(true)
                 .navigationBarHidden(true)
-                .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
-                    do {
-                        let url = try result.get()
-                        let images = convertPDFToImages(url: url)
-                        let result = convertPhotosToParagraphs(scan: images)
+//                .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
+//                    do {
+//                        let url = try result.get()
+//                        let images = convertPDFToImages(url: url)
+//                        let result = convertPhotosToParagraphs(scan: images)
 //                        self.scanResult.scannedTextList = result.0
 //                        self.scanResult.scannedText = result.1
-                    } catch {
-                        print("OH DEAR")
-                    }
-                })
-                .sheet(isPresented: $showDocumentCameraView, content: {
-                    DocumentCameraView(settings: userSettings, scanResult: scanResult)
-                })
+//                    } catch {
+//                        print("OH DEAR")
+//                    }
+//                })
+//                .sheet(isPresented: $showDocumentCameraView, content: {
+//                    DocumentCameraView(settings: userSettings, scanResult: scanResult)
+//                })
                 .sheet(isPresented: $showPencilEdit, content: {
                     
                     if canvasSettings.lineCap == .round {
@@ -326,15 +323,14 @@ struct Home: View {
                 })
                 .sheet(isPresented: $showMenu, content: {
                     Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
-                        .environmentObject(canvasSettings)
                         .environmentObject(userSettings)
                         .presentationDetents([.fraction(0.30)])
                         .presentationDragIndicator(.visible)
                 })
-                .sheet(isPresented: $showDictionary, content: {
-                    DictionaryLookup(wordData: nil, state: .Stationary)
-                        .environmentObject(userSettings)
-                })
+//                .sheet(isPresented: $showDictionary, content: {
+//                    DictionaryLookup(wordData: nil, state: .Stationary)
+//                        .environmentObject(userSettings)
+//                })
                 .fileExporter(
                    isPresented: $showFileExporter,
                    document: document,
