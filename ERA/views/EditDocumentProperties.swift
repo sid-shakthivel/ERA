@@ -62,7 +62,7 @@ struct EditDocumentProperties: View {
                 .frame(maxHeight: .infinity, alignment: .bottomLeading)
                 .buttonStyle(.borderedProminent)
         }
-        .invertBackgroundOnDarkTheme()
+        .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
 

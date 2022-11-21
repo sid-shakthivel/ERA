@@ -221,9 +221,9 @@ struct OptionBar: View {
             
             Spacer()
         }
+        .invertBackgroundOnDarkTheme(isBase: false)
         .onAppear(perform: setup_tooltips)
         .padding(.top)
-        .padding(.bottom)
         .onAppear() {
             if settings.isDarkMode && canvasSettings.selectedColour == .black {
                 canvasSettings.selectedColour = .white

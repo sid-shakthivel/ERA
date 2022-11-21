@@ -63,7 +63,7 @@ struct FileExplorer: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(files, id: \.id) { file in
-                                NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!)) {
+                                NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
                                     ZStack {
                                         if (userSettings.isDarkMode) {
                                             RoundedRectangle(cornerRadius: 10)
@@ -126,7 +126,7 @@ struct FileExplorer: View {
                     }
                     .padding(.leading)
                 }
-                    .invertBackgroundOnDarkTheme()
+                    .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
                         Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
                                 .environmentObject(userSettings)

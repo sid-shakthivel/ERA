@@ -100,7 +100,7 @@ struct Menu: View {
            }
        }
             .frame(maxHeight: .infinity)
-            .invertBackgroundOnDarkTheme()
+            .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
 

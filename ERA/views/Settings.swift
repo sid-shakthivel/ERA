@@ -223,14 +223,7 @@ struct Settings: View {
                                 .padding()
                             })
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .background(ColourConstants.darkModeDarker)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .background(ColourConstants.lightModeLighter)
-                            }
+                            .invertBackgroundOnDarkTheme(isBase: false)
                             .cornerRadius(10)
                             .if(!settings.isDarkMode) { view in
                                 view.overlay(
@@ -269,16 +262,7 @@ struct Settings: View {
 
                             })
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .accentColor(.white)
-                                        .background(ColourConstants.darkModeDarker)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .accentColor(.black)
-                                        .background(ColourConstants.lightModeLighter)
-                                }
+                                .invertBackgroundOnDarkTheme(isBase: false)
                                 .cornerRadius(10)
                                 .if(!settings.isDarkMode) { view in
                                     view.overlay(
@@ -327,14 +311,7 @@ struct Settings: View {
                             }
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .background(ColourConstants.darkModeDarker)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .background(ColourConstants.lightModeLighter)
-                                }
+                                .invertBackgroundOnDarkTheme(isBase: false)
                                 .cornerRadius(10)
                                 .if(!settings.isDarkMode) { view in
                                     view.overlay(
@@ -373,17 +350,7 @@ struct Settings: View {
 
                             })
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                
-                                .if(settings.isDarkMode) { view in
-                                    view
-                                        .accentColor(.white)
-                                        .background(ColourConstants.darkModeDarker)
-                                }
-                                .if(!settings.isDarkMode) { view in
-                                    view
-                                        .accentColor(.black)
-                                        .background(ColourConstants.lightModeLighter)
-                                }
+                                .invertBackgroundOnDarkTheme(isBase: false)
                                 .cornerRadius(10)
                                 .if(!settings.isDarkMode) { view in
                                     view.overlay(
@@ -436,14 +403,7 @@ struct Settings: View {
                         }
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .if(settings.isDarkMode) { view in
-                                view
-                                    .background(ColourConstants.darkModeDarker)
-                            }
-                            .if(!settings.isDarkMode) { view in
-                                view
-                                    .background(ColourConstants.lightModeLighter)
-                            }
+                            .invertBackgroundOnDarkTheme(isBase: false)
                             .cornerRadius(10)
                             .if(!settings.isDarkMode) { view in
                                 view.overlay(
@@ -656,7 +616,7 @@ struct Settings: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                     .padding()
             }
-                .invertBackgroundOnDarkTheme()
+                .invertBackgroundOnDarkTheme(isBase: true)
                 .sheet(isPresented: $isShowingFontPicker) {
                     FontPickerWrapper(isShowingFontPicker: $isShowingFontPicker)
                 }

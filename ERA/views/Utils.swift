@@ -54,17 +54,37 @@ struct InvertOnThemeChange: ViewModifier {
 
 struct BackgroundThemeChange: ViewModifier {
     @EnvironmentObject var userPreferences: UserPreferences
+    var isBase: Bool
     
     func body(content: Content) -> some View {
         if (userPreferences.isDarkMode) {
-            content
-                .listRowBackground(ColourConstants.darkModeBackground)
-                .background(ColourConstants.darkModeBackground)
+            
+            if (isBase) {
+                content
+                    .listRowBackground(ColourConstants.darkModeBackground)
+                    .background(ColourConstants.darkModeBackground)
+            }
+            
+            if (!isBase) {
+                content
+                    .accentColor(.white)
+                    .listRowBackground(ColourConstants.darkModeDarker)
+                    .background(ColourConstants.darkModeDarker)
+            }
         }
         else {
-            content
-                .listRowBackground(ColourConstants.lightModeBackground)
-                .background(ColourConstants.lightModeBackground)
+            if (isBase) {
+                content
+                    .listRowBackground(ColourConstants.lightModeBackground)
+                    .background(ColourConstants.lightModeBackground)
+            }
+            
+            if (!isBase) {
+                content
+                    .accentColor(.black)
+                    .listRowBackground(ColourConstants.lightModeLighter)
+                    .background(ColourConstants.lightModeLighter)
+            }
         }
     }
 }
@@ -74,8 +94,8 @@ extension View {
         modifier(InvertOnThemeChange())
     }
     
-    func invertBackgroundOnDarkTheme() -> some View {
-        modifier(BackgroundThemeChange())
+    func invertBackgroundOnDarkTheme(isBase: Bool) -> some View {
+        modifier(BackgroundThemeChange(isBase: isBase))
     }
 }
 
@@ -301,15 +321,23 @@ func convertDataToImages(dataArray: [Data]) -> [Image] {
 }
 
 func getFirstImageFromData(data: Data) -> Image? {
+    let images = getImagesfromData(data: data)
+    if !images.isEmpty {
+        return images[0]
+    }
+    return nil
+}
+
+func getImagesfromData(data: Data) -> [Image] {
     do {
         let dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as! [Data]
         let imageArray = convertDataToImages(dataArray: dataArray)
-        return imageArray[0]
+        return imageArray
     } catch {
         print("issue")
     }
     
-    return nil
+    return []
 }
 
 public class ScanResult: NSObject, ObservableObject, NSSecureCoding {

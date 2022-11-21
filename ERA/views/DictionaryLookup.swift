@@ -164,7 +164,7 @@ struct DictionaryLookup: View {
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .invertBackgroundOnDarkTheme()
+                .invertBackgroundOnDarkTheme(isBase: true)
                 .padding()
             case .Failure:
                 VStack {
@@ -183,7 +183,7 @@ struct DictionaryLookup: View {
                             .fontWeight(.bold)
                     }
                 }
-                .invertBackgroundOnDarkTheme()
+                .invertBackgroundOnDarkTheme(isBase: true)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .Success:
                 VStack {
@@ -215,12 +215,12 @@ struct DictionaryLookup: View {
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
                                     }
-                                    .invertBackgroundOnDarkTheme()
+                                    .invertBackgroundOnDarkTheme(isBase: true)
                                 }
                             }
                         }
                             .scrollContentBackground(.hidden)
-                            .invertBackgroundOnDarkTheme()
+                            .invertBackgroundOnDarkTheme(isBase: true)
                             .tabItem {
                                 Label("Defintions", systemImage: "pencil.circle")
                             }
@@ -235,7 +235,7 @@ struct DictionaryLookup: View {
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
                                     }
-                                        .invertBackgroundOnDarkTheme()
+                                    .invertBackgroundOnDarkTheme(isBase: true)
                                 }
                             }
                             
@@ -248,23 +248,23 @@ struct DictionaryLookup: View {
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
                                     }
-                                        .invertBackgroundOnDarkTheme()
+                                    .invertBackgroundOnDarkTheme(isBase: true)
                                 }
                             }
                         }
                             .scrollContentBackground(.hidden)
                             .listRowBackground(userSettings.backgroundColour)
-                            .invertBackgroundOnDarkTheme()
+                            .invertBackgroundOnDarkTheme(isBase: true)
                             .tabItem {
                                 Label("Synonyms", systemImage: "pencil")
                             }
                     }
                 }
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                    .invertBackgroundOnDarkTheme()
+                    .invertBackgroundOnDarkTheme(isBase: true)
             }
         }
-            .invertBackgroundOnDarkTheme()
+        .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
 

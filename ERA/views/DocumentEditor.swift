@@ -33,6 +33,7 @@ struct DocumentEditor: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State var scanResult: ScanResult
+    @State var images: [Image]
     
     @State var showFileExporter = false
     @State var showDictionary: Bool = false
@@ -180,66 +181,89 @@ struct DocumentEditor: View {
                     
                     Divider()
                     
-                    ZStack {
-                        ScrollView(.vertical, showsIndicators: true) {
-                            if scanResult.scannedTextList.count < 1 {
-                                // View generated on intial startup (editable)
-                                Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
-                                Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
-                            } else {
-                                // View generated on scan/imported PDF
-                                ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
-                                    Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
-                                    Text("")
-                                }
-                            }
-                        }
-                        
-                        if isDrawing {
-                            Canvas { ctx, size in
-                                for line in canvasSettings.lines {
-                                    var path = Path()
-                                    path.addLines(line.points)
-                                    
-                                    ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: canvasSettings.lineCap, lineJoin: .round))
-                                }
-                            }
-                            .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                                let position = value.location
-                                if value.translation == .zero {
-                                    if canvasSettings.isRubbing {
-                                        canvasSettings.lines.append(Line(points: [position], colour: userSettings.backgroundColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
-                                    } else {
-                                        if canvasSettings.lineCap == .round {
-                                            canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
-                                        } else {
-                                            canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedHighlighterColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
-                                        }
-                                    }
+                    TabView {
+                        ZStack {
+                            ScrollView(.vertical, showsIndicators: true) {
+                                if scanResult.scannedTextList.count < 1 {
+                                    // View generated on intial startup (editable)
+                                    Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
+                                    Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
                                 } else {
-                                    guard let lastIndex = canvasSettings.lines.indices.last else { return }
-                                    canvasSettings.lines[lastIndex].points.append(position)
+                                    // View generated on scan/imported PDF
+                                    ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
+                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
+                                        Text("")
+                                    }
                                 }
-                            }))
+                            }
+                            
+                            if isDrawing {
+                                Canvas { ctx, size in
+                                    for line in canvasSettings.lines {
+                                        var path = Path()
+                                        path.addLines(line.points)
+                                        
+                                        ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: canvasSettings.lineCap, lineJoin: .round))
+                                    }
+                                }
+                                .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
+                                    let position = value.location
+                                    if value.translation == .zero {
+                                        if canvasSettings.isRubbing {
+                                            canvasSettings.lines.append(Line(points: [position], colour: userSettings.backgroundColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                        } else {
+                                            if canvasSettings.lineCap == .round {
+                                                canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                            } else {
+                                                canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedHighlighterColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                            }
+                                        }
+                                    } else {
+                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
+                                        canvasSettings.lines[lastIndex].points.append(position)
+                                    }
+                                }))
+                            }
                         }
+                            .padding()
+                            .background(userSettings.backgroundColour)
+                            .tabItem {
+                                Text("Text Editor")
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                                    .font(.system(size: 20))
+                                    .textCase(.uppercase)
+                            }
+                        
+                        ZStack {
+                            ScrollView(.vertical, showsIndicators: true) {
+                                ForEach(0..<images.count, id: \.self) { imageIndex in
+                                   images[imageIndex]
+                                       .resizable()
+                                       .frame(width: geometryProxy.size.width, height: geometryProxy.size.height * 0.85)
+                                       .aspectRatio(contentMode: .fit)
+                                }
+                            }
+                        }
+                            .padding()
+                            .background(userSettings.backgroundColour)
+                            .tabItem {
+                                Text("Photo Viewer")
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                                    .font(.system(size: 20))
+                                    .textCase(.uppercase)
+                            }
+                        
                     }
-                        .padding()
-                        .background(userSettings.backgroundColour)
-                                                                
+
+                    
                     OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .environmentObject(userSettings)
                         .environmentObject(canvasSettings)
-                        .if(userSettings.isDarkMode) { view in
-                            view
-                                .background(ColourConstants.darkModeDarker)
-                        }
-                        .if(!userSettings.isDarkMode) { view in
-                            view
-                                .background(ColourConstants.lightModeLighter)
-                        }
                 }
-                .invertBackgroundOnDarkTheme()
+                .invertBackgroundOnDarkTheme(isBase: true)
             }
                 .if(!userSettings.isDarkMode) { view in
                     view
