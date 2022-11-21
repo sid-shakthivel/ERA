@@ -64,28 +64,29 @@ struct FileExplorer: View {
                         .padding()
                     
                     ScrollView {
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(files, id: \.id) { file in
-                                NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
-                                    ZStack {
-                                        if (userSettings.isDarkMode) {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .fill(ColourConstants.darkModeDarker)
-                                        } else {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .fill(ColourConstants.lightModeLighter)
-                                        }
-                                        
-                                        VStack {
-                                            getFirstImageFromData(data: file.images!)?
-                                                .resizable()
-                                                .frame(width: 100, height: 200)
-                                                .aspectRatio(contentMode: .fit)
+                        ZStack {
+                            LazyVGrid(columns: columns, spacing: 20) {
+                                ForEach(files, id: \.id) { file in
+                                    NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
+                                        ZStack {
+                                            if (userSettings.isDarkMode) {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(ColourConstants.darkModeDarker)
+                                            } else {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(ColourConstants.lightModeLighter)
+                                            }
                                             
-                                            Text("\(file.title ?? "Unknown Title")")
+                                            VStack {
+                                                getFirstImageFromData(data: file.images!)?
+                                                    .resizable()
+                                                    .frame(width: 100, height: 200)
+                                                    .aspectRatio(contentMode: .fit)
+                                                
+                                                Text("\(file.title ?? "Unknown Title")")
+                                            }
+                                            .padding()
                                         }
-                                        .padding()
-                                    }
                                         .contextMenu {
                                             Button {
                                                 // Delete an entry from core data
@@ -102,9 +103,10 @@ struct FileExplorer: View {
                                                 Text("Edit")
                                             }
                                         }
+                                    }
                                 }
+                                .padding()
                             }
-                            .padding()
                         }
                     }
                     
