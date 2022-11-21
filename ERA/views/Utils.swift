@@ -379,16 +379,27 @@ public class ScanResult: NSObject, ObservableObject, NSSecureCoding {
     }
 }
 
+/*
+ Convert current data (including time) into a string
+ */
 func getDate() -> String {
-    // Create Date
     let date = Date()
-
-    // Create Date Formatter
     let dateFormatter = DateFormatter()
-
-    // Set Date Format
     dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-
-    // Convert Date to String
     return dateFormatter.string(from: date)
+}
+
+
+extension Array where Element: Hashable {
+    func removingDuplicates() -> [Element] {
+        var addedDict = [Element: Bool]()
+
+        return filter {
+            addedDict.updateValue(true, forKey: $0) == nil
+        }
+    }
+
+    mutating func removeDuplicates() {
+        self = self.removingDuplicates()
+    }
 }

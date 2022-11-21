@@ -141,7 +141,7 @@ class UserPreferences: ObservableObject, Codable {
 struct Settings: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    var languages = ["en-GB", "en-US", "en-ZA", "fr-FR", "en-IN", "ko-KR", "en-AU", "es-ES", "it-IT"]
+    var languages: [String] = AVSpeechSynthesisVoice.speechVoices().map { $0.language }.removingDuplicates()
     
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserPreferences
@@ -365,6 +365,13 @@ struct Settings: View {
                                     )
                                 }
                         }
+                                                
+                        Text("This is some example text")
+                            .foregroundColor(settings.fontColour)
+                            .font(Font(settings.paragraphFont))
+                            .lineSpacing(CGFloat(settings.lineSpacing))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top)
                     }
 
                     Group {

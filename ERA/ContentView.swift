@@ -24,28 +24,25 @@ struct ContentView: View {
     @StateObject var userSettings = UserPreferences()
     
     var body: some View {
-//        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
-//            // show your onboarding view
-//            OnboardingView()
-//                .onAppear() {
-//                    // set the value for next call
-//                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
-//                }
-//                .preferredColorScheme(.light)
-//        } else {
-//            Home()
-//        }
-        
-        FileExplorer()
-            .environmentObject(userSettings)
-            .if(!userSettings.isDarkMode) { view in
-                view
-                    .preferredColorScheme(.light)
-            }
-            .if(userSettings.isDarkMode) { view in
-                view
-                    .preferredColorScheme(.dark)
-            }
+        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
+            OnboardingView()
+                .onAppear() {
+                    // Set the value for next call
+                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
+                }
+                .preferredColorScheme(.light)
+        } else {
+            FileExplorer()
+                .environmentObject(userSettings)
+                .if(!userSettings.isDarkMode) { view in
+                    view
+                        .preferredColorScheme(.light)
+                }
+                .if(userSettings.isDarkMode) { view in
+                    view
+                        .preferredColorScheme(.dark)
+                }
+        }
     }
 }
 

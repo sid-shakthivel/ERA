@@ -13,7 +13,7 @@ struct EditDocumentProperties: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State var scanTest: ScanTest
-    @State var title: String = ""
+    @State var title: String
     
     var body: some View {
         VStack {
@@ -28,11 +28,6 @@ struct EditDocumentProperties: View {
                 TextField("\(scanTest.title ?? "")", text: $title)
                     .foregroundColor(.black)
                     .invertOnDarkTheme()
-                    .placeholder(when: title.isEmpty) {
-                        Text("\(scanTest.title ?? "")")
-                            .foregroundColor(.black)
-                            .invertOnDarkTheme()
-                    }
                     .padding(.horizontal)
             }
             
@@ -61,8 +56,18 @@ struct EditDocumentProperties: View {
                 }
                 .frame(maxHeight: .infinity, alignment: .bottomLeading)
                 .buttonStyle(.borderedProminent)
+                .padding()
         }
         .invertBackgroundOnDarkTheme(isBase: true)
+        .toolbar {
+            ToolbarItem() {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Text("Cancel")
+                })
+            }
+        }
     }
 }
 

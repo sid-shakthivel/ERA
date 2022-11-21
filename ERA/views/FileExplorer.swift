@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct FileExplorer: View {
     @Environment(\.managedObjectContext) var moc
@@ -25,6 +26,8 @@ struct FileExplorer: View {
     @State var showEditDocumentProperties: Bool = false
     
     @State var currentDocument: ScanTest?
+    
+    var accents: [String] = AVSpeechSynthesisVoice.speechVoices().map { $0.language }
         
     var body: some View {
         GeometryReader { geometryProxy in
@@ -77,6 +80,7 @@ struct FileExplorer: View {
                                             getFirstImageFromData(data: file.images!)?
                                                 .resizable()
                                                 .frame(width: 100, height: 200)
+                                                .aspectRatio(contentMode: .fit)
                                             
                                             Text("\(file.title ?? "Unknown Title")")
                                         }
@@ -160,7 +164,7 @@ struct FileExplorer: View {
                         DocumentCameraView()
                     })
                     .sheet(isPresented: $showEditDocumentProperties) {
-                        EditDocumentProperties(scanTest: currentDocument!)
+                        EditDocumentPropertiesTest(document: $currentDocument)
                     }
                     .sheet(isPresented: $showDictionary, content: {
                         DictionaryLookup(wordData: nil, state: .Stationary)
@@ -168,6 +172,13 @@ struct FileExplorer: View {
                     })
             }
         }
+    }
+}
+
+struct EditDocumentPropertiesTest: View {
+    @Binding var document: ScanTest?
+    var body: some View {
+        EditDocumentProperties(scanTest: document!, title: document!.title ?? "Unknown")
     }
 }
 

@@ -24,8 +24,6 @@ struct FontPickerWrapper: View {
                     isShowingFontPicker.toggle()
                 }, label: {
                     Text("Cancel")
-                        
-                        
                 })
             }
                 .frame(maxWidth: .infinity, alignment: .trailing)

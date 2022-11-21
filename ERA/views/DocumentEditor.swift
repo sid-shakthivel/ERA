@@ -265,14 +265,6 @@ struct DocumentEditor: View {
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
             }
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.light)
-                }
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.dark)
-                }
                 .onAppear(perform: initialisation)
                 .environmentObject(userSettings)
                 .environmentObject(scanResult)
@@ -319,6 +311,8 @@ struct DocumentEditor: View {
         }
     }
 }
+
+
 
 //struct Home_Previews: PreviewProvider {
 //    static var previews: some View {
