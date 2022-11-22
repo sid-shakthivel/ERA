@@ -66,6 +66,7 @@ struct FileExplorer: View {
                         .padding()
                     
                     ScrollView {
+<<<<<<< HEAD
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(files, id: \.id) { file in
                                 NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
@@ -85,9 +86,31 @@ struct FileExplorer: View {
                                                 .aspectRatio(contentMode: .fit)
 
                                             Text("\(file.title ?? "Unknown Title")")
+=======
+                        ZStack {
+                            LazyVGrid(columns: columns, spacing: 20) {
+                                ForEach(files, id: \.id) { file in
+                                    NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
+                                        ZStack {
+                                            if (userSettings.isDarkMode) {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(ColourConstants.darkModeDarker)
+                                            } else {
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .fill(ColourConstants.lightModeLighter)
+                                            }
+                                            
+                                            VStack {
+                                                getFirstImageFromData(data: file.images!)?
+                                                    .resizable()
+                                                    .frame(width: 100, height: 200)
+                                                    .aspectRatio(contentMode: .fit)
+                                                
+                                                Text("\(file.title ?? "Unknown Title")")
+                                            }
+                                            .padding()
+>>>>>>> a14039d64e96cbfd9dffa3e7a32a5ed7b9ceeef9
                                         }
-                                        .padding()
-                                    }
                                         .contextMenu {
                                             Button {
                                                 // Delete an entry from core data
@@ -104,7 +127,9 @@ struct FileExplorer: View {
                                                 Text("Edit")
                                             }
                                         }
+                                    }
                                 }
+                                .padding()
                             }
                             .padding()
 
