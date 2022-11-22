@@ -203,14 +203,23 @@ struct DocumentCameraView: UIViewControllerRepresentable {
         {
             parent.presentationMode.wrappedValue.dismiss()
             DispatchQueue.main.async {
-                let photoList = convertCameraDocumentScanToImages(scan: scan)
-                let result = convertPhotosToParagraphs(scan: photoList)
-                
-                let newScanResult = Document(context: self.parent.moc)
-                newScanResult.id = UUID()
-                newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
-                newScanResult.title = "Scan" + DateFormatter().string(from: Date())
-                try? self.parent.moc.save()
+                do {
+                    let images: [UIImage] = convertCameraDocumentScanToImages(scan: scan)
+                    let savedImages = images
+                    let result: ([SavedParagraph], String) = convertPhotosToParagraphs(scan: images)
+                    
+                    let newScanResult = Document(context: self.parent.moc)
+                    newScanResult.id = UUID()
+                    newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
+                    newScanResult.title = "Scan" + getDate()
+                    
+                    // Save images
+                    let imageDataArray = convertImagesToData(images: savedImages)
+                    let colatedImageData = try NSKeyedArchiver.archivedData(withRootObject: imageDataArray, requiringSecureCoding: true)
+                    newScanResult.images = colatedImageData
+
+                    try? self.parent.moc.save()
+                } catch {}
             }
         }
     }

@@ -45,12 +45,12 @@ struct FileExplorer: View {
                         
                         Spacer()
                         
-    //                        NavigationLink(destination: Settings()) {
-    //                            Image("settings")
-    //                                .resizable()
-    //                                .frame(width: 30, height: 30)
-    //                                .invertOnDarkTheme()
-    //                        }
+                        NavigationLink(destination: Settings()) {
+                            Image("settings")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .invertOnDarkTheme()
+                        }
                     }
                     .padding(.leading)
                     .padding(.trailing)
@@ -66,65 +66,45 @@ struct FileExplorer: View {
                         .padding()
                     
                     ScrollView {
-<<<<<<< HEAD
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(files, id: \.id) { file in
-                                NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
-                                    ZStack {
-                                        if (userSettings.isDarkMode) {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .fill(ColourConstants.darkModeDarker)
-                                        } else {
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .fill(ColourConstants.lightModeLighter)
-                                        }
-
-                                        VStack {
-                                            getFirstImageFromData(data: file.images!)?
-                                                .resizable()
-                                                .frame(width: 100, height: 200)
-                                                .aspectRatio(contentMode: .fit)
-
-                                            Text("\(file.title ?? "Unknown Title")")
-=======
                         ZStack {
                             LazyVGrid(columns: columns, spacing: 20) {
                                 ForEach(files, id: \.id) { file in
-                                    NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
-                                        ZStack {
-                                            if (userSettings.isDarkMode) {
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(ColourConstants.darkModeDarker)
-                                            } else {
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(ColourConstants.lightModeLighter)
-                                            }
-                                            
-                                            VStack {
-                                                getFirstImageFromData(data: file.images!)?
-                                                    .resizable()
-                                                    .frame(width: 100, height: 200)
-                                                    .aspectRatio(contentMode: .fit)
+                                    if file.images != nil {
+                                        NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
+                                            ZStack {
+                                                if (userSettings.isDarkMode) {
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .fill(ColourConstants.darkModeDarker)
+                                                } else {
+                                                    RoundedRectangle(cornerRadius: 10)
+                                                        .fill(ColourConstants.lightModeLighter)
+                                                }
                                                 
-                                                Text("\(file.title ?? "Unknown Title")")
+                                                VStack {
+                                                    getFirstImageFromData(data: file.images!)?
+                                                        .resizable()
+                                                        .frame(width: 100, height: 200)
+                                                        .aspectRatio(contentMode: .fit)
+                                                    
+                                                    Text("\(file.title ?? "Unknown Title")")
+                                                }
+                                                .padding()
                                             }
-                                            .padding()
->>>>>>> a14039d64e96cbfd9dffa3e7a32a5ed7b9ceeef9
-                                        }
-                                        .contextMenu {
-                                            Button {
-                                                // Delete an entry from core data
-                                                moc.delete(file)
-                                                try? moc.save()
-                                            } label: {
-                                                Text("Delete")
-                                            }
+                                            .contextMenu {
+                                                Button {
+                                                    // Delete an entry from core data
+                                                    moc.delete(file)
+                                                    try? moc.save()
+                                                } label: {
+                                                    Text("Delete")
+                                                }
 
-                                            Button {
-                                                currentDocument = file
-                                                showEditDocumentProperties = true
-                                            } label: {
-                                                Text("Edit")
+                                                Button {
+                                                    currentDocument = file
+                                                    showEditDocumentProperties = true
+                                                } label: {
+                                                    Text("Edit")
+                                                }
                                             }
                                         }
                                     }
@@ -180,7 +160,7 @@ struct FileExplorer: View {
                         do {
                             let url = try result.get()  // Retrieve exact URL on site
 
-                            let images = convertPDFToImages(url: url) // Use URL to conver the file into an array of photos
+                            let images: [UIImage] = convertPDFToImages(url: url) // Use URL to conver the file into an array of photos
                             let result = convertPhotosToParagraphs(scan: images) // Get paragraph information
 
                             // Create new scanResult which is saved into core data
@@ -209,6 +189,7 @@ struct FileExplorer: View {
                     })
             }
         }
+            .navigationBarBackButtonHidden(true)
     }
 }
 

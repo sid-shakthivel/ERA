@@ -26,6 +26,7 @@ struct ContentView: View {
     var body: some View {
         if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
             OnboardingView()
+                .environmentObject(userSettings)
                 .onAppear() {
                     // Set the value for next call
                     UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")

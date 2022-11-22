@@ -58,7 +58,6 @@ struct BackgroundThemeChange: ViewModifier {
     
     func body(content: Content) -> some View {
         if (userPreferences.isDarkMode) {
-            
             if (isBase) {
                 content
                     .listRowBackground(ColourConstants.darkModeBackground)
@@ -341,6 +340,10 @@ func getFirstImageFromData(data: Data) -> Image? {
         return images[0]
     }
     return nil
+}
+
+func convertUIImagesToImages(uiImages: [UIImage]) -> [Image] {
+    return uiImages.map { Image(uiImage: $0 )}
 }
 
 func getImagesfromData(data: Data) -> [Image] {

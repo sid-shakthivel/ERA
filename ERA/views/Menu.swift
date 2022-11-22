@@ -21,7 +21,10 @@ struct Menu: View {
         Group {
            VStack {
                Button {
-                   showDocumentCameraView.toggle()
+                   showMenu = false
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                       showDocumentCameraView.toggle()
+                   }
                } label: {
                    HStack {
                        Image("scan-document")

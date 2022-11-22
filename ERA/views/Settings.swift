@@ -141,8 +141,7 @@ class UserPreferences: ObservableObject, Codable {
 struct Settings: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-//    var languages: [String] = AVSpeechSynthesisVoice.speechVoices().map { $0.language }.removingDuplicates()
-    var languages: [String] = ["en0-GB"]
+    var languages: [String] = AVSpeechSynthesisVoice.speechVoices().map { $0.language }.removingDuplicates()
     
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserPreferences
