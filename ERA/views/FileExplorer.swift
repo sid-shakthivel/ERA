@@ -17,7 +17,7 @@ struct FileExplorer: View {
     /*
      Retriving data from core data is done using fetch request (description of how data should be sent, sorted, filters)
      */
-    @FetchRequest(sortDescriptors: []) var files: FetchedResults<ScanTest>
+    @FetchRequest(sortDescriptors: []) var files: FetchedResults<Document>
     
     @State var showMenu: Bool = false
     @State var showDocumentCameraView = false
@@ -25,13 +25,15 @@ struct FileExplorer: View {
     @State var showDictionary: Bool = false
     @State var showEditDocumentProperties: Bool = false
     
-    @State var currentDocument: ScanTest?
+    @State var currentDocument: Document?
+    
+    @State var isLoading: Bool = false
     
     var accents: [String] = AVSpeechSynthesisVoice.speechVoices().map { $0.language }
         
     var body: some View {
-        GeometryReader { geometryProxy in
-            NavigationView {
+        NavigationView {
+            GeometryReader { geometryProxy in
                 VStack {
                     HStack {
                         Text("Easy Reading Assistant")
@@ -43,12 +45,12 @@ struct FileExplorer: View {
                         
                         Spacer()
                         
-                        NavigationLink(destination: Settings()) {
-                            Image("settings")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .invertOnDarkTheme()
-                        }
+    //                        NavigationLink(destination: Settings()) {
+    //                            Image("settings")
+    //                                .resizable()
+    //                                .frame(width: 30, height: 30)
+    //                                .invertOnDarkTheme()
+    //                        }
                     }
                     .padding(.leading)
                     .padding(.trailing)
@@ -75,13 +77,13 @@ struct FileExplorer: View {
                                             RoundedRectangle(cornerRadius: 10)
                                                 .fill(ColourConstants.lightModeLighter)
                                         }
-                                        
+
                                         VStack {
                                             getFirstImageFromData(data: file.images!)?
                                                 .resizable()
                                                 .frame(width: 100, height: 200)
                                                 .aspectRatio(contentMode: .fit)
-                                            
+
                                             Text("\(file.title ?? "Unknown Title")")
                                         }
                                         .padding()
@@ -94,7 +96,7 @@ struct FileExplorer: View {
                                             } label: {
                                                 Text("Delete")
                                             }
-                                            
+
                                             Button {
                                                 currentDocument = file
                                                 showEditDocumentProperties = true
@@ -105,6 +107,18 @@ struct FileExplorer: View {
                                 }
                             }
                             .padding()
+
+                            if isLoading {
+                                if userSettings.isDarkMode {
+                                    ProgressView()
+                                        .scaleEffect(3)
+                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0xf4e0d6, alpha: 1)))
+                                } else {
+                                    ProgressView()
+                                        .scaleEffect(3)
+                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0x0B1F29, alpha: 1)))
+                                }
+                            }
                         }
                     }
                     
@@ -134,31 +148,29 @@ struct FileExplorer: View {
                     .sheet(isPresented: $showMenu, content: {
                         Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
                                 .environmentObject(userSettings)
-                            .presentationDetents([.fraction(0.30)])
-                            .presentationDragIndicator(.visible)
+                                .presentationDetents([.fraction(0.30)])
+                                .presentationDragIndicator(.visible)
                     })
                     .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                         do {
                             let url = try result.get()  // Retrieve exact URL on site
+
                             let images = convertPDFToImages(url: url) // Use URL to conver the file into an array of photos
                             let result = convertPhotosToParagraphs(scan: images) // Get paragraph information
-                            
+
                             // Create new scanResult which is saved into core data
-                            let newScanResult = ScanTest(context: moc)
+                            let newScanResult = Document(context: moc)
                             newScanResult.id = UUID()
                             newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
                             newScanResult.title = "Scan" + getDate()
-                            
+
                             // Save images
                             let imageDataArray = convertImagesToData(images: images)
                             let colatedImageData = try NSKeyedArchiver.archivedData(withRootObject: imageDataArray, requiringSecureCoding: true)
                             newScanResult.images = colatedImageData
                             
                             try? moc.save()
-                            
-                        } catch {
-                            print("OH DEAR")
-                        }
+                        } catch {}
                     })
                     .sheet(isPresented: $showDocumentCameraView, content: {
                         DocumentCameraView()
@@ -176,7 +188,7 @@ struct FileExplorer: View {
 }
 
 struct EditDocumentPropertiesTest: View {
-    @Binding var document: ScanTest?
+    @Binding var document: Document?
     var body: some View {
         EditDocumentProperties(scanTest: document!, title: document!.title ?? "Unknown")
     }

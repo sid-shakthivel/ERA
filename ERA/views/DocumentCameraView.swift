@@ -206,7 +206,7 @@ struct DocumentCameraView: UIViewControllerRepresentable {
                 let photoList = convertCameraDocumentScanToImages(scan: scan)
                 let result = convertPhotosToParagraphs(scan: photoList)
                 
-                let newScanResult = ScanTest(context: self.parent.moc)
+                let newScanResult = Document(context: self.parent.moc)
                 newScanResult.id = UUID()
                 newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
                 newScanResult.title = "Scan" + DateFormatter().string(from: Date())

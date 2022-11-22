@@ -48,6 +48,8 @@ struct DocumentEditor: View {
     @StateObject var canvasSettings = CanvasSettings()
     @StateObject var speaker = Speaker()
     
+    @State var isViewingText: Bool = true
+    
     func speak_text() {
         do {
             try AVAudioSession.sharedInstance().setCategory(.playback,mode: .default)
@@ -181,7 +183,8 @@ struct DocumentEditor: View {
                     
                     Divider()
                     
-                    TabView {
+                    if isViewingText {
+                        // Show the document view in which users can edit text
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
                                 if scanResult.scannedTextList.count < 1 {
@@ -227,14 +230,8 @@ struct DocumentEditor: View {
                         }
                             .padding()
                             .background(userSettings.backgroundColour)
-                            .tabItem {
-                                Text("Text Editor")
-                                    .foregroundColor(.black)
-                                    .invertOnDarkTheme()
-                                    .font(.system(size: 20))
-                                    .textCase(.uppercase)
-                            }
-                        
+                    } else {
+                        // Show photo view
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
                                 ForEach(0..<images.count, id: \.self) { imageIndex in
@@ -247,16 +244,22 @@ struct DocumentEditor: View {
                         }
                             .padding()
                             .background(userSettings.backgroundColour)
-                            .tabItem {
-                                Text("Photo Viewer")
-                                    .foregroundColor(.black)
-                                    .invertOnDarkTheme()
-                                    .font(.system(size: 20))
-                                    .textCase(.uppercase)
-                            }
-                        
                     }
-
+                    
+                    Picker("", selection: $isViewingText) {
+                        Text("Document Editor")
+                            .tag(true)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                        
+                        Text("Photo Editor")
+                            .tag(false)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                    }
+                        .pickerStyle(.segmented)
+                        .padding(.leading)
+                        .padding(.trailing)
                     
                     OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
                         .frame(maxWidth: .infinity, alignment: .leading)

@@ -10,6 +10,7 @@ import SwiftUI
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication) -> Bool {
         ScanResultAttributeTransformer.register()
+        SavedParagraphAttributeTransformer.register()
         return true
     }
 }

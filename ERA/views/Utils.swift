@@ -286,6 +286,21 @@ class ScanResultAttributeTransformer: NSSecureUnarchiveFromDataTransformer {
         let name = NSValueTransformerName(className)
         let transformer = ScanResultAttributeTransformer()
         
+     ValueTransformer.setValueTransformer(transformer, forName: name)
+    }
+}
+
+@objc(SavedParagraphAttributeTransformer)
+class SavedParagraphAttributeTransformer: NSSecureUnarchiveFromDataTransformer {
+    override static var allowedTopLevelClasses: [AnyClass] {
+        [SavedParagraph.self]
+    }
+    
+    static func register() {
+        let className = String(describing: SavedParagraphAttributeTransformer.self)
+        let name = NSValueTransformerName(className)
+        let transformer = SavedParagraphAttributeTransformer()
+        
         ValueTransformer.setValueTransformer(transformer, forName: name)
     }
 }

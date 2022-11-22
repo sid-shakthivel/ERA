@@ -12,7 +12,7 @@ struct EditDocumentProperties: View {
     @EnvironmentObject var userSettings: UserPreferences
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State var scanTest: ScanTest
+    @State var scanTest: Document
     @State var title: String
     
     var body: some View {
@@ -58,16 +58,7 @@ struct EditDocumentProperties: View {
                 .buttonStyle(.borderedProminent)
                 .padding()
         }
-        .invertBackgroundOnDarkTheme(isBase: true)
-        .toolbar {
-            ToolbarItem() {
-                Button(action: {
-                    presentationMode.wrappedValue.dismiss()
-                }, label: {
-                    Text("Cancel")
-                })
-            }
-        }
+            .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
 
