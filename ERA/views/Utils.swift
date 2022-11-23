@@ -398,6 +398,103 @@ public class ScanResult: NSObject, ObservableObject, NSSecureCoding {
 }
 
 /*
+ Working lines are being actively drawn and worked upon and stored within a temporary buffer
+ */
+struct WorkingLine {
+    public var points: [CGPoint]
+    public var colour: Color
+    public var lineCap: CGLineCap
+    public var lineWidth: Double
+    public var isHighlighter: Bool
+}
+
+/*
+ Saved lines are lines which have been saved into core data and are retrieved/saved to and fro
+ */
+
+class SavedLine: NSObject, NSSecureCoding {
+    static var supportsSecureCoding: Bool = true
+    
+    enum CodingKeys: String {
+        case points = "points"
+        case colour = "colour"
+        case lineCap = "lineCap"
+        case lineWidth = "lineWidth"
+        case isHighlighter = "isHighlighter"
+    }
+    
+    public var points: [CGPoint]
+    public var colour: Color
+    public var lineCap: CGLineCap
+    public var lineWidth: Double
+    public var isHighlighter: Bool
+    
+    init(points: [CGPoint], colour: Color, lineCap: CGLineCap, lineWidth: Double, isHighlighter: Bool) {
+        self.points = points
+        self.colour = colour
+        self.lineCap = lineCap
+        self.lineWidth = lineWidth
+        self.isHighlighter = isHighlighter
+    }
+    
+    public func encode(with coder: NSCoder) {
+        // In order to encode an array of CGPoints, must be converted into NSValues
+        let pointValues = points.map { NSValue(cgPoint: $0) }
+        
+        print("going to encode")
+        
+        coder.encode(pointValues, forKey: "positions")
+        coder.encode(UIColor(colour).encode(), forKey: CodingKeys.colour.rawValue)
+        coder.encode(lineCap.rawValue, forKey: CodingKeys.lineCap.rawValue)
+        coder.encode(lineWidth, forKey: CodingKeys.lineWidth.rawValue)
+        coder.encode(isHighlighter, forKey: CodingKeys.isHighlighter.rawValue)
+    }
+    
+    public required convenience init?(coder: NSCoder) {
+        
+        print("Began the process")
+        
+        let mIsHighlighter = coder.decodeBool(forKey: CodingKeys.isHighlighter.rawValue)
+        let mLineWidth = coder.decodeDouble(forKey: CodingKeys.lineWidth.rawValue)
+        let mLineCap = CGLineCap(rawValue: Int32(coder.decodeInteger(forKey: CodingKeys.lineCap.rawValue)))!
+        
+        let mColourData: Data = coder.decodeObject(forKey: CodingKeys.colour.rawValue) as! Data
+        let mUiColour = UIColor.color(data: mColourData)
+        let mPoints: [CGPoint] = (coder.decodeObject(forKey: CodingKeys.points.rawValue) as! [NSValue]).map { $0.cgPointValue }
+        
+        self.init(points: mPoints, colour: Color(uiColor: mUiColour!), lineCap: mLineCap, lineWidth: mLineWidth, isHighlighter: mIsHighlighter)
+    }
+}
+
+public class CanvasData: NSObject, ObservableObject, NSSecureCoding {
+    public static var supportsSecureCoding: Bool = true
+    
+    enum CodingKeys: String {
+        case lines = "lines"
+    }
+    
+    @Published var lines: [SavedLine] = []
+    
+    init(lines: [SavedLine]) {
+        self.lines = lines
+    }
+    
+    public func encode(with coder: NSCoder) {
+        coder.encode(lines, forKey: CodingKeys.lines.rawValue)
+    }
+    
+    public required convenience init?(coder: NSCoder) {
+        print("at the very least here then")
+        
+        let mLines = coder.decodeObject(of: [NSArray.self, SavedLine.self], forKey: CodingKeys.lines.rawValue) as! [SavedLine]
+        
+        print(mLines)
+        
+        self.init(lines: mLines)
+    }
+}
+
+/*
  Convert current data (including time) into a string
  */
 func getDate() -> String {
@@ -420,4 +517,14 @@ extension Array where Element: Hashable {
     mutating func removeDuplicates() {
         self = self.removingDuplicates()
     }
+}
+
+extension UIColor {
+     class func color(data:Data) -> UIColor? {
+          return try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(data) as? UIColor
+     }
+
+     func encode() -> Data? {
+          return try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
+     }
 }

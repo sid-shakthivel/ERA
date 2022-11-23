@@ -12,7 +12,7 @@ struct EditDocumentProperties: View {
     @EnvironmentObject var userSettings: UserPreferences
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State var scanTest: Document
+    @State var document: Document
     @State var title: String
     
     var body: some View {
@@ -25,7 +25,7 @@ struct EditDocumentProperties: View {
                     .font(.system(size: 24))
                     .padding()
                 
-                TextField("\(scanTest.title ?? "")", text: $title)
+                TextField("\(document.title ?? "")", text: $title)
                     .foregroundColor(.black)
                     .invertOnDarkTheme()
                     .padding(.horizontal)
@@ -35,7 +35,7 @@ struct EditDocumentProperties: View {
             
             Button(action: {
                 moc.performAndWait {
-                    scanTest.title = title
+                    document.title = title
                     try? moc.save()
                 }
                 presentationMode.wrappedValue.dismiss()

@@ -12,6 +12,7 @@ struct OptionBar: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @EnvironmentObject var settings: UserPreferences
     @EnvironmentObject var scanData: ScanResult
+    @EnvironmentObject var canvasData: CanvasData
     
     @Binding var showDictionary: Bool
     @Binding var isDrawing: Bool
@@ -173,7 +174,7 @@ struct OptionBar: View {
                     .invertOnDarkTheme()
                     .onTapGesture(count: 1) {
                        // On single tap clear the canvas
-                        canvasSettings.lines = []
+                        canvasData.lines = []
                     }
                     .onLongPressGesture {
                         // On long press remove all text
@@ -183,8 +184,8 @@ struct OptionBar: View {
                 
 
                 Button(action: {
-                    if canvasSettings.lines.count >= 1 {
-                        canvasSettings.lastLine = canvasSettings.lines.removeLast()
+                    if canvasSettings.lineBuffer.count >= 1 {
+                        canvasSettings.lastLine = canvasSettings.lineBuffer.removeLast()
                     }
                 }, label: {
                     Image(systemName: "arrow.uturn.backward")
@@ -195,7 +196,7 @@ struct OptionBar: View {
 
                 Button(action: {
                     if canvasSettings.lastLine != nil {
-                        canvasSettings.lines.append(canvasSettings.lastLine!)
+                        canvasSettings.lineBuffer.append(canvasSettings.lastLine!)
                         canvasSettings.lastLine = nil
                     }
                 }, label: {
@@ -206,18 +207,18 @@ struct OptionBar: View {
                 })
             }
             
-            if !isShowingHighlighter || !isShowingPencil {
-                Spacer()
-                
-                Button(action: {
-                    isShowingHelp.toggle()
-                }, label: {
-                    Image("info")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .invertOnDarkTheme()
-                })
-            }
+//            if !isShowingHighlighter || !isShowingPencil {
+//                Spacer()
+//
+//                Button(action: {
+//                    isShowingHelp.toggle()
+//                }, label: {
+//                    Image("info")
+//                        .resizable()
+//                        .frame(width: 30, height: 30)
+//                        .invertOnDarkTheme()
+//                })
+//            }
             
             Spacer()
         }
@@ -236,8 +237,8 @@ struct OptionBar: View {
     }
 }
 
-struct OptionBar_Previews: PreviewProvider {
-    static var previews: some View {
-        OptionBar(showDictionary: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false), isShowingHelp: .constant(false))
-    }
-}
+//struct OptionBar_Previews: PreviewProvider {
+//    static var previews: some View {
+//        OptionBar(showDictionary: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false), isShowingHelp: .constant(false))
+//    }
+//}

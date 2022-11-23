@@ -10,16 +10,6 @@ import VisionKit
 import Vision
 import AVFoundation
 
-struct RetrievedParagraph: Hashable {
-    var text: String
-    var isHeading: Bool
-    
-    init(text: String, isHeading: Bool) {
-        self.text = text
-        self.isHeading = isHeading
-    }
-}
-
 // Ensure SavedParagraph is a subclass of NSObject in order to be serialised
 class SavedParagraph: NSObject, NSSecureCoding {
     var text: String

@@ -13,40 +13,34 @@ import SwiftUITooltip
 class CanvasSettings: ObservableObject {
     @Published var selectedColour: Color = .black
     @Published var selectedHighlighterColour: Color = Color(hex: 0x000000, alpha: 0.5)
-    @Published var lines: [Line] = []
-    @Published var lastLine: Line?
+    @Published var lastLine: WorkingLine? // Stores the last line within the bufer
+    @Published var lineBuffer: [WorkingLine] = [] // This is a buffer which holds temporary lines which are being worked upon
     @Published var lineWidth: Double = 5
     @Published var isRubbing: Bool = false
     @Published var lineCap: CGLineCap = .round
 }
 
-struct Line {
-    var points: [CGPoint]
-    var colour: Color
-    var lineCap: CGLineCap
-    var lineWidth: Double
-    var isHighlighter: Bool
-}
-
 struct DocumentEditor: View {
+    @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var userSettings: UserPreferences
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State var scanResult: ScanResult
+    @State var document: FetchedResults<Document>.Element // Contains all data
+    @State var scanResult: ScanResult // Specifically contains just scan data in order to minimise unwrapping/nil
     @State var images: [Image]
     
     @State var showFileExporter = false
     @State var showDictionary: Bool = false
     @State var showPencilEdit: Bool = false
-    @State var document: PDFDoc? = nil
+    @State var pdfDocument: PDFDoc? = nil
     @State var tooltipConfig = DefaultTooltipConfig()
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
     @State var isShowingHelp: Bool = false
     
-    @StateObject var canvasSettings = CanvasSettings()
     @StateObject var speaker = Speaker()
+    @StateObject var canvasStuff = CanvasSettings()
     
     @State var isViewingText: Bool = true
     
@@ -57,7 +51,7 @@ struct DocumentEditor: View {
             print("This error message from SpeechSynthesizer \(error.localizedDescription)")
         }
             
-        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
+        let utterance = AVSpeechUtterance(string: document.scanResult!.scannedText)
         utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
         utterance.volume = userSettings.volume
         utterance.pitchMultiplier = userSettings.pitch
@@ -69,14 +63,46 @@ struct DocumentEditor: View {
         speaker.synth.stopSpeaking(at: .immediate)
     }
     
-    func setup_tooltips() {
+    func initialisation() {
+        // Configure the tooltips
         tooltipConfig.enableAnimation = true
         tooltipConfig.animationOffset = 10
         tooltipConfig.animationTime = 1
+        
+        // Copy data from the saved buffer into the working bufffer
+        guard let lines = (document.canvasData as? CanvasData)?.lines else { return }
+        print("lines")
+        print(lines)
+        for line in lines {
+            canvasStuff.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+        }
+        print("Initt'd")
     }
     
-    func initialisation() {
-        setup_tooltips()
+    func termination() {
+        // Copy data from the working buffer into the saved buffer and attempt to save it into core data
+        var savedLineBuffer: [SavedLine] = []
+        for line in canvasStuff.lineBuffer {
+            savedLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+        }
+       
+        
+        DispatchQueue.main.async {
+            print(savedLineBuffer)
+            moc.performAndWait {
+                
+                let newDocument = Document(context: moc)
+                newDocument.id = UUID()
+                newDocument.scanResult = ScanResult()
+                newDocument.title = document.title
+                newDocument.images = document.images
+                newDocument.canvasData = CanvasData(lines: [])
+                
+                moc.delete(document)
+                
+                try? moc.save()
+            }
+        }
     }
     
     var body: some View {
@@ -103,7 +129,7 @@ struct DocumentEditor: View {
                         Spacer()
                         
                         Button(action: {
-                            document = convertScreenToPDF()
+                            pdfDocument = convertScreenToPDF()
                             showFileExporter.toggle()
                         }, label: {
                             Image("export")
@@ -187,7 +213,7 @@ struct DocumentEditor: View {
                         // Show the document view in which users can edit text
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
-                                if scanResult.scannedTextList.count < 1 {
+                                if document.scanResult!.scannedTextList.count < 1 {
                                     // View generated on intial startup (editable)
                                     Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
                                     Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
@@ -200,32 +226,27 @@ struct DocumentEditor: View {
                                 }
                             }
                             
-                            if isDrawing {
+                            if isDrawing { 
                                 Canvas { ctx, size in
-                                    for line in canvasSettings.lines {
+                                    for line in canvasStuff.lineBuffer {
                                         var path = Path()
                                         path.addLines(line.points)
                                         
-                                        ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth, lineCap: canvasSettings.lineCap, lineJoin: .round))
+                                        ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth ))
                                     }
                                 }
-                                .gesture(DragGesture(minimumDistance: 0, coordinateSpace: .local).onChanged({ value in
-                                    let position = value.location
-                                    if value.translation == .zero {
-                                        if canvasSettings.isRubbing {
-                                            canvasSettings.lines.append(Line(points: [position], colour: userSettings.backgroundColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
-                                        } else {
-                                            if canvasSettings.lineCap == .round {
-                                                canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                .gesture(
+                                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                        .onChanged({ value in
+                                            let position = value.location
+                                            if value.translation == .zero {
+                                                canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: canvasStuff.selectedColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
                                             } else {
-                                                canvasSettings.lines.append(Line(points: [position], colour: canvasSettings.selectedHighlighterColour, lineCap: canvasSettings.lineCap, lineWidth: canvasSettings.lineWidth, isHighlighter: false))
+                                                guard let index = canvasStuff.lineBuffer.indices.last else { return }
+                                                canvasStuff.lineBuffer[index].points.append(position)
                                             }
-                                        }
-                                    } else {
-                                        guard let lastIndex = canvasSettings.lines.indices.last else { return }
-                                        canvasSettings.lines[lastIndex].points.append(position)
-                                    }
-                                }))
+                                        })
+                                )
                             }
                         }
                             .padding()
@@ -235,7 +256,7 @@ struct DocumentEditor: View {
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
                                 ForEach(0..<images.count, id: \.self) { imageIndex in
-                                   images[imageIndex]
+                                    images[imageIndex]
                                        .resizable()
                                        .frame(width: geometryProxy.size.width, height: geometryProxy.size.height * 0.85)
                                        .aspectRatio(contentMode: .fit)
@@ -264,27 +285,28 @@ struct DocumentEditor: View {
                     OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .environmentObject(userSettings)
-                        .environmentObject(canvasSettings)
+                        .environmentObject(canvasStuff)
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
             }
                 .onAppear(perform: initialisation)
+                .onDisappear(perform: termination)
                 .environmentObject(userSettings)
-                .environmentObject(scanResult)
-                .environmentObject(canvasSettings)
+                .environmentObject(document.scanResult!)
+                .environmentObject(canvasStuff)
                 .navigationBarTitle("")
                 .navigationBarBackButtonHidden(true)
                 .navigationBarHidden(true)
                 .sheet(isPresented: $showPencilEdit, content: {
-                    if canvasSettings.lineCap == .round {
+                    if canvasStuff.lineCap == .round {
                         EditPencil(drawingToolName: "Pencil")
-                            .environmentObject(canvasSettings)
+                            .environmentObject(canvasStuff)
                             .environmentObject(userSettings)
                             .presentationDetents([.fraction(0.30)])
                             .presentationDragIndicator(.visible)
                     } else {
                         EditPencil(drawingToolName: "Highlighter")
-                            .environmentObject(canvasSettings)
+                            .environmentObject(canvasStuff)
                             .environmentObject(userSettings)
                             .presentationDetents([.fraction(0.30)])
                             .presentationDragIndicator(.visible)
@@ -296,7 +318,7 @@ struct DocumentEditor: View {
                 })
                 .fileExporter(
                    isPresented: $showFileExporter,
-                   document: document,
+                   document: pdfDocument,
                    contentType: UTType.pdf,
                    defaultFilename: "NewPDF"
                 ) { result in }

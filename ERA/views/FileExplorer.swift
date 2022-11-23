@@ -28,8 +28,6 @@ struct FileExplorer: View {
     @State var currentDocument: Document?
     
     @State var isLoading: Bool = false
-    
-    var accents: [String] = AVSpeechSynthesisVoice.speechVoices().map { $0.language }
         
     var body: some View {
         NavigationView {
@@ -70,7 +68,7 @@ struct FileExplorer: View {
                             LazyVGrid(columns: columns, spacing: 20) {
                                 ForEach(files, id: \.id) { file in
                                     if file.images != nil {
-                                        NavigationLink(destination: DocumentEditor( scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
+                                        NavigationLink(destination: DocumentEditor(document: file, scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
                                             ZStack {
                                                 if (userSettings.isDarkMode) {
                                                     RoundedRectangle(cornerRadius: 10)
@@ -164,15 +162,16 @@ struct FileExplorer: View {
                             let result = convertPhotosToParagraphs(scan: images) // Get paragraph information
 
                             // Create new scanResult which is saved into core data
-                            let newScanResult = Document(context: moc)
-                            newScanResult.id = UUID()
-                            newScanResult.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
-                            newScanResult.title = "Scan" + getDate()
+                            let newDocument = Document(context: moc)
+                            newDocument.id = UUID()
+                            newDocument.scanResult = ScanResult(scannedTextList: result.0, scannedText: result.1)
+                            newDocument.title = "Scan" + getDate()
 
                             // Save images
                             let imageDataArray = convertImagesToData(images: images)
                             let colatedImageData = try NSKeyedArchiver.archivedData(withRootObject: imageDataArray, requiringSecureCoding: true)
-                            newScanResult.images = colatedImageData
+                            newDocument.images = colatedImageData
+                            newDocument.canvasData = CanvasData(lines: [])
                             
                             try? moc.save()
                         } catch {}
@@ -196,7 +195,7 @@ struct FileExplorer: View {
 struct EditDocumentPropertiesTest: View {
     @Binding var document: Document?
     var body: some View {
-        EditDocumentProperties(scanTest: document!, title: document!.title ?? "Unknown")
+        EditDocumentProperties(document: document!, title: document!.title ?? "Unknown")
     }
 }
 
