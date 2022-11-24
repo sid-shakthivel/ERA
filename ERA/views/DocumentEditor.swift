@@ -72,8 +72,8 @@ struct DocumentEditor: View {
         // Copy data from the saved buffer into the working bufffer
         guard let lines = (document.canvasData as? CanvasData)?.lines else { return }
         print("lines")
-        print(lines)
         for line in lines {
+            print(line.points)
             canvasStuff.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
         }
         print("Initt'd")
@@ -88,18 +88,14 @@ struct DocumentEditor: View {
        
         
         DispatchQueue.main.async {
-            print(savedLineBuffer)
             moc.performAndWait {
-                
                 let newDocument = Document(context: moc)
                 newDocument.id = UUID()
-                newDocument.scanResult = ScanResult()
+                newDocument.scanResult = scanResult
                 newDocument.title = document.title
                 newDocument.images = document.images
-                newDocument.canvasData = CanvasData(lines: [])
-                
+                newDocument.canvasData = CanvasData(lines: savedLineBuffer)
                 moc.delete(document)
-                
                 try? moc.save()
             }
         }
@@ -325,7 +321,7 @@ struct DocumentEditor: View {
                .gesture(
                 MagnificationGesture()
                     .onChanged { newScale in
-                        let newFontSize = min(CGFloat(userSettings.paragraphFontSize) * newScale, 1.5)
+                        let newFontSize = CGFloat(userSettings.paragraphFontSize) * newScale
 
                         userSettings.paragraphFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: newFontSize)
                         userSettings.headingFont = UIFont(descriptor: userSettings.paragraphFont.fontDescriptor, size: CGFloat(newFontSize * 1.5))

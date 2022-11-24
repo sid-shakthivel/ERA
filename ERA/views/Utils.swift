@@ -443,7 +443,7 @@ class SavedLine: NSObject, NSSecureCoding {
         
         print("going to encode")
         
-        coder.encode(pointValues, forKey: "positions")
+        coder.encode(pointValues, forKey: CodingKeys.points.rawValue)
         coder.encode(UIColor(colour).encode(), forKey: CodingKeys.colour.rawValue)
         coder.encode(lineCap.rawValue, forKey: CodingKeys.lineCap.rawValue)
         coder.encode(lineWidth, forKey: CodingKeys.lineWidth.rawValue)
@@ -460,6 +460,7 @@ class SavedLine: NSObject, NSSecureCoding {
         
         let mColourData: Data = coder.decodeObject(forKey: CodingKeys.colour.rawValue) as! Data
         let mUiColour = UIColor.color(data: mColourData)
+        
         let mPoints: [CGPoint] = (coder.decodeObject(forKey: CodingKeys.points.rawValue) as! [NSValue]).map { $0.cgPointValue }
         
         self.init(points: mPoints, colour: Color(uiColor: mUiColour!), lineCap: mLineCap, lineWidth: mLineWidth, isHighlighter: mIsHighlighter)
