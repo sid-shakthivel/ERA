@@ -180,8 +180,7 @@ struct OptionBar: View {
                         // On long press remove all text
                         scanData.scannedText = ""
                         scanData.scannedTextList = []
-                    }
-                
+                    }   
 
                 Button(action: {
                     if canvasSettings.lineBuffer.count >= 1 {

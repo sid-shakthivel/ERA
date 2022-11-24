@@ -51,7 +51,7 @@ struct DocumentEditor: View {
             print("This error message from SpeechSynthesizer \(error.localizedDescription)")
         }
             
-        let utterance = AVSpeechUtterance(string: document.scanResult!.scannedText)
+        let utterance = AVSpeechUtterance(string: scanResult.scannedText)
         utterance.voice = AVSpeechSynthesisVoice(language: userSettings.voice)
         utterance.volume = userSettings.volume
         utterance.pitchMultiplier = userSettings.pitch
@@ -71,33 +71,36 @@ struct DocumentEditor: View {
         
         // Copy data from the saved buffer into the working bufffer
         guard let lines = (document.canvasData as? CanvasData)?.lines else { return }
-        print("lines")
         for line in lines {
-            print(line.points)
             canvasStuff.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
         }
-        print("Initt'd")
     }
     
-    func termination() {
+    func save_document() {
         // Copy data from the working buffer into the saved buffer and attempt to save it into core data
         var savedLineBuffer: [SavedLine] = []
         for line in canvasStuff.lineBuffer {
             savedLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
         }
        
-        
-        DispatchQueue.main.async {
-            moc.performAndWait {
-                let newDocument = Document(context: moc)
-                newDocument.id = UUID()
-                newDocument.scanResult = scanResult
-                newDocument.title = document.title
-                newDocument.images = document.images
-                newDocument.canvasData = CanvasData(lines: savedLineBuffer)
-                moc.delete(document)
-                try? moc.save()
+        moc.performAndWait {
+            let newDocument = Document(context: moc)
+            newDocument.id = UUID()
+            
+            var test: [SavedParagraph] = []
+            // Copy over the attributes maybe in order to save em
+            for savedParagraph in scanResult.scannedTextList {
+                test.append(SavedParagraph(text: savedParagraph.text as String, isHeading: savedParagraph.isHeading))
             }
+            
+            let best = scanResult.scannedText as String
+            
+            newDocument.scanResult = ScanResult(scannedTextList: test, scannedText: best)
+            newDocument.title = document.title
+            newDocument.images = document.images
+            newDocument.canvasData = CanvasData(lines: savedLineBuffer)
+            moc.delete(document)
+            try? moc.save()
         }
     }
     
@@ -140,6 +143,16 @@ struct DocumentEditor: View {
                                             .font(Font(userSettings.subParagaphFont))
                                     }
                             }
+                        
+                        Button(action: {
+                            // Save button which saves data to core data
+                            save_document()
+                        }, label: {
+                            Image("save")
+                                .resizable()
+                                .frame(width: 20, height: 30)
+                                .invertOnDarkTheme()
+                        })
                             
                         if isEditingText {
                             // Needs to save changes
@@ -209,16 +222,18 @@ struct DocumentEditor: View {
                         // Show the document view in which users can edit text
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
-                                if document.scanResult!.scannedTextList.count < 1 {
-                                    // View generated on intial startup (editable)
-                                    Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
-                                    Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
-                                } else {
-                                    // View generated on scan/imported PDF
-                                    ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
-                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
-                                        Text("")
-                                    }
+//                                if scanResult.scannedTextList.count < 1 {
+//                                    // View generated on intial startup (editable)
+//                                    Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
+//                                    Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
+//                                } else {
+//
+//                                }
+                                
+                                // View generated on scan/imported PDF
+                                ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
+                                    Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
+                                    Text("")
                                 }
                             }
                             
@@ -234,12 +249,20 @@ struct DocumentEditor: View {
                                 .gesture(
                                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                         .onChanged({ value in
-                                            let position = value.location
+                                            let position = value.location                                            
                                             if value.translation == .zero {
-                                                canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: canvasStuff.selectedColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                if canvasStuff.isRubbing {
+                                                    canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                } else {
+                                                    if canvasStuff.lineCap == .round {
+                                                        canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: canvasStuff.selectedColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                    } else {
+                                                        canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: canvasStuff.selectedHighlighterColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                    }
+                                                }
                                             } else {
-                                                guard let index = canvasStuff.lineBuffer.indices.last else { return }
-                                                canvasStuff.lineBuffer[index].points.append(position)
+                                                guard let lastIndex = canvasStuff.lineBuffer.indices.last else { return }
+                                                canvasStuff.lineBuffer[lastIndex].points.append(position)
                                             }
                                         })
                                 )
@@ -286,9 +309,9 @@ struct DocumentEditor: View {
                 .invertBackgroundOnDarkTheme(isBase: true)
             }
                 .onAppear(perform: initialisation)
-                .onDisappear(perform: termination)
+                .onDisappear(perform: save_document)
                 .environmentObject(userSettings)
-                .environmentObject(document.scanResult!)
+                .environmentObject(scanResult)
                 .environmentObject(canvasStuff)
                 .navigationBarTitle("")
                 .navigationBarBackButtonHidden(true)

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AVFoundation
+import SwiftUITooltip
 
 struct FileExplorer: View {
     @Environment(\.managedObjectContext) var moc
@@ -28,6 +28,16 @@ struct FileExplorer: View {
     @State var currentDocument: Document?
     
     @State var isLoading: Bool = false
+    
+    @State var isShowingHelp = false
+    
+    @State var tooltipConfig = DefaultTooltipConfig()
+    
+    func setup_tooltips() {
+        tooltipConfig.enableAnimation = true
+        tooltipConfig.animationOffset = 10
+        tooltipConfig.animationTime = 1
+    }
         
     var body: some View {
         NavigationView {
@@ -43,11 +53,27 @@ struct FileExplorer: View {
                         
                         Spacer()
                         
+                        Button(action: {
+                            isShowingHelp.toggle()
+                        }, label: {
+                            Image("info")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .invertOnDarkTheme()
+                        })
+                        
                         NavigationLink(destination: Settings()) {
                             Image("settings")
                                 .resizable()
                                 .frame(width: 30, height: 30)
                                 .invertOnDarkTheme()
+                        }
+                        .if(isShowingHelp) { view in
+                            view
+                                .tooltip(.bottom, config: tooltipConfig) {
+                                    Text("Settings")
+                                        .font(Font(userSettings.subParagaphFont))
+                                }
                         }
                     }
                     .padding(.leading)
@@ -141,12 +167,20 @@ struct FileExplorer: View {
                                     .padding()
                                     .invertOnDarkTheme()
                             })
+                            .if(isShowingHelp) { view in
+                                view
+                                    .tooltip(.right, config: tooltipConfig) {
+                                        Text("Menu")
+                                            .font(Font(userSettings.paragraphFont))
+                                    }
+                            }
                         }
                         
                         Spacer()
                     }
                     .padding(.leading)
                 }
+                    .onAppear(perform: setup_tooltips)
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
                         Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
@@ -156,6 +190,7 @@ struct FileExplorer: View {
                     })
                     .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                         do {
+                            isLoading = true
                             let url = try result.get()  // Retrieve exact URL on site
 
                             let images: [UIImage] = convertPDFToImages(url: url) // Use URL to conver the file into an array of photos
@@ -174,6 +209,7 @@ struct FileExplorer: View {
                             newDocument.canvasData = CanvasData(lines: [])
                             
                             try? moc.save()
+                            isLoading = false
                         } catch {}
                     })
                     .sheet(isPresented: $showDocumentCameraView, content: {

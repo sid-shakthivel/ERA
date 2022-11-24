@@ -16,7 +16,7 @@ class SavedParagraph: NSObject, NSSecureCoding {
     var isHeading: Bool
     
     enum CodingKeys: String {
-        case text = "text"
+        case text = "texting"
         case isHeading = "isHeading"
     }
     
@@ -33,10 +33,9 @@ class SavedParagraph: NSObject, NSSecureCoding {
     }
     
     public required convenience init?(coder: NSCoder) {
-        let mText = coder.decodeObject(forKey: CodingKeys.text.rawValue) as? String ?? ""
         let mIsHeading = coder.decodeBool(forKey: CodingKeys.isHeading.rawValue)
-        
-        self.init(text: mText, isHeading: mIsHeading)
+        let mText = coder.decodeObject(of: NSString.self, forKey: CodingKeys.text.rawValue) as? String
+        self.init(text: mText ?? "hey yoiung world", isHeading: mIsHeading)
     }
 }
 

@@ -277,7 +277,7 @@ class Speaker: NSObject, ObservableObject, AVSpeechSynthesizerDelegate {
 @objc(ScanResultAttributeTransformer)
 class ScanResultAttributeTransformer: NSSecureUnarchiveFromDataTransformer {
     override static var allowedTopLevelClasses: [AnyClass] {
-        [ScanResult.self]
+        [ScanResult.self, NSArray.self, SavedParagraph.self]
     }
     
     static func register() {
@@ -362,38 +362,28 @@ public class ScanResult: NSObject, ObservableObject, NSSecureCoding {
     public static var supportsSecureCoding: Bool = true
 
     enum CodingKeys: String {
-        case scannedTextList = "text"
+        case scannedTextList = "scannedTextList"
         case scannedText = "scannedText"
-        case scanHeading = "scanHeading"
-        case scanText = "scanText"
     }
     
     @Published var scannedTextList: [SavedParagraph]
     @Published var scannedText: String
-    @Published var scanHeading: SavedParagraph
-    @Published var scanText: SavedParagraph
     
-    init(scannedTextList: [SavedParagraph] = [], scannedText: String = exampleText, scanHeading: SavedParagraph = SavedParagraph(text: exampleHeading, isHeading: true), scanText: SavedParagraph = SavedParagraph(text: exampleText, isHeading: false)) {
+    init (scannedTextList: [SavedParagraph] = [], scannedText: String = exampleText) {
         self.scannedTextList = scannedTextList
         self.scannedText = scannedText
-        self.scanHeading = scanHeading
-        self.scanText = scanText
     }
     
     public func encode(with coder: NSCoder) {
         coder.encode(scannedTextList, forKey: CodingKeys.scannedTextList.rawValue)
         coder.encode(scannedText, forKey: CodingKeys.scannedText.rawValue)
-        coder.encode(scanHeading, forKey: CodingKeys.scanHeading.rawValue)
-        coder.encode(scanText, forKey: CodingKeys.scanText.rawValue)
     }
     
     public required convenience init?(coder: NSCoder) {
-        let mScannedTextList = coder.decodeObject(of: [NSArray.self, SavedParagraph.self], forKey: CodingKeys.scannedTextList.rawValue) as! [SavedParagraph]
         let mScannedText = coder.decodeObject(forKey: CodingKeys.scannedText.rawValue) as? String ?? ""
-        let mScanHeading = coder.decodeObject(of: SavedParagraph.self, forKey: CodingKeys.scanHeading.rawValue)!
-        let mScanText = coder.decodeObject(of: SavedParagraph.self, forKey: CodingKeys.scanText.rawValue)!
+        let mScannedTextList = coder.decodeObject(of: [NSArray.self, SavedParagraph.self], forKey: CodingKeys.scannedTextList.rawValue) as! [SavedParagraph]
         
-        self.init(scannedTextList: mScannedTextList, scannedText: mScannedText, scanHeading: mScanHeading, scanText: mScanText)
+        self.init(scannedTextList: mScannedTextList, scannedText: mScannedText)
     }
 }
 
@@ -441,8 +431,6 @@ class SavedLine: NSObject, NSSecureCoding {
         // In order to encode an array of CGPoints, must be converted into NSValues
         let pointValues = points.map { NSValue(cgPoint: $0) }
         
-        print("going to encode")
-        
         coder.encode(pointValues, forKey: CodingKeys.points.rawValue)
         coder.encode(UIColor(colour).encode(), forKey: CodingKeys.colour.rawValue)
         coder.encode(lineCap.rawValue, forKey: CodingKeys.lineCap.rawValue)
@@ -451,9 +439,6 @@ class SavedLine: NSObject, NSSecureCoding {
     }
     
     public required convenience init?(coder: NSCoder) {
-        
-        print("Began the process")
-        
         let mIsHighlighter = coder.decodeBool(forKey: CodingKeys.isHighlighter.rawValue)
         let mLineWidth = coder.decodeDouble(forKey: CodingKeys.lineWidth.rawValue)
         let mLineCap = CGLineCap(rawValue: Int32(coder.decodeInteger(forKey: CodingKeys.lineCap.rawValue)))!
@@ -485,12 +470,7 @@ public class CanvasData: NSObject, ObservableObject, NSSecureCoding {
     }
     
     public required convenience init?(coder: NSCoder) {
-        print("at the very least here then")
-        
         let mLines = coder.decodeObject(of: [NSArray.self, SavedLine.self], forKey: CodingKeys.lines.rawValue) as! [SavedLine]
-        
-        print(mLines)
-        
         self.init(lines: mLines)
     }
 }

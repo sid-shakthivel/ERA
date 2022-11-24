@@ -61,11 +61,15 @@ struct Paragraph: View {
                     // If user goes from editing text to not editing text, the modified text needs to be altered
                     DispatchQueue.main.async {
                         let oldParagraphText = paragraphFormat.text
-                        paragraphFormat.text = textToEdit
+                        paragraphFormat.text = String(textToEdit)
                         
                         // Scanned text must be altered too by replacing the paragraph with the edited version
                         if !paragraphFormat.isHeading {
-                            scanResult.scannedText = scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: textToEdit)
+                            let text = scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: textToEdit)
+                            
+                            scanResult.scannedText = text
+                            
+                            print(scanResult.scannedText)
                         }
                     }
                 }
