@@ -146,6 +146,8 @@ struct DocumentEditor: View {
                         
                         Button(action: {
                             // Save button which saves data to core data
+                            isEditingText = false
+                            isDrawing = false
                             save_document()
                         }, label: {
                             Image("save")

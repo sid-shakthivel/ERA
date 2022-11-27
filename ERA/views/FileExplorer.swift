@@ -37,6 +37,7 @@ struct FileExplorer: View {
         tooltipConfig.enableAnimation = true
         tooltipConfig.animationOffset = 10
         tooltipConfig.animationTime = 1
+        tooltipConfig.showArrow = false
     }
         
     var body: some View {
@@ -53,27 +54,20 @@ struct FileExplorer: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            isShowingHelp.toggle()
-                        }, label: {
-                            Image("info")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .invertOnDarkTheme()
-                        })
+//                        Button(action: {
+//                            isShowingHelp.toggle()
+//                        }, label: {
+//                            Image("info")
+//                                .resizable()
+//                                .frame(width: 30, height: 30)
+//                                .invertOnDarkTheme()
+//                        })
                         
                         NavigationLink(destination: Settings()) {
                             Image("settings")
                                 .resizable()
                                 .frame(width: 30, height: 30)
                                 .invertOnDarkTheme()
-                        }
-                        .if(isShowingHelp) { view in
-                            view
-                                .tooltip(.bottom, config: tooltipConfig) {
-                                    Text("Settings")
-                                        .font(Font(userSettings.subParagaphFont))
-                                }
                         }
                     }
                     .padding(.leading)
@@ -89,7 +83,7 @@ struct FileExplorer: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                     
-                    ScrollView {
+                    ScrollView {                        
                         ZStack {
                             LazyVGrid(columns: columns, spacing: 20) {
                                 ForEach(files, id: \.id) { file in
@@ -130,6 +124,7 @@ struct FileExplorer: View {
                                                     Text("Edit")
                                                 }
                                             }
+                                            .animation(.easeOut, value: 10)
                                         }
                                     }
                                 }
@@ -167,15 +162,17 @@ struct FileExplorer: View {
                                     .padding()
                                     .invertOnDarkTheme()
                             })
-                            .if(isShowingHelp) { view in
-                                view
-                                    .tooltip(.right, config: tooltipConfig) {
-                                        Text("Menu")
-                                            .font(Font(userSettings.paragraphFont))
-                                    }
+                            
+                            if isShowingHelp {
+                                VStack {
+                                    Text("Menu")
+                                        .font(Font(userSettings.headingFont))
+                                    Image(systemName: "arrow.down")
+                                }
+                                .offset(y: -60)
                             }
                         }
-                        
+
                         Spacer()
                     }
                     .padding(.leading)

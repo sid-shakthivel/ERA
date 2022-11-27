@@ -197,6 +197,9 @@ struct Settings: View {
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
                         }
+                        .onChange(of: settings.isEnhancedReading) { _ in
+                            settings.saveSettings(userPreferences: settings)
+                        }
 
                         Group {
                             Text("Font Selection")
@@ -208,6 +211,7 @@ struct Settings: View {
 
                             Button(action: {
                                 isShowingFontPicker.toggle()
+                                settings.saveSettings(userPreferences: settings)
                             }, label: {
                                 HStack {
                                     Text("\(settings.paragraphFont.fontName)")
@@ -281,6 +285,7 @@ struct Settings: View {
                                     settings.headingFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.5))
                                     settings.subheadingFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.25))
                                     settings.subParagaphFont = UIFont(descriptor: settings.paragraphFont.fontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 0.75))
+                                    settings.saveSettings(userPreferences: settings)
                                 })
                         }
 
@@ -325,6 +330,9 @@ struct Settings: View {
                                             .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
                                     )
                                 }
+                                .onChange(of: settings.fontColour) { _ in
+                                    settings.saveSettings(userPreferences: settings)
+                                }
                         }
                         
                         Group {
@@ -334,7 +342,7 @@ struct Settings: View {
                                 .fontWeight(.bold)
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                            
+
                             Picker(selection: $settings.lineSpacing, content: {
                                 ForEach(0...20, id: \.self) { number in
                                     HStack {
@@ -363,6 +371,9 @@ struct Settings: View {
                                         RoundedRectangle(cornerRadius: 10)
                                             .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
                                     )
+                                }
+                                .onChange(of: settings.lineSpacing) { _ in
+                                    settings.saveSettings(userPreferences: settings)
                                 }
                         }
                                                 
@@ -424,6 +435,9 @@ struct Settings: View {
                                         .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
                                 )
                             }
+                            .onChange(of: settings.backgroundColour) { _ in
+                                settings.saveSettings(userPreferences: settings)
+                            }
                     }
                     
                     Group {
@@ -435,7 +449,7 @@ struct Settings: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
                             .padding(.bottom)
-                        
+
                         Group {
                             Toggle(isOn: $settings.isDarkMode, label: {
                                 Text("Dark Mode")
@@ -444,41 +458,33 @@ struct Settings: View {
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))
                             })
-                        }
-                        .onChange(of: settings.isDarkMode) { isDarkMode in
-                            if isDarkMode {
-                                // Set other settings to reflect dark mode
-//                                canvasSettings.selectedColour = .white
-//                                canvasSettings.selectedHighlighterColour = .white
-                            } else {
-                                // Set other setting to reflect light mode
-//                                canvasSettings.selectedColour = .white
-//                                canvasSettings.selectedHighlighterColour = .white
-                            }
-                            
-                            do {
-                                if isDarkMode {
-                                    // Set other settings to dark mode
-                                    let test = try encodeColor(colour: ColourConstants.lightModeBackground)
-                                    let best = try decodeColor(from: test)
-                                    
-                                    if best == settings.backgroundColour || ColourConstants.lightModeBackground == settings.backgroundColour {
-                                        settings.backgroundColour = ColourConstants.darkModeBackground
-                                        settings.fontColour = .white
-                                    }
-                                } else {
-                                    // Set other settings to light mode
-                                    let test = try encodeColor(colour: ColourConstants.darkModeBackground)
-                                    let best = try decodeColor(from: test)
-                                    
-                                    if best == settings.backgroundColour || ColourConstants.darkModeBackground == settings.backgroundColour {
-                                        settings.backgroundColour = ColourConstants.lightModeBackground
-                                        settings.fontColour = .black
-                                    }
-                                }
-                            } catch {
-                                
-                            }
+                            .onChange(of: settings.isDarkMode) { isDarkMode in
+                               do {
+                                   if isDarkMode {
+                                       // Set other settings to dark mode
+                                       let test = try encodeColor(colour: ColourConstants.lightModeBackground)
+                                       let best = try decodeColor(from: test)
+
+                                       if best == settings.backgroundColour || ColourConstants.lightModeBackground == settings.backgroundColour {
+                                           settings.backgroundColour = ColourConstants.darkModeBackground
+                                           settings.fontColour = .white
+                                       }
+                                   } else {
+                                       // Set other settings to light mode
+                                       let test = try encodeColor(colour: ColourConstants.darkModeBackground)
+                                       let best = try decodeColor(from: test)
+
+                                       if best == settings.backgroundColour || ColourConstants.darkModeBackground == settings.backgroundColour {
+                                           settings.backgroundColour = ColourConstants.lightModeBackground
+                                           settings.fontColour = .black
+                                       }
+                                   }
+
+                                   settings.saveSettings(userPreferences: settings)
+                               } catch {
+
+                               }
+                           }
                         }
                     }
                     
@@ -501,6 +507,9 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Slider(value: $settings.pitch, in: 0.5...2)
+                                .onChange(of: settings.pitch) { _ in
+                                    settings.saveSettings(userPreferences: settings)
+                                }
 
                             Text("Volume")
                                 .foregroundColor(.black)
@@ -510,6 +519,9 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Slider(value: $settings.volume, in: 0...1)
+                                .onChange(of: settings.volume) { _ in
+                                    settings.saveSettings(userPreferences: settings)
+                                }
 
                             Text("Rate")
                                 .foregroundColor(.black)
@@ -519,6 +531,9 @@ struct Settings: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Slider(value: $settings.rate, in: AVSpeechUtteranceMinimumSpeechRate...AVSpeechUtteranceMaximumSpeechRate)
+                                .onChange(of: settings.rate) { _ in
+                                    settings.saveSettings(userPreferences: settings)
+                                }
                         }
 
                         Group {
@@ -564,28 +579,11 @@ struct Settings: View {
                                     )
                                 }
                                 .padding(.bottom)
+                                .onChange(of: settings.voice) { _ in
+                                    settings.saveSettings(userPreferences: settings)
+                                }
                         }
                     }
-                    
-                    Button(action: {
-                        settings.saveSettings(userPreferences: settings)
-                    }, label: {
-                        Text("Save")
-                            .textCase(.uppercase)
-                            .foregroundColor(.white)
-                            .font(.system(size: 14))
-                            .fontWeight(.semibold)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                    })
-                        .if(settings.isDarkMode) { view in
-                            view.tint(ColourConstants.darkModeDarker)
-                        }
-                        .if(!settings.isDarkMode) { view in
-                            view.tint(Color(hex: 0x19242D, alpha: 1))
-                        }
-                        .frame(maxHeight: .infinity, alignment: .bottomLeading)
-                        .buttonStyle(.borderedProminent)
                     
                     Button(action: {
                         // Resets settings back to default

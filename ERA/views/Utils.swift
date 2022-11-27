@@ -348,7 +348,7 @@ func convertUIImagesToImages(uiImages: [UIImage]) -> [Image] {
 
 func getImagesfromData(data: Data) -> [Image] {
     do {
-        let dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClass: NSArray.self, from: data) as! [Data]
+        let dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self], from: data) as! [Data]
         let imageArray = convertDataToImages(dataArray: dataArray)
         return imageArray
     } catch {
