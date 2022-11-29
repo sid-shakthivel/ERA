@@ -14,7 +14,7 @@ import AVFoundation
 class UserPreferences: ObservableObject, Codable {
     // For Codable to work, enum of properties need to be listed
     enum CodingKeys: CodingKey {
-        case paragraphFontSize, fontColour, backgroundColour, isEnhancedReading, isDarkMode, paragraphFontName, voice, pitch, rate, volume, lineSpacing
+        case paragraphFontSize, fontColour, backgroundColour, isEnhancedReading, isDarkMode, paragraphFontName, voice, pitch, rate, volume, lineSpacing, letterSpacing
     }
     
     // All other font sizes and relative to this main font size
@@ -42,6 +42,7 @@ class UserPreferences: ObservableObject, Codable {
     
     // Text based settings
     @Published var lineSpacing: Int = 0
+    @Published var letterSpacing: Float = 0
 
     // Save settings from the observable object to user settings
     func saveSettings(userPreferences: UserPreferences) {
@@ -72,6 +73,7 @@ class UserPreferences: ObservableObject, Codable {
         try container.encode(volume, forKey: .volume)
         
         try container.encode(lineSpacing, forKey: .lineSpacing)
+        try container.encode(letterSpacing, forKey: .letterSpacing)
     }
     
     // Conform to decode
@@ -111,6 +113,7 @@ class UserPreferences: ObservableObject, Codable {
         volume = try container.decode(Float.self, forKey: .volume)
         
         lineSpacing = try container.decode(Int.self, forKey: .lineSpacing)
+        letterSpacing = try container.decode(Float.self, forKey: .letterSpacing)
     }
     
     // Setup a new userPreferences class using JSON within UserDefaults
@@ -131,7 +134,9 @@ class UserPreferences: ObservableObject, Codable {
                 rate = loadedUserPreferences.rate
                 volume = loadedUserPreferences.volume
                 lineSpacing = loadedUserPreferences.lineSpacing
-                isDarkMode = loadedUserPreferences.isDarkMode                
+                isDarkMode = loadedUserPreferences.isDarkMode
+                lineSpacing = loadedUserPreferences.lineSpacing
+                letterSpacing = loadedUserPreferences.letterSpacing
                 return
             }
         }
@@ -334,7 +339,7 @@ struct Settings: View {
                                     settings.saveSettings(userPreferences: settings)
                                 }
                         }
-                        
+
                         Group {
                             Text("Line Spacing")
                                 .foregroundColor(.black)
@@ -376,10 +381,53 @@ struct Settings: View {
                                     settings.saveSettings(userPreferences: settings)
                                 }
                         }
+                        
+                        Group {
+                            Text("Letter Spacing")
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
+                                .fontWeight(.bold)
+                                .font(.system(size: 14))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            Picker(selection: $settings.letterSpacing, content: {
+                                ForEach(0...5, id: \.self) { number in
+                                    HStack {
+                                        Text("\(number)")
+                                            .font(.system(size: 14))
+                                            .fontWeight(.regular)
+                                            .foregroundColor(.black)
+                                            .invertOnDarkTheme()
+                                            .padding()
+                                    }
+                                }
+                            }, label: {
+
+                            })
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .invertBackgroundOnDarkTheme(isBase: false)
+                                .cornerRadius(10)
+                                .if(!settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .if(settings.isDarkMode) { view in
+                                    view.overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(Color(hex: 0xAB9D96, alpha: 1), lineWidth: 1)
+                                    )
+                                }
+                                .onChange(of: settings.lineSpacing) { _ in
+                                    settings.saveSettings(userPreferences: settings)
+                                }
+                        }
                                                 
                         Text("This is some example text")
                             .foregroundColor(settings.fontColour)
                             .font(Font(settings.paragraphFont))
+                            .tracking(CGFloat(settings.letterSpacing))
                             .lineSpacing(CGFloat(settings.lineSpacing))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
