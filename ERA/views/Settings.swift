@@ -40,7 +40,7 @@ class UserPreferences: ObservableObject, Codable {
     @Published var rate: Float = 0.5
     @Published var volume: Float = 1.0
     
-    // Line spacing
+    // Text based settings
     @Published var lineSpacing: Int = 0
 
     // Save settings from the observable object to user settings

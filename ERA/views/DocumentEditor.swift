@@ -224,22 +224,16 @@ struct DocumentEditor: View {
                         // Show the document view in which users can edit text
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
-//                                if scanResult.scannedTextList.count < 1 {
-//                                    // View generated on intial startup (editable)
-//                                    Paragraph(paragraphFormat: $scanResult.scanHeading, isEditingText: $isEditingText, textToEdit: scanResult.scanHeading.text)
-//                                    Paragraph(paragraphFormat: $scanResult.scanText, isEditingText: $isEditingText, textToEdit: scanResult.scannedText)
-//                                } else {
-//
-//                                }
-                                
                                 // View generated on scan/imported PDF
                                 ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
-                                    Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
-                                    Text("")
+                                    Group {
+                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
+                                        Text("")
+                                    }
                                 }
                             }
                             
-                            if isDrawing { 
+                            if isDrawing {
                                 Canvas { ctx, size in
                                     for line in canvasStuff.lineBuffer {
                                         var path = Path()
@@ -251,7 +245,7 @@ struct DocumentEditor: View {
                                 .gesture(
                                     DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                         .onChanged({ value in
-                                            let position = value.location                                            
+                                            let position = value.location
                                             if value.translation == .zero {
                                                 if canvasStuff.isRubbing {
                                                     canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))

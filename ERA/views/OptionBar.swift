@@ -176,11 +176,6 @@ struct OptionBar: View {
                        // On single tap clear the canvas
                         canvasData.lines = []
                     }
-                    .onLongPressGesture {
-                        // On long press remove all text
-                        scanData.scannedText = ""
-                        scanData.scannedTextList = []
-                    }   
 
                 Button(action: {
                     if canvasSettings.lineBuffer.count >= 1 {
