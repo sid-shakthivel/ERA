@@ -120,8 +120,7 @@ struct DocumentEditor: View {
                             Text("Document Editor")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .font(.system(size: 14))
-                                .fontWeight(.bold)
+                                .font(.system(size: 14, weight: .bold))
                                 .textCase(.uppercase)
                         }
                         
@@ -314,17 +313,27 @@ struct DocumentEditor: View {
                 .navigationBarHidden(true)
                 .sheet(isPresented: $showPencilEdit, content: {
                     if canvasStuff.lineCap == .round {
+//                        if #available(iOS 16, *) {
+//                            EditPencil(drawingToolName: "Pencil")
+//                                .environmentObject(canvasStuff)
+//                                .environmentObject(userSettings)
+//                                .presentationDetents([.fraction(0.30)])
+//                                .presentationDragIndicator(.visible)
+//                        } else {
+//                            EditPencil(drawingToolName: "Pencil")
+//                                .environmentObject(canvasStuff)
+//                                .environmentObject(userSettings)
+//                        }
+                        
                         EditPencil(drawingToolName: "Pencil")
                             .environmentObject(canvasStuff)
                             .environmentObject(userSettings)
-                            .presentationDetents([.fraction(0.30)])
-                            .presentationDragIndicator(.visible)
                     } else {
-                        EditPencil(drawingToolName: "Highlighter")
-                            .environmentObject(canvasStuff)
-                            .environmentObject(userSettings)
-                            .presentationDetents([.fraction(0.30)])
-                            .presentationDragIndicator(.visible)
+//                        EditPencil(drawingToolName: "Highlighter")
+//                            .environmentObject(canvasStuff)
+//                            .environmentObject(userSettings)
+//                            .presentationDetents([.fraction(0.30)])
+//                            .presentationDragIndicator(.visible)
                     }
                 })
                 .sheet(isPresented: $showDictionary, content: {

@@ -34,8 +34,7 @@ struct Menu: View {
                            .foregroundColor(.black)
                            .invertOnDarkTheme()
                            .textCase(.uppercase)
-                           .fontWeight(.semibold)
-                           .font(.system(size: 14))
+                           .font(.system(size: 14, weight: .semibold))
                        
                        Image("arrow-right")
                            .invertOnDarkTheme()
@@ -61,9 +60,8 @@ struct Menu: View {
                        Text("Upload Document")
                            .foregroundColor(.black)
                            .invertOnDarkTheme()
-                           .fontWeight(.semibold)
                            .textCase(.uppercase)
-                           .font(.system(size: 14))
+                           .font(.system(size: 14, weight: .semibold))
                        
                        Image("arrow-right")
                            .invertOnDarkTheme()
@@ -90,8 +88,7 @@ struct Menu: View {
                            .foregroundColor(.black)
                            .invertOnDarkTheme()
                            .textCase(.uppercase)
-                           .fontWeight(.semibold)
-                           .font(.system(size: 14))
+                           .font(.system(size: 14, weight: .semibold))
                        
                        Image("arrow-right")
                            .invertOnDarkTheme()

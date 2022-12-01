@@ -48,7 +48,7 @@ struct FileExplorer: View {
                         Text("Easy Reading Assistant")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .fontWeight(.bold)
+                            .font(.system(size: 20, weight: .bold))
                             .textCase(.uppercase)
                             .frame(maxWidth: .infinity, alignment: .leading)
                         
@@ -78,8 +78,7 @@ struct FileExplorer: View {
                     Text("Home")
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
-                        .font(.system(size: 24))
-                        .fontWeight(.semibold)
+                        .font(.system(size: 24, weight: .semibold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .padding()
                     
@@ -180,10 +179,16 @@ struct FileExplorer: View {
                     .onAppear(perform: setup_tooltips)
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
+//                        if #available(iOS 16, *) {
+//                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+//                                    .environmentObject(userSettings)
+//                                    .presentationDetents([.fraction(0.30)])
+//                                    .presentationDragIndicator(.visible)
+//                        } else {
+//
+//                        }
+                        
                         Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
-                                .environmentObject(userSettings)
-                                .presentationDetents([.fraction(0.30)])
-                                .presentationDragIndicator(.visible)
                     })
                     .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                         do {
@@ -232,8 +237,9 @@ struct EditDocumentPropertiesTest: View {
     }
 }
 
-struct FileExplorer_Previews: PreviewProvider {
-    static var previews: some View {
-        FileExplorer()
-    }
-}
+//struct FileExplorer_Previews: PreviewProvider {
+//    @available(iOS 16.0, *)
+//    static var previews: some View {
+//        FileExplorer()
+//    }
+//}

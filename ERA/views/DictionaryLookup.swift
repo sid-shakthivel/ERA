@@ -126,8 +126,7 @@ struct DictionaryLookup: View {
                 Text("Dictionary")
                     .foregroundColor(.black)
                     .invertOnDarkTheme()
-                    .fontWeight(.bold)
-                    .font(.system(size: 24))
+                    .font(.system(size: 24, weight: .bold))
                     .padding()
                 
                 TextField("", text: $textInput)
@@ -174,13 +173,13 @@ struct DictionaryLookup: View {
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
                             .font(Font(userSettings.headingFont))
-                            .fontWeight(.bold)
+//                            .fontWeight(.bold)
                     case .UnknownWord, .Nothing:
                         Text("Word not found!?")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
                             .font(Font(userSettings.headingFont))
-                            .fontWeight(.bold)
+//                            .fontWeight(.bold)
                     }
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
@@ -191,7 +190,7 @@ struct DictionaryLookup: View {
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
                         .font(Font(userSettings.headingFont))
-                        .fontWeight(.bold)
+//                        .fontWeight(.bold)
                     
                     Text("\(wordData?.phonetic ?? "Unknown")")
                         .foregroundColor(.black)
@@ -219,7 +218,7 @@ struct DictionaryLookup: View {
                                 }
                             }
                         }
-                            .scrollContentBackground(.hidden)
+//                            .scrollContentBackground(.hidden)
                             .invertBackgroundOnDarkTheme(isBase: true)
                             .tabItem {
                                 Label("Defintions", systemImage: "pencil.circle")
@@ -252,7 +251,7 @@ struct DictionaryLookup: View {
                                 }
                             }
                         }
-                            .scrollContentBackground(.hidden)
+//                            .scrollContentBackground(.hidden)
                             .listRowBackground(userSettings.backgroundColour)
                             .invertBackgroundOnDarkTheme(isBase: true)
                             .tabItem {

@@ -30,7 +30,7 @@ class UserPreferences: ObservableObject, Codable {
     
     // Sets indivudal fonts for each category
     @Published var paragraphFont: UIFont = UIFont.systemFont(ofSize: 16)
-    @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24)
+    @Published var headingFont: UIFont = UIFont.systemFont(ofSize: 24, weight: .bold)
     @Published var subheadingFont: UIFont = UIFont.systemFont(ofSize: 20)
     @Published var subParagaphFont: UIFont = UIFont.systemFont(ofSize: 12)
     
@@ -167,8 +167,7 @@ struct Settings: View {
                         Text("Settings")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .font(.system(size: 14))
-                            .fontWeight(.bold)
+                            .font(.system(size: 14, weight: .bold))
                             .textCase(.uppercase)
                     }
                 }
@@ -252,8 +251,7 @@ struct Settings: View {
                             Text("Font Size")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Picker(selection: $settings.paragraphFontSize, content: {
@@ -298,8 +296,7 @@ struct Settings: View {
                             Text("Font Colour")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             ColorPicker(selection: $settings.fontColour) {
@@ -344,8 +341,7 @@ struct Settings: View {
                             Text("Line Spacing")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Picker(selection: $settings.lineSpacing, content: {
@@ -386,8 +382,7 @@ struct Settings: View {
                             Text("Letter Spacing")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Picker(selection: $settings.letterSpacing, content: {
@@ -437,8 +432,7 @@ struct Settings: View {
                         Text("Background Settings")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .fontWeight(.bold)
-                            .font(.system(size: 24))
+                            .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
                             .padding(.bottom)
@@ -446,8 +440,7 @@ struct Settings: View {
                         Text("Background Colour")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .fontWeight(.bold)
-                            .font(.system(size: 14))
+                            .font(.system(size: 14, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         ColorPicker(selection: $settings.backgroundColour) {
@@ -492,8 +485,7 @@ struct Settings: View {
                         Text("App Settings")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .fontWeight(.bold)
-                            .font(.system(size: 24))
+                            .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
                             .padding(.bottom)
@@ -503,8 +495,7 @@ struct Settings: View {
                                 Text("Dark Mode")
                                     .foregroundColor(.black)
                                     .invertOnDarkTheme()
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 14))
+                                    .font(.system(size: 14, weight: .bold))
                             })
                             .onChange(of: settings.isDarkMode) { isDarkMode in
                                do {
@@ -540,8 +531,7 @@ struct Settings: View {
                         Text("Text to Speech")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .fontWeight(.bold)
-                            .font(.system(size: 24))
+                            .font(.system(size: 24, weight: .bold))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.top)
                             .padding(.bottom)
@@ -550,8 +540,7 @@ struct Settings: View {
                             Text("Pitch")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Slider(value: $settings.pitch, in: 0.5...2)
@@ -562,8 +551,7 @@ struct Settings: View {
                             Text("Volume")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Slider(value: $settings.volume, in: 0...1)
@@ -574,8 +562,7 @@ struct Settings: View {
                             Text("Rate")
                                 .foregroundColor(.black)
                                 .invertOnDarkTheme()
-                                .fontWeight(.bold)
-                                .font(.system(size: 14))
+                                .font(.system(size: 14, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .leading)
 
                             Slider(value: $settings.rate, in: AVSpeechUtteranceMinimumSpeechRate...AVSpeechUtteranceMaximumSpeechRate)
@@ -652,8 +639,7 @@ struct Settings: View {
                         Text("Reset")
                             .textCase(.uppercase)
                             .foregroundColor(.white)
-                            .font(.system(size: 14))
-                            .fontWeight(.semibold)
+                            .font(.system(size: 14, weight: .semibold))
                             .frame(maxWidth: .infinity)
                             .padding()
                     })

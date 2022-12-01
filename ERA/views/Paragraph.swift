@@ -21,20 +21,29 @@ struct Paragraph: View {
             if paragraphFormat.isHeading {
                 // Heading
                 if isEditingText {
-                    TextField(textToEdit, text: $textToEdit)
-                        .foregroundColor(userSettings.fontColour)
-                        .font(Font(userSettings.headingFont))
-                        .fontWeight(.bold)
-                        .tracking(CGFloat(userSettings.letterSpacing))
-                        .onChange(of: textToEdit) { newValue in
-                            paragraphFormat.text = newValue
-                        }
+                    if #available(iOS 16, *) {
+                        TextField(textToEdit, text: $textToEdit)
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.headingFont))
+                            .fontWeight(.bold)
+                            .tracking(CGFloat(userSettings.letterSpacing))
+                            .onChange(of: textToEdit) { newValue in
+                                paragraphFormat.text = newValue
+                            }
+                    } else {
+                        TextField(textToEdit, text: $textToEdit)
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.headingFont))
+                            .onChange(of: textToEdit) { newValue in
+                                paragraphFormat.text = newValue
+                            }
+                    }
                 } else {
                     Text(paragraphFormat.text)
                         .foregroundColor(userSettings.fontColour)
                         .font(Font(userSettings.headingFont))
-                        .tracking(CGFloat(userSettings.letterSpacing))
-                        .fontWeight(.bold)
+//                        .tracking(CGFloat(userSettings.letterSpacing))
+//                        .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
             } else {
@@ -44,19 +53,25 @@ struct Paragraph: View {
                         TextEditor(text: $textToEdit)
                             .foregroundColor(userSettings.fontColour)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .scrollContentBackground(.hidden)
                             .background(userSettings.backgroundColour)
-                            .tracking(CGFloat(userSettings.letterSpacing))
                             .font(Font(userSettings.paragraphFont))
                             .frame(minHeight: 500)
                     }
                 } else {
-                    Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
-                        .foregroundColor(userSettings.fontColour)
-                        .font(Font(userSettings.paragraphFont))
-                        .lineSpacing(CGFloat(userSettings.lineSpacing))
-                        .tracking(CGFloat(userSettings.letterSpacing))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if #available(iOS 16, *) {
+                        Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.paragraphFont))
+                            .lineSpacing(CGFloat(userSettings.lineSpacing))
+                            .tracking(CGFloat(userSettings.letterSpacing))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.paragraphFont))
+                            .lineSpacing(CGFloat(userSettings.lineSpacing))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
             }
         }
@@ -70,12 +85,11 @@ struct Paragraph: View {
                         // Scanned text must be altered too by replacing the paragraph with the edited version
                         if !paragraphFormat.isHeading {
                             let text = scanResult.scannedText.replacingOccurrences(of: oldParagraphText, with: textToEdit)
-                            
                             scanResult.scannedText = text
-                            
-                            print(scanResult.scannedText)
                         }
                     }
+                } else {
+                    UITextView.appearance().backgroundColor = .clear
                 }
             }
     }
