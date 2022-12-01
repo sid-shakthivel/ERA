@@ -16,49 +16,50 @@ struct Paragraph: View {
     @EnvironmentObject var userSettings: UserPreferences
     @EnvironmentObject var scanResult: ScanResult
     
+    
+//    init(paragraphFormat: SavedParagraph, isEditingText: Bool, textToEdit: String) {
+//        if #unavailable(iOS 16.0) {
+//            UITextView.appearance().backgroundColor = .clear
+//        }
+//    }
+    
     var body: some View {
         Group {
             if paragraphFormat.isHeading {
                 // Heading
                 if isEditingText {
-                    if #available(iOS 16, *) {
-                        TextField(textToEdit, text: $textToEdit)
-                            .foregroundColor(userSettings.fontColour)
-                            .font(Font(userSettings.headingFont))
-                            .fontWeight(.bold)
-                            .tracking(CGFloat(userSettings.letterSpacing))
-                            .onChange(of: textToEdit) { newValue in
-                                paragraphFormat.text = newValue
-                            }
-                    } else {
-                        TextField(textToEdit, text: $textToEdit)
-                            .foregroundColor(userSettings.fontColour)
-                            .font(Font(userSettings.headingFont))
-                            .onChange(of: textToEdit) { newValue in
-                                paragraphFormat.text = newValue
-                            }
-                    }
-                } else {
-                    Text(paragraphFormat.text)
+                    TextField(textToEdit, text: $textToEdit)
                         .foregroundColor(userSettings.fontColour)
                         .font(Font(userSettings.headingFont))
-//                        .tracking(CGFloat(userSettings.letterSpacing))
-//                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .onChange(of: textToEdit) { newValue in
+                            paragraphFormat.text = newValue
+                        }
+                } else {
+                    if #available(iOS 16.0, *) {
+                        Text(paragraphFormat.text)
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.headingFont))
+                            .tracking(CGFloat(userSettings.letterSpacing))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    } else {
+                        Text(paragraphFormat.text)
+                            .foregroundColor(userSettings.fontColour)
+                            .font(Font(userSettings.headingFont))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
             } else {
                 // Normal paragraph
                 if isEditingText {
-                    ZStack {
-                        TextEditor(text: $textToEdit)
-                            .foregroundColor(userSettings.fontColour)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(userSettings.backgroundColour)
-                            .font(Font(userSettings.paragraphFont))
-                            .frame(minHeight: 500)
-                    }
+                    TextEditor(text: $textToEdit)
+                        .foregroundColor(userSettings.fontColour)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .clearListBackground()
+                        .background(userSettings.backgroundColour)
+                        .font(Font(userSettings.paragraphFont))
+                        .frame(minHeight: 500)
                 } else {
-                    if #available(iOS 16, *) {
+                    if #available(iOS 16.0, *) {
                         Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
                             .foregroundColor(userSettings.fontColour)
                             .font(Font(userSettings.paragraphFont))

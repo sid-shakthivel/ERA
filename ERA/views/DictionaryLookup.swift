@@ -64,9 +64,15 @@ struct DictionaryLookup: View {
     @EnvironmentObject var userSettings: UserPreferences
     
     @State var wordData: Word?
-    @State var state: Status = Status.Fetching
+    @State var state: Status = Status.Stationary
     @State var errorMessage: ErrorMessages = ErrorMessages.Nothing
     @State var textInput: String = ""
+    
+    init(wordData: Word?) {
+        if #unavailable(iOS 16.0) {
+            UITableView.appearance().backgroundColor = .clear
+        }
+    }
     
     func fetchData() {
         textInput = cleanString(of: textInput)
@@ -218,10 +224,13 @@ struct DictionaryLookup: View {
                                 }
                             }
                         }
-//                            .scrollContentBackground(.hidden)
+                            .clearListBackground()
                             .invertBackgroundOnDarkTheme(isBase: true)
                             .tabItem {
                                 Label("Defintions", systemImage: "pencil.circle")
+                            }
+                            .onAppear {
+                                UITextView.appearance().backgroundColor = .clear
                             }
                         
                         List {
@@ -251,7 +260,7 @@ struct DictionaryLookup: View {
                                 }
                             }
                         }
-//                            .scrollContentBackground(.hidden)
+                            .clearListBackground()
                             .listRowBackground(userSettings.backgroundColour)
                             .invertBackgroundOnDarkTheme(isBase: true)
                             .tabItem {
@@ -267,8 +276,8 @@ struct DictionaryLookup: View {
     }
 }
 
-struct Lookup_Previews: PreviewProvider {
-    static var previews: some View {
-        DictionaryLookup()
-    }
-}
+//struct Lookup_Previews: PreviewProvider {
+//    static var previews: some View {
+//        DictionaryLookup()
+//    }
+//}

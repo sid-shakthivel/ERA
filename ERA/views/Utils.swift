@@ -88,6 +88,16 @@ struct BackgroundThemeChange: ViewModifier {
     }
 }
 
+struct ClearListBackgroundModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 16.0, *) {
+            content.scrollContentBackground(.hidden)
+        } else {
+            content
+        }
+    }
+}
+
 extension View {
     func invertOnDarkTheme() -> some View {
         modifier(InvertOnThemeChange())
@@ -95,6 +105,10 @@ extension View {
     
     func invertBackgroundOnDarkTheme(isBase: Bool) -> some View {
         modifier(BackgroundThemeChange(isBase: isBase))
+    }
+    
+    func clearListBackground() -> some View {
+        modifier(ClearListBackgroundModifier())
     }
 }
 

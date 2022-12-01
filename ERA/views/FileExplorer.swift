@@ -54,15 +54,6 @@ struct FileExplorer: View {
                         
                         Spacer()
                         
-//                        Button(action: {
-//                            isShowingHelp.toggle()
-//                        }, label: {
-//                            Image("info")
-//                                .resizable()
-//                                .frame(width: 30, height: 30)
-//                                .invertOnDarkTheme()
-//                        })
-                        
                         NavigationLink(destination: Settings()) {
                             Image("settings")
                                 .resizable()
@@ -179,16 +170,15 @@ struct FileExplorer: View {
                     .onAppear(perform: setup_tooltips)
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
-//                        if #available(iOS 16, *) {
-//                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
-//                                    .environmentObject(userSettings)
-//                                    .presentationDetents([.fraction(0.30)])
-//                                    .presentationDragIndicator(.visible)
-//                        } else {
-//
-//                        }
-                        
-                        Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+                        if #available(iOS 16, *) {
+                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+                                    .environmentObject(userSettings)
+                                    .presentationDetents([.fraction(0.30)])
+                                    .presentationDragIndicator(.visible)
+                        } else {
+                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+                                .environmentObject(userSettings)
+                        }
                     })
                     .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                         do {
@@ -221,7 +211,7 @@ struct FileExplorer: View {
                         EditDocumentPropertiesTest(document: $currentDocument)
                     }
                     .sheet(isPresented: $showDictionary, content: {
-                        DictionaryLookup(wordData: nil, state: .Stationary)
+                        DictionaryLookup(wordData: nil)
                             .environmentObject(userSettings)
                     })
             }

@@ -313,31 +313,33 @@ struct DocumentEditor: View {
                 .navigationBarHidden(true)
                 .sheet(isPresented: $showPencilEdit, content: {
                     if canvasStuff.lineCap == .round {
-//                        if #available(iOS 16, *) {
-//                            EditPencil(drawingToolName: "Pencil")
-//                                .environmentObject(canvasStuff)
-//                                .environmentObject(userSettings)
-//                                .presentationDetents([.fraction(0.30)])
-//                                .presentationDragIndicator(.visible)
-//                        } else {
-//                            EditPencil(drawingToolName: "Pencil")
-//                                .environmentObject(canvasStuff)
-//                                .environmentObject(userSettings)
-//                        }
-                        
-                        EditPencil(drawingToolName: "Pencil")
-                            .environmentObject(canvasStuff)
-                            .environmentObject(userSettings)
+                        if #available(iOS 16, *) {
+                            EditPencil(drawingToolName: "Pencil")
+                                .environmentObject(canvasStuff)
+                                .environmentObject(userSettings)
+                                .presentationDetents([.fraction(0.30)])
+                                .presentationDragIndicator(.visible)
+                        } else {
+                            EditPencil(drawingToolName: "Pencil")
+                                .environmentObject(canvasStuff)
+                                .environmentObject(userSettings)
+                        }
                     } else {
-//                        EditPencil(drawingToolName: "Highlighter")
-//                            .environmentObject(canvasStuff)
-//                            .environmentObject(userSettings)
-//                            .presentationDetents([.fraction(0.30)])
-//                            .presentationDragIndicator(.visible)
+                        if #available(iOS 16, *) {
+                            EditPencil(drawingToolName: "Highlighter")
+                                .environmentObject(canvasStuff)
+                                .environmentObject(userSettings)
+                                .presentationDetents([.fraction(0.30)])
+                                .presentationDragIndicator(.visible)
+                        } else {
+                            EditPencil(drawingToolName: "Highlighter")
+                                .environmentObject(canvasStuff)
+                                .environmentObject(userSettings)
+                        }
                     }
                 })
                 .sheet(isPresented: $showDictionary, content: {
-                    DictionaryLookup(wordData: nil, state: .Stationary)
+                    DictionaryLookup(wordData: nil)
                         .environmentObject(userSettings)
                 })
                 .fileExporter(

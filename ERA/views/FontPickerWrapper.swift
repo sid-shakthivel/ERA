@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct FontPickerWrapper: View {
     @Binding var isShowingFontPicker: Bool
@@ -69,7 +70,7 @@ struct CustomFontPicker: UIViewControllerRepresentable {
             guard let descriptor = viewController.selectedFontDescriptor else { return }
             
             parent.settings.paragraphFont = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.paragraphFontSize))
-            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.5))
+            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.5)).bold()
             parent.settings.subheadingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.25))
             parent.settings.subParagaphFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 0.75))
             parent.presentationMode.wrappedValue.dismiss()
@@ -77,6 +78,17 @@ struct CustomFontPicker: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+}
+
+extension UIFont {
+    func withTraits(traits:UIFontDescriptor.SymbolicTraits) -> UIFont {
+        let descriptor = fontDescriptor.withSymbolicTraits(traits)
+        return UIFont(descriptor: descriptor!, size: 0) //size 0 means keep the size as it is
+    }
+
+    func bold() -> UIFont {
+        return withTraits(traits: .traitBold)
+    }
 }
 
 struct FontPickerWrapper_Previews: PreviewProvider {
