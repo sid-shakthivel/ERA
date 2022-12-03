@@ -51,13 +51,23 @@ struct Paragraph: View {
             } else {
                 // Normal paragraph
                 if isEditingText {
-                    TextEditor(text: $textToEdit)
-                        .foregroundColor(userSettings.fontColour)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .clearListBackground()
-                        .background(userSettings.backgroundColour)
-                        .font(Font(userSettings.paragraphFont))
-                        .frame(minHeight: 500)
+                    if #available(iOS 16.0, *) {
+                        TextField("", text: $textToEdit, axis: .vertical)
+                            .foregroundColor(userSettings.fontColour)
+                            .background(userSettings.backgroundColour)
+                            .tracking(CGFloat(userSettings.letterSpacing))
+                            .lineSpacing(CGFloat(userSettings.lineSpacing))
+                            .font(Font(userSettings.paragraphFont))
+                    } else {
+                        TextEditor(text: $textToEdit)
+                            .foregroundColor(userSettings.fontColour)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .clearListBackground()
+                            .background(userSettings.backgroundColour)
+                            .font(Font(userSettings.paragraphFont))
+                            .lineSpacing(CGFloat(userSettings.lineSpacing))
+                            .frame(minHeight: 500)
+                    }
                 } else {
                     if #available(iOS 16.0, *) {
                         Text(modifyText(state: userSettings.enhancedReadingStatus, text: paragraphFormat.text))

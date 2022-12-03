@@ -294,44 +294,39 @@ struct DocumentEditor: View {
                                        .resizable()
                                        .frame(width: geometryProxy.size.width, height: geometryProxy.size.height * 0.85)
                                        .aspectRatio(contentMode: .fit)
-                                       .scaleEffect(self.scale)
-                                       .gesture(MagnificationGesture().updating($scale) { (newValue, scale, _) in
-                                         // Anything with value
-                                         scale = newValue
-                                       })
                                 }
                             }
                             
-//                            if isDrawing {
-//                                Canvas { ctx, size in
-//                                    for line in photoEditorCanvas.lineBuffer {
-//                                        var path = Path()
-//                                        path.addLines(line.points)
-//
-//                                        ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth ))
-//                                    }
-//                                }
-//                                .gesture(
-//                                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
-//                                        .onChanged({ value in
-//                                            let position = value.location
-//                                            if value.translation == .zero {
-//                                                if photoEditorCanvas.isRubbing {
-//                                                    photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
-//                                                } else {
-//                                                    if textEditorCanvas.lineCap == .round {
-//                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
-//                                                    } else {
-//                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedHighlighterColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
-//                                                    }
-//                                                }
-//                                            } else {
-//                                                guard let lastIndex = photoEditorCanvas.lineBuffer.indices.last else { return }
-//                                                photoEditorCanvas.lineBuffer[lastIndex].points.append(position)
-//                                            }
-//                                        })
-//                                )
-//                            }
+                            if isDrawing {
+                                Canvas { ctx, size in
+                                    for line in photoEditorCanvas.lineBuffer {
+                                        var path = Path()
+                                        path.addLines(line.points)
+
+                                        ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth ))
+                                    }
+                                }
+                                .gesture(
+                                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                        .onChanged({ value in
+                                            let position = value.location
+                                            if value.translation == .zero {
+                                                if photoEditorCanvas.isRubbing {
+                                                    photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+                                                } else {
+                                                    if textEditorCanvas.lineCap == .round {
+                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+                                                    } else {
+                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedHighlighterColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+                                                    }
+                                                }
+                                            } else {
+                                                guard let lastIndex = photoEditorCanvas.lineBuffer.indices.last else { return }
+                                                photoEditorCanvas.lineBuffer[lastIndex].points.append(position)
+                                            }
+                                        })
+                                )
+                            }
                         }
                             .padding()
                             .background(userSettings.backgroundColour)

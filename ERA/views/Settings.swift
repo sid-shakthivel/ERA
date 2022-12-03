@@ -198,6 +198,7 @@ struct Settings: View {
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .font(.system(size: 14))
+                                .padding(.top)
                                 .invertOnDarkTheme()
 
                             Picker("", selection: $settings.enhancedReadingStatus) {
