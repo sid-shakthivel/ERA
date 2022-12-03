@@ -11,8 +11,6 @@ import SwiftUITooltip
 struct OptionBar: View {
     @EnvironmentObject var canvasSettings: CanvasSettings
     @EnvironmentObject var settings: UserPreferences
-    @EnvironmentObject var scanData: ScanResult
-    @EnvironmentObject var canvasData: CanvasData
     
     @Binding var showDictionary: Bool
     @Binding var isDrawing: Bool
@@ -174,7 +172,7 @@ struct OptionBar: View {
                     .invertOnDarkTheme()
                     .onTapGesture(count: 1) {
                        // On single tap clear the canvas
-                        canvasData.lines = []
+                        canvasSettings.lineBuffer = []
                     }
 
                 Button(action: {

@@ -31,7 +31,7 @@ struct OnboardSubView: View {
             
             Spacer()
 
-            Text(modifyText(condition: true, text: data.mainText))
+            Text(modifyText(state: .Normal, text: data.mainText))
                 .foregroundColor(Color(hex: 0x000000))
                 .font(.system(size: 24))
                 .multilineTextAlignment(.center)

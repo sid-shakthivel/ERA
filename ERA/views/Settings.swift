@@ -8,13 +8,17 @@
 import SwiftUI
 import AVFoundation
 
+enum EnhancedReadingStatus: Int, Codable, CaseIterable {
+    case Skim, Normal, Off
+}
+
 /*
  UserPreferences contains all settings which the user can modify/set
  */
 class UserPreferences: ObservableObject, Codable {
     // For Codable to work, enum of properties need to be listed
     enum CodingKeys: CodingKey {
-        case paragraphFontSize, fontColour, backgroundColour, isEnhancedReading, isDarkMode, paragraphFontName, voice, pitch, rate, volume, lineSpacing, letterSpacing
+        case paragraphFontSize, fontColour, backgroundColour, enhancedReadingStatus, isDarkMode, paragraphFontName, voice, pitch, rate, volume, lineSpacing, letterSpacing
     }
     
     // All other font sizes and relative to this main font size
@@ -25,7 +29,7 @@ class UserPreferences: ObservableObject, Codable {
     @Published var backgroundColour: Color = Color(hex: 0xFFF9F0, alpha: 1)
     
     // Toggles for specific settings
-    @Published var isEnhancedReading: Bool = false
+    @Published var enhancedReadingStatus: EnhancedReadingStatus = .Off
     @Published var isDarkMode: Bool = false
     
     // Sets indivudal fonts for each category
@@ -62,7 +66,7 @@ class UserPreferences: ObservableObject, Codable {
         try container.encode(encodeColor(colour: fontColour), forKey: .fontColour)
         try container.encode(encodeColor(colour: backgroundColour), forKey: .backgroundColour)
         
-        try container.encode(isEnhancedReading, forKey: .isEnhancedReading)
+        try container.encode(enhancedReadingStatus, forKey: .enhancedReadingStatus)
         try container.encode(isDarkMode, forKey: .isDarkMode)
 
         try container.encode(paragraphFont.fontName, forKey: .paragraphFontName)
@@ -88,7 +92,7 @@ class UserPreferences: ObservableObject, Codable {
         fontColour = try decodeColor(from: fontColourEncoded)
         backgroundColour = try decodeColor(from: backgroundColourEncoded)
         
-        isEnhancedReading = try container.decode(Bool.self, forKey: .isEnhancedReading)
+        enhancedReadingStatus = try container.decode(EnhancedReadingStatus.self, forKey: .enhancedReadingStatus)
         isDarkMode = try container.decode(Bool.self, forKey: .isDarkMode)
         
         // Retrieve font name
@@ -124,7 +128,7 @@ class UserPreferences: ObservableObject, Codable {
                 paragraphFontSize = loadedUserPreferences.paragraphFontSize
                 fontColour = loadedUserPreferences.fontColour
                 backgroundColour = loadedUserPreferences.backgroundColour
-                isEnhancedReading = loadedUserPreferences.isEnhancedReading
+                enhancedReadingStatus = loadedUserPreferences.enhancedReadingStatus
                 paragraphFont = loadedUserPreferences.paragraphFont
                 headingFont = loadedUserPreferences.headingFont
                 subheadingFont = loadedUserPreferences.subheadingFont
@@ -151,6 +155,8 @@ struct Settings: View {
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserPreferences
     @EnvironmentObject var canvasSettings: CanvasSettings
+    
+    @State var isSkimMode: Bool = false
     
     var body: some View {
         NavigationView {
@@ -187,21 +193,50 @@ struct Settings: View {
                             .invertOnDarkTheme()
 
                         Group {
-                            Toggle(isOn: $settings.isEnhancedReading, label: {
-                                Text("Enhanced Reading")
-                                    .foregroundColor(.black)
-                                    .fontWeight(.bold)
-                                    .font(.system(size: 14))
-                                    .invertOnDarkTheme()
-                            })
-
-                            Text(modifyText(condition: true, text: "Enhanced reading boldens the first half of every word which improves concentration"))
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.bottom)
+                            Text("Enhanced Reading")
                                 .foregroundColor(.black)
+                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .font(.system(size: 14))
                                 .invertOnDarkTheme()
+
+                            Picker("", selection: $settings.enhancedReadingStatus) {
+                                Text("Skim Mode")
+                                    .tag(EnhancedReadingStatus.Skim)
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+
+                                Text("Normal mode")
+                                    .tag(EnhancedReadingStatus.Normal)
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+
+                                Text("Off")
+                                    .tag(EnhancedReadingStatus.Off)
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                            }
+                                .pickerStyle(.segmented)
+
+                            switch (settings.enhancedReadingStatus) {
+                            case .Off:
+                                Text(modifyText(state: settings.enhancedReadingStatus, text: "This text is just normal"))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                            case .Normal:
+                                Text(modifyText(state: settings.enhancedReadingStatus, text: "Normal enahnced reading boldens the first half of every word"))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                            case .Skim:
+                                Text(modifyText(state: settings.enhancedReadingStatus, text: "Skim enhanced reading boldens the first half of each important"))
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                            }
                         }
-                        .onChange(of: settings.isEnhancedReading) { _ in
+                        .onChange(of: settings.enhancedReadingStatus) { _ in
                             settings.saveSettings(userPreferences: settings)
                         }
 
@@ -212,6 +247,7 @@ struct Settings: View {
                                 .font(.system(size: 14))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .invertOnDarkTheme()
+                                .padding(.top)
 
                             Button(action: {
                                 isShowingFontPicker.toggle()
@@ -419,7 +455,7 @@ struct Settings: View {
                                 }
                         }
                                                 
-                        Text("This is some example text")
+                        Text("This is a an example sentence.")
                             .foregroundColor(settings.fontColour)
                             .font(Font(settings.paragraphFont))
                             .tracking(CGFloat(settings.letterSpacing))
@@ -624,7 +660,7 @@ struct Settings: View {
                         // Resets settings back to default
                         settings.paragraphFontSize = 16;
                         settings.fontColour = .black
-                        settings.isEnhancedReading = false
+                        settings.enhancedReadingStatus = .Off
                         settings.paragraphFont = UIFont.systemFont(ofSize: 16)
                         settings.headingFont = UIFont.systemFont(ofSize: 24)
                         settings.backgroundColour = ColourConstants.lightModeBackground

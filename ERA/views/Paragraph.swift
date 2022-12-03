@@ -60,14 +60,14 @@ struct Paragraph: View {
                         .frame(minHeight: 500)
                 } else {
                     if #available(iOS 16.0, *) {
-                        Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
+                        Text(modifyText(state: userSettings.enhancedReadingStatus, text: paragraphFormat.text))
                             .foregroundColor(userSettings.fontColour)
                             .font(Font(userSettings.paragraphFont))
                             .lineSpacing(CGFloat(userSettings.lineSpacing))
                             .tracking(CGFloat(userSettings.letterSpacing))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
-                        Text(modifyText(condition: userSettings.isEnhancedReading, text: paragraphFormat.text))
+                        Text(modifyText(state: userSettings.enhancedReadingStatus, text: paragraphFormat.text))
                             .foregroundColor(userSettings.fontColour)
                             .font(Font(userSettings.paragraphFont))
                             .lineSpacing(CGFloat(userSettings.lineSpacing))

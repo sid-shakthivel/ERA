@@ -211,11 +211,11 @@ struct DictionaryLookup: View {
                                     .fontWeight(.bold)
                                 ForEach(meaning.definitions, id: \.self) { definition in
                                     VStack(alignment: .leading) {
-                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: definition.definition))
+                                        Text(modifyText(state: userSettings.enhancedReadingStatus, text: definition.definition))
                                             .font(Font(userSettings.paragraphFont))
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
-                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: definition.example ?? "No Example"))
+                                        Text(modifyText(state: userSettings.enhancedReadingStatus, text: definition.example ?? "No Example"))
                                             .font(Font(userSettings.subParagaphFont))
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
@@ -238,7 +238,7 @@ struct DictionaryLookup: View {
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 ForEach(meaning.synonyms, id: \.self) { synonym in
                                     VStack(alignment: .leading) {
-                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: synonym))
+                                        Text(modifyText(state: userSettings.enhancedReadingStatus, text: synonym))
                                             .font(Font(userSettings.paragraphFont))
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()
@@ -251,7 +251,7 @@ struct DictionaryLookup: View {
                             ForEach(wordData!.meanings, id: \.self) { meaning in
                                 ForEach(meaning.antonyms, id: \.self) { antonym in
                                     VStack(alignment: .leading) {
-                                        Text(modifyText(condition: userSettings.isEnhancedReading, text: antonym))
+                                        Text(modifyText(state: userSettings.enhancedReadingStatus, text: antonym))
                                             .font(Font(userSettings.paragraphFont))
                                             .foregroundColor(.black)
                                             .invertOnDarkTheme()

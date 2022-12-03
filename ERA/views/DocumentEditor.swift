@@ -60,7 +60,9 @@ struct DocumentEditor: View {
     }
     
     func stop_speaking() {
-        speaker.synth.stopSpeaking(at: .immediate)
+        if speaker.synth.isSpeaking {
+            speaker.synth.stopSpeaking(at: .immediate)
+        }
     }
     
     func initialisation() {
@@ -70,7 +72,7 @@ struct DocumentEditor: View {
         tooltipConfig.animationTime = 1
         
         // Copy data from the saved buffer into the working bufffer
-        guard let lines = (document.canvasData as? CanvasData)?.lines else { return }
+        guard let lines = (document.textCanvasData as? CanvasData)?.lines else { return }
         for line in lines {
             canvasStuff.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
         }
@@ -98,7 +100,7 @@ struct DocumentEditor: View {
             newDocument.scanResult = ScanResult(scannedTextList: test, scannedText: best)
             newDocument.title = document.title
             newDocument.images = document.images
-            newDocument.canvasData = CanvasData(lines: savedLineBuffer)
+            newDocument.textCanvasData = CanvasData(lines: savedLineBuffer)
             moc.delete(document)
             try? moc.save()
         }
@@ -111,6 +113,7 @@ struct DocumentEditor: View {
                     HStack {
                         Button {
                             presentationMode.wrappedValue.dismiss()
+                            stop_speaking()
                         } label: {
                             Image("arrow-left")
                                 .resizable()

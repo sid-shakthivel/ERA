@@ -123,27 +123,41 @@ extension UIColor {
 /*
  Takes a string and boldens first half of word if it meets requirements
  */
-func enhanceWord(word: String) -> String {
+func enhanceWord(state: EnhancedReadingStatus, word: String) -> String {
     var mutWord = word
     
-    /*
-     Word must be over 3 characters to be important
-     */
-    if mutWord.count > 3 {
-        // Perform NLP to determine word class as only important words such as nouns, verbs, and adverbs should be boldened
-        let tagger = NLTagger(tagSchemes: [.lexicalClass])
-        
-        tagger.string = mutWord
-        let tag = tagger.tag(at: mutWord.startIndex, unit: .word, scheme: .lexicalClass)
-        
-        if tag.0?.rawValue == "Noun" || tag.0?.rawValue == "Verb" || tag.0?.rawValue == "Adverb" || tag.0?.rawValue == "Adjective" || tag.0?.rawValue == "OtherWord" {
+    switch(state) {
+        case .Skim:
+        /*
+         Word must be over 3 characters to be important
+         */
+        if mutWord.count > 3 {
+            // Perform NLP to determine word class as only important words such as nouns, verbs, and adverbs should be boldened
+            let tagger = NLTagger(tagSchemes: [.lexicalClass])
+            
+            tagger.string = mutWord
+            let tag = tagger.tag(at: mutWord.startIndex, unit: .word, scheme: .lexicalClass)
+            
+            if tag.0?.rawValue == "Noun" || tag.0?.rawValue == "Verb" || tag.0?.rawValue == "Adverb" || tag.0?.rawValue == "Adjective" || tag.0?.rawValue == "OtherWord" {
+                let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
+                mutWord.insert("*", at: mutWord.startIndex)
+                mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: 1))
+                
+                mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 1))
+                mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 2))
+            }
+        }
+            break
+        case .Normal:
             let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
             mutWord.insert("*", at: mutWord.startIndex)
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: 1))
             
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 1))
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 2))
-        }
+            break
+        default:
+            break
     }
     
     return mutWord
@@ -152,17 +166,16 @@ func enhanceWord(word: String) -> String {
 /*
  For a specific condition, perform enhanced reading algorithm upon every word
  */
-func modifyText(condition: Bool, text: String) -> LocalizedStringKey {
-    if condition {
-        var markdownStringArray: [String] = []
-        
-        for substring in text.split(separator: " ") {
-            markdownStringArray.append(enhanceWord(word: String(substring)))
-        }
-
-        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
-    } else {
+func modifyText(state: EnhancedReadingStatus, text: String) -> LocalizedStringKey {
+    switch (state) {
+    case .Off:
         return LocalizedStringKey(text)
+    case .Normal, .Skim:
+        var markdownStringArray: [String] = []
+        for substring in text.split(separator: " ") {
+            markdownStringArray.append(enhanceWord(state: state, word: String(substring)))
+        }
+        return LocalizedStringKey(markdownStringArray.joined(separator: " "))
     }
 }
 
