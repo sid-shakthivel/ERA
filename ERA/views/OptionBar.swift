@@ -18,8 +18,8 @@ struct OptionBar: View {
     @Binding var showPencilEdit: Bool
     @Binding var isShowingHelp: Bool
     
-    @State var isShowingHighlighter: Bool = false
-    @State var isShowingPencil: Bool = false
+    @State var isUsingHighlighter: Bool = false
+    @State var isUsingPencil: Bool = false
     
     @State var tooltipConfig = DefaultTooltipConfig()
     
@@ -41,119 +41,86 @@ struct OptionBar: View {
                     .frame(width: 25, height: 25)
                     .invertOnDarkTheme()
             })
-            .if(isShowingHelp) { view in
-                view
-                    .tooltip(.top, config: tooltipConfig) {
-                        Text("Dictionary")
-                            .font(Font(settings.subParagaphFont))
-                    }
-                }
-            
+
             Spacer()
             
             Group {
-                HStack {
-                    ZStack {
-                        if isDrawing && canvasSettings.lineCap == .round {
-                            Capsule()
-                                .fill(Color(UIColor(canvasSettings.selectedColour).inverted))
-                                .frame(width: 80, height: 30)
+                Button(action: {
+                    isDrawing = true
+                    isUsingPencil = true
+                    isUsingHighlighter = false
+                    canvasSettings.lineCap = .round
+                    canvasSettings.isRubbing = false
+                }, label: {
+                    Image(systemName: "pencil.tip")
+                        .font(.title)
+                })
+                
+                if isUsingPencil {
+                    Button(action: {
+                        showPencilEdit = true
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color(hex: 0xe7b8a4))
+                                .invertOnDarkTheme()
+                                .frame(width: 35, height: 30)
+                            
+                            Circle()
+                                .fill(canvasSettings.selectedColour)
+                                .frame(width: 25, height: 20)
                         }
-                        
-                        HStack {
-                            Button(action: {
-                                isDrawing = true
-                                isShowingPencil = true
-                                isShowingHighlighter = false
-                                canvasSettings.lineCap = .round
-                                canvasSettings.isRubbing = false
-                            }, label: {
-                                Image(systemName: "pencil.tip")
-                                    .font(.title)
-                                    .foregroundColor(canvasSettings.selectedColour)
-                            })
-                            .if(isDrawing && canvasSettings.lineCap == .round, transform: { view in
-                                view
-                                    .background(Color(UIColor(canvasSettings.selectedColour).inverted))
-                                    .clipShape(Circle())
-                            })
-
-                            if isShowingPencil {
-                                Button(action: {
-                                    showPencilEdit = true
-                                    isShowingPencil = false
-                                    canvasSettings.isRubbing = false
-                                }, label: {
-                                    Image("edit-pencil")
-                                        .resizable()
-                                        .frame(width: 35, height: 30)
-                                        .invertOnDarkTheme()
-                                })
-                            }
-                        }
-                    }
-                    
-                    ZStack {
-                        if isDrawing && canvasSettings.lineCap == .butt {
-                            Capsule()
-                                .fill(Color(UIColor(canvasSettings.selectedHighlighterColour).inverted))
-                                .frame(width: 80, height: 30)
-                        }
-                        
-                        HStack {
-                            Button(action: {
-                                isDrawing = true
-                                isShowingHighlighter = true
-                                isShowingPencil = false
-                                canvasSettings.lineCap = .butt
-                                canvasSettings.isRubbing = false
-                            }, label: {
-                                Image(systemName: "highlighter")
-                                    .font(.title)
-                                    .foregroundColor(canvasSettings.selectedHighlighterColour)
-                            })
-
-                            if isShowingHighlighter {
-                                Button(action: {
-                                    showPencilEdit = true;
-                                    canvasSettings.isRubbing = false
-                                    isDrawing = false
-                                }, label: {
-                                    Image("edit-pencil")
-                                        .resizable()
-                                        .frame(width: 35, height: 30)
-                                        .invertOnDarkTheme()
-                                })
-                            }
-                        }
-                    }
+                    })
+                        .transition(.slide)
                 }
-
+                
+                Button(action: {
+                    isDrawing = true
+                    isUsingHighlighter = true
+                    isUsingPencil = false
+                    canvasSettings.lineCap = .butt
+                    canvasSettings.isRubbing = false
+                }, label: {
+                    Image(systemName: "highlighter")
+                        .font(.title)
+                })
+                
+                if isUsingHighlighter {
+                    Button(action: {
+                        showPencilEdit = true
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color(hex: 0xe7b8a4))
+                                .invertOnDarkTheme()
+                                .frame(width: 35, height: 30)
+                            
+                            Circle()
+                                .fill(canvasSettings.selectedHighlighterColour)
+                                .frame(width: 25, height: 20)
+                        }
+                    })
+                        .transition(.slide)
+                }
+                
                 Button(action: {
                     isDrawing = false
                     isEditing = false
-                    isShowingHighlighter = false
-                    isShowingPencil = false
+                    isUsingHighlighter = false
+                    isUsingPencil = false
                 }, label: {
                     Image("close-canvas")
                         .resizable()
                         .frame(width: 30, height: 30)
                         .invertOnDarkTheme()
                 })
-                    .if(isShowingHelp) { view in
-                        view
-                            .tooltip(.top, config: tooltipConfig) {
-                                Text("Close canvas")
-                                    .font(Font(settings.subParagaphFont))
-                            }
-                    }
                 
                 Button(action: {
                     isDrawing = true
                     isEditing = false
                     canvasSettings.isRubbing = true
-                    isShowingHighlighter = false
-                    isShowingPencil = false
+                    isUsingHighlighter = false
+                    isUsingPencil = false
                     canvasSettings.lineCap = .square
                 }, label: {
                     Image("rubber")
@@ -162,7 +129,7 @@ struct OptionBar: View {
                         .invertOnDarkTheme()
                 })
             }
-
+            
             Spacer()
 
             Group {                
@@ -171,7 +138,6 @@ struct OptionBar: View {
                     .frame(width: 30, height: 30)
                     .invertOnDarkTheme()
                     .onTapGesture(count: 1) {
-                       // On single tap clear the canvas
                         canvasSettings.lineBuffer = []
                     }
 
@@ -199,24 +165,11 @@ struct OptionBar: View {
                 })
             }
             
-//            if !isShowingHighlighter || !isShowingPencil {
-//                Spacer()
-//
-//                Button(action: {
-//                    isShowingHelp.toggle()
-//                }, label: {
-//                    Image("info")
-//                        .resizable()
-//                        .frame(width: 30, height: 30)
-//                        .invertOnDarkTheme()
-//                })
-//            }
-            
             Spacer()
         }
+        .padding(.top)
         .invertBackgroundOnDarkTheme(isBase: false)
         .onAppear(perform: setup_tooltips)
-        .padding(.top)
         .onAppear() {
             if settings.isDarkMode && canvasSettings.selectedColour == .black {
                 canvasSettings.selectedColour = .white

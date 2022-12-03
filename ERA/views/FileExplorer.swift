@@ -54,6 +54,13 @@ struct FileExplorer: View {
                         
                         Spacer()
                         
+                        NavigationLink(destination: Help()) {
+                            Image("info")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .invertOnDarkTheme()
+                        }
+                        
                         NavigationLink(destination: Settings()) {
                             Image("settings")
                                 .resizable()
@@ -165,15 +172,6 @@ struct FileExplorer: View {
                                     .padding()
                                     .invertOnDarkTheme()
                             })
-                            
-                            if isShowingHelp {
-                                VStack {
-                                    Text("Menu")
-                                        .font(Font(userSettings.headingFont))
-                                    Image(systemName: "arrow.down")
-                                }
-                                .offset(y: -60)
-                            }
                         }
 
                         Spacer()

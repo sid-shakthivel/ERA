@@ -18,6 +18,7 @@
 		35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* DocumentEditor.swift */; };
 		3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3585B8B029292A910087BA67 /* FileExplorer.swift */; };
 		3589C58D293BC71000A805F6 /* ScrollableImage in Frameworks */ = {isa = PBXBuildFile; productRef = 3589C58C293BC71000A805F6 /* ScrollableImage */; };
+		3589C591293BDD6700A805F6 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3589C590293BDD6700A805F6 /* Help.swift */; };
 		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
 		35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */; };
 		35AAB699292A84DC002B0D72 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB698292A84DC002B0D72 /* DataController.swift */; };
@@ -43,6 +44,7 @@
 		356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPickerWrapper.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* DocumentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentEditor.swift; sourceTree = "<group>"; };
 		3585B8B029292A910087BA67 /* FileExplorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorer.swift; sourceTree = "<group>"; };
+		3589C590293BDD6700A805F6 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
 		3598E738291066FF00F449F6 /* EditPencil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPencil.swift; sourceTree = "<group>"; };
 		35AAB696292A61FB002B0D72 /* ERA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ERA.xcdatamodel; sourceTree = "<group>"; };
 		35AAB698292A84DC002B0D72 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
 				3585B8B029292A910087BA67 /* FileExplorer.swift */,
 				35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */,
+				3589C590293BDD6700A805F6 /* Help.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -213,6 +216,7 @@
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
 				35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */,
 				356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */,
+				3589C591293BDD6700A805F6 /* Help.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35AAB699292A84DC002B0D72 /* DataController.swift in Sources */,
 				35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */,
