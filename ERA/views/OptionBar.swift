@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftUITooltip
 
 struct OptionBar: View {
-    @EnvironmentObject var canvasSettings: CanvasSettings
+    @EnvironmentObject var canvasSettings: TempCanvas
     @EnvironmentObject var settings: UserPreferences
     
     @Binding var showDictionary: Bool

@@ -17,6 +17,7 @@
 		356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */; };
 		35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* DocumentEditor.swift */; };
 		3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3585B8B029292A910087BA67 /* FileExplorer.swift */; };
+		3589C58D293BC71000A805F6 /* ScrollableImage in Frameworks */ = {isa = PBXBuildFile; productRef = 3589C58C293BC71000A805F6 /* ScrollableImage */; };
 		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
 		35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */; };
 		35AAB699292A84DC002B0D72 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB698292A84DC002B0D72 /* DataController.swift */; };
@@ -61,6 +62,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				35E6F1B0291A806600E7FBDE /* SwiftUITooltip in Frameworks */,
+				3589C58D293BC71000A805F6 /* ScrollableImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +147,7 @@
 			name = ERA;
 			packageProductDependencies = (
 				35E6F1AF291A806600E7FBDE /* SwiftUITooltip */,
+				3589C58C293BC71000A805F6 /* ScrollableImage */,
 			);
 			productName = BionicReading;
 			productReference = 356A454C28E5C47B0067999E /* ERA.app */;
@@ -176,6 +179,7 @@
 			mainGroup = 356A454328E5C47B0067999E;
 			packageReferences = (
 				35E6F1AE291A806600E7FBDE /* XCRemoteSwiftPackageReference "SwiftUI-Tooltip" */,
+				3589C58B293BC71000A805F6 /* XCRemoteSwiftPackageReference "ScrollableImage" */,
 			);
 			productRefGroup = 356A454D28E5C47B0067999E /* Products */;
 			projectDirPath = "";
@@ -441,6 +445,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3589C58B293BC71000A805F6 /* XCRemoteSwiftPackageReference "ScrollableImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gtokman/ScrollableImage.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		35E6F1AE291A806600E7FBDE /* XCRemoteSwiftPackageReference "SwiftUI-Tooltip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/quassum/SwiftUI-Tooltip.git";
@@ -452,6 +464,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3589C58C293BC71000A805F6 /* ScrollableImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3589C58B293BC71000A805F6 /* XCRemoteSwiftPackageReference "ScrollableImage" */;
+			productName = ScrollableImage;
+		};
 		35E6F1AF291A806600E7FBDE /* SwiftUITooltip */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 35E6F1AE291A806600E7FBDE /* XCRemoteSwiftPackageReference "SwiftUI-Tooltip" */;

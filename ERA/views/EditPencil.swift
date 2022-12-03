@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EditPencil: View {
-    @EnvironmentObject var canvasSettings: CanvasSettings
+    @EnvironmentObject var canvasSettings: TempCanvas
     @EnvironmentObject var settings: UserPreferences
     
     @State var drawingToolName: String

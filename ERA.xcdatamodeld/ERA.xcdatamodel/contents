@@ -3,6 +3,7 @@
     <entity name="Document" representedClassName="Document" syncable="YES" codeGenerationType="class">
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="images" optional="YES" attributeType="Binary"/>
+        <attribute name="photoCanvasData" optional="YES" attributeType="Transformable"/>
         <attribute name="scanResult" optional="YES" attributeType="Transformable" valueTransformerName="ScanResultAttributeTransformer" customClassName="ScanResult"/>
         <attribute name="textCanvasData" optional="YES" attributeType="Transformable"/>
         <attribute name="title" optional="YES" attributeType="String"/>

@@ -9,15 +9,17 @@ import SwiftUI
 import AVFoundation
 import PDFKit
 import SwiftUITooltip
+import ScrollableImage
 
-class CanvasSettings: ObservableObject {
+class TempCanvas: ObservableObject {
+    @Published var isUsingHighlighter: Bool = false
     @Published var selectedColour: Color = .black
-    @Published var selectedHighlighterColour: Color = Color(hex: 0x000000, alpha: 0.5)
+    @Published var selectedHighlighterColour: Color = Color(hex: 0xFFFF00, alpha: 0.5)
     @Published var lastLine: WorkingLine? // Stores the last line within the bufer
     @Published var lineBuffer: [WorkingLine] = [] // This is a buffer which holds temporary lines which are being worked upon
-    @Published var lineWidth: Double = 5
-    @Published var isRubbing: Bool = false
+    @Published var lineWidth: Double = 2
     @Published var lineCap: CGLineCap = .round
+    @Published var isRubbing: Bool = false
 }
 
 struct DocumentEditor: View {
@@ -40,9 +42,13 @@ struct DocumentEditor: View {
     @State var isShowingHelp: Bool = false
     
     @StateObject var speaker = Speaker()
-    @StateObject var canvasStuff = CanvasSettings()
+    
+    @StateObject var textEditorCanvas = TempCanvas()
+    @StateObject var photoEditorCanvas = TempCanvas()
     
     @State var isViewingText: Bool = true
+    
+    @GestureState private var scale: CGFloat = 1.0
     
     func speak_text() {
         do {
@@ -74,15 +80,25 @@ struct DocumentEditor: View {
         // Copy data from the saved buffer into the working bufffer
         guard let lines = (document.textCanvasData as? CanvasData)?.lines else { return }
         for line in lines {
-            canvasStuff.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+            textEditorCanvas.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+        }
+        
+        guard let photoLines = (document.photoCanvasData as? CanvasData)?.lines else { return }
+        for line in photoLines {
+            photoEditorCanvas.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
         }
     }
     
     func save_document() {
         // Copy data from the working buffer into the saved buffer and attempt to save it into core data
         var savedLineBuffer: [SavedLine] = []
-        for line in canvasStuff.lineBuffer {
+        for line in textEditorCanvas.lineBuffer {
             savedLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+        }
+        
+        var savedPhotoLineBuffer: [SavedLine] = []
+        for line in photoEditorCanvas.lineBuffer {
+            savedPhotoLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
         }
        
         moc.performAndWait {
@@ -101,6 +117,7 @@ struct DocumentEditor: View {
             newDocument.title = document.title
             newDocument.images = document.images
             newDocument.textCanvasData = CanvasData(lines: savedLineBuffer)
+            newDocument.photoCanvasData = CanvasData(lines: savedPhotoLineBuffer)
             moc.delete(document)
             try? moc.save()
         }
@@ -237,10 +254,10 @@ struct DocumentEditor: View {
                             
                             if isDrawing {
                                 Canvas { ctx, size in
-                                    for line in canvasStuff.lineBuffer {
+                                    for line in textEditorCanvas.lineBuffer {
                                         var path = Path()
                                         path.addLines(line.points)
-                                        
+
                                         ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth ))
                                     }
                                 }
@@ -249,18 +266,18 @@ struct DocumentEditor: View {
                                         .onChanged({ value in
                                             let position = value.location
                                             if value.translation == .zero {
-                                                if canvasStuff.isRubbing {
-                                                    canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                if textEditorCanvas.isRubbing {
+                                                    textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: textEditorCanvas.lineCap, lineWidth: textEditorCanvas.lineWidth, isHighlighter: false))
                                                 } else {
-                                                    if canvasStuff.lineCap == .round {
-                                                        canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: canvasStuff.selectedColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                    if textEditorCanvas.lineCap == .round {
+                                                        textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: textEditorCanvas.selectedColour, lineCap: textEditorCanvas.lineCap, lineWidth: textEditorCanvas.lineWidth, isHighlighter: false))
                                                     } else {
-                                                        canvasStuff.lineBuffer.append(WorkingLine(points: [position], colour: canvasStuff.selectedHighlighterColour, lineCap: canvasStuff.lineCap, lineWidth: canvasStuff.lineWidth, isHighlighter: false))
+                                                        textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: textEditorCanvas.selectedHighlighterColour, lineCap: textEditorCanvas.lineCap, lineWidth: textEditorCanvas.lineWidth, isHighlighter: false))
                                                     }
                                                 }
                                             } else {
-                                                guard let lastIndex = canvasStuff.lineBuffer.indices.last else { return }
-                                                canvasStuff.lineBuffer[lastIndex].points.append(position)
+                                                guard let lastIndex = textEditorCanvas.lineBuffer.indices.last else { return }
+                                                textEditorCanvas.lineBuffer[lastIndex].points.append(position)
                                             }
                                         })
                                 )
@@ -277,8 +294,44 @@ struct DocumentEditor: View {
                                        .resizable()
                                        .frame(width: geometryProxy.size.width, height: geometryProxy.size.height * 0.85)
                                        .aspectRatio(contentMode: .fit)
+                                       .scaleEffect(self.scale)
+                                       .gesture(MagnificationGesture().updating($scale) { (newValue, scale, _) in
+                                         // Anything with value
+                                         scale = newValue
+                                       })
                                 }
                             }
+                            
+//                            if isDrawing {
+//                                Canvas { ctx, size in
+//                                    for line in photoEditorCanvas.lineBuffer {
+//                                        var path = Path()
+//                                        path.addLines(line.points)
+//
+//                                        ctx.stroke(path, with: .color(line.colour), style: StrokeStyle(lineWidth: line.lineWidth ))
+//                                    }
+//                                }
+//                                .gesture(
+//                                    DragGesture(minimumDistance: 0, coordinateSpace: .local)
+//                                        .onChanged({ value in
+//                                            let position = value.location
+//                                            if value.translation == .zero {
+//                                                if photoEditorCanvas.isRubbing {
+//                                                    photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+//                                                } else {
+//                                                    if textEditorCanvas.lineCap == .round {
+//                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+//                                                    } else {
+//                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedHighlighterColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+//                                                    }
+//                                                }
+//                                            } else {
+//                                                guard let lastIndex = photoEditorCanvas.lineBuffer.indices.last else { return }
+//                                                photoEditorCanvas.lineBuffer[lastIndex].points.append(position)
+//                                            }
+//                                        })
+//                                )
+//                            }
                         }
                             .padding()
                             .background(userSettings.backgroundColour)
@@ -299,10 +352,17 @@ struct DocumentEditor: View {
                         .padding(.leading)
                         .padding(.trailing)
                     
-                    OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .environmentObject(userSettings)
-                        .environmentObject(canvasStuff)
+                    if isViewingText {
+                        OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .environmentObject(userSettings)
+                            .environmentObject(textEditorCanvas)
+                    } else {
+                        OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .environmentObject(userSettings)
+                            .environmentObject(photoEditorCanvas)
+                    }
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
             }
@@ -310,33 +370,39 @@ struct DocumentEditor: View {
                 .onDisappear(perform: save_document)
                 .environmentObject(userSettings)
                 .environmentObject(scanResult)
-                .environmentObject(canvasStuff)
+                .environmentObject(textEditorCanvas)
                 .navigationBarTitle("")
                 .navigationBarBackButtonHidden(true)
                 .navigationBarHidden(true)
                 .sheet(isPresented: $showPencilEdit, content: {
-                    if canvasStuff.lineCap == .round {
+                    if isViewingText {
+                        // Provide settings for text canvas
+                        let name = textEditorCanvas.isUsingHighlighter == true ? "Highlighter": "Pencil";
+                         
                         if #available(iOS 16, *) {
-                            EditPencil(drawingToolName: "Pencil")
-                                .environmentObject(canvasStuff)
+                            EditPencil(drawingToolName: name)
+                                .environmentObject(textEditorCanvas)
                                 .environmentObject(userSettings)
                                 .presentationDetents([.fraction(0.30)])
                                 .presentationDragIndicator(.visible)
                         } else {
-                            EditPencil(drawingToolName: "Pencil")
-                                .environmentObject(canvasStuff)
+                            EditPencil(drawingToolName: name)
+                                .environmentObject(textEditorCanvas)
                                 .environmentObject(userSettings)
                         }
                     } else {
+                        // Provide settings for photo canvas
+                        let name = textEditorCanvas.isUsingHighlighter == true ? "Highlighter": "Pencil";
+                        
                         if #available(iOS 16, *) {
-                            EditPencil(drawingToolName: "Highlighter")
-                                .environmentObject(canvasStuff)
+                            EditPencil(drawingToolName: name)
+                                .environmentObject(textEditorCanvas)
                                 .environmentObject(userSettings)
                                 .presentationDetents([.fraction(0.30)])
                                 .presentationDragIndicator(.visible)
                         } else {
-                            EditPencil(drawingToolName: "Highlighter")
-                                .environmentObject(canvasStuff)
+                            EditPencil(drawingToolName: name)
+                                .environmentObject(textEditorCanvas)
                                 .environmentObject(userSettings)
                         }
                     }

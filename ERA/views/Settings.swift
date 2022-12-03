@@ -154,7 +154,7 @@ struct Settings: View {
     
     @State private var isShowingFontPicker = false
     @EnvironmentObject var settings: UserPreferences
-    @EnvironmentObject var canvasSettings: CanvasSettings
+    @EnvironmentObject var canvasSettings: TempCanvas
     
     @State var isSkimMode: Bool = false
     
