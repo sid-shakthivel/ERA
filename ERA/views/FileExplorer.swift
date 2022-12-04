@@ -33,7 +33,11 @@ struct FileExplorer: View {
     
     @State var tooltipConfig = DefaultTooltipConfig()
     
-    func setup_tooltips() {
+    func initialisation() {
+        if files.count == 0 {
+            showMenu.toggle()
+        }
+        
         tooltipConfig.enableAnimation = true
         tooltipConfig.animationOffset = 10
         tooltipConfig.animationTime = 1
@@ -178,7 +182,7 @@ struct FileExplorer: View {
                     }
                     .padding(.leading)
                 }
-                    .onAppear(perform: setup_tooltips)
+                    .onAppear(perform: initialisation)
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
                         if #available(iOS 16, *) {

@@ -9,7 +9,6 @@ import SwiftUI
 import AVFoundation
 import PDFKit
 import SwiftUITooltip
-import ScrollableImage
 
 class TempCanvas: ObservableObject {
     @Published var isUsingHighlighter: Bool = false
@@ -18,7 +17,6 @@ class TempCanvas: ObservableObject {
     @Published var lastLine: WorkingLine? // Stores the last line within the bufer
     @Published var lineBuffer: [WorkingLine] = [] // This is a buffer which holds temporary lines which are being worked upon
     @Published var lineWidth: Double = 2
-    @Published var lineCap: CGLineCap = .round
     @Published var isRubbing: Bool = false
 }
 
@@ -80,12 +78,12 @@ struct DocumentEditor: View {
         // Copy data from the saved buffer into the working bufffer
         guard let lines = (document.textCanvasData as? CanvasData)?.lines else { return }
         for line in lines {
-            textEditorCanvas.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+            textEditorCanvas.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth))
         }
         
         guard let photoLines = (document.photoCanvasData as? CanvasData)?.lines else { return }
         for line in photoLines {
-            photoEditorCanvas.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+            photoEditorCanvas.lineBuffer.append(WorkingLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth))
         }
     }
     
@@ -93,12 +91,12 @@ struct DocumentEditor: View {
         // Copy data from the working buffer into the saved buffer and attempt to save it into core data
         var savedLineBuffer: [SavedLine] = []
         for line in textEditorCanvas.lineBuffer {
-            savedLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+            savedLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth))
         }
         
         var savedPhotoLineBuffer: [SavedLine] = []
         for line in photoEditorCanvas.lineBuffer {
-            savedPhotoLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth, isHighlighter: line.isHighlighter))
+            savedPhotoLineBuffer.append(SavedLine(points: line.points, colour: line.colour, lineCap: line.lineCap, lineWidth: line.lineWidth))
         }
        
         moc.performAndWait {
@@ -106,11 +104,11 @@ struct DocumentEditor: View {
             newDocument.id = UUID()
             
             var test: [SavedParagraph] = []
-            // Copy over the attributes maybe in order to save em
+//          Copy over the attributes maybe in order to save em
             for savedParagraph in scanResult.scannedTextList {
                 test.append(SavedParagraph(text: savedParagraph.text as String, isHeading: savedParagraph.isHeading))
             }
-            
+
             let best = scanResult.scannedText as String
             
             newDocument.scanResult = ScanResult(scannedTextList: test, scannedText: best)
@@ -266,14 +264,13 @@ struct DocumentEditor: View {
                                         .onChanged({ value in
                                             let position = value.location
                                             if value.translation == .zero {
+                                                let lineCapStyle: CGLineCap = textEditorCanvas.isUsingHighlighter ? CGLineCap.butt : CGLineCap.round;
+                                                let lineColour: Color = textEditorCanvas.isUsingHighlighter ? textEditorCanvas.selectedHighlighterColour : textEditorCanvas.selectedColour;
+                                                
                                                 if textEditorCanvas.isRubbing {
-                                                    textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: textEditorCanvas.lineCap, lineWidth: textEditorCanvas.lineWidth, isHighlighter: false))
+                                                    textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: .round, lineWidth: textEditorCanvas.lineWidth))
                                                 } else {
-                                                    if textEditorCanvas.lineCap == .round {
-                                                        textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: textEditorCanvas.selectedColour, lineCap: textEditorCanvas.lineCap, lineWidth: textEditorCanvas.lineWidth, isHighlighter: false))
-                                                    } else {
-                                                        textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: textEditorCanvas.selectedHighlighterColour, lineCap: textEditorCanvas.lineCap, lineWidth: textEditorCanvas.lineWidth, isHighlighter: false))
-                                                    }
+                                                    textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: lineColour, lineCap: lineCapStyle, lineWidth: textEditorCanvas.lineWidth))
                                                 }
                                             } else {
                                                 guard let lastIndex = textEditorCanvas.lineBuffer.indices.last else { return }
@@ -311,14 +308,14 @@ struct DocumentEditor: View {
                                         .onChanged({ value in
                                             let position = value.location
                                             if value.translation == .zero {
+                                                
+                                                let lineCapStyle: CGLineCap = photoEditorCanvas.isUsingHighlighter ? CGLineCap.butt : CGLineCap.round;
+                                                let lineColour: Color = photoEditorCanvas.isUsingHighlighter ? photoEditorCanvas.selectedHighlighterColour : photoEditorCanvas.selectedColour;
+                                                
                                                 if photoEditorCanvas.isRubbing {
-                                                    photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
+                                                    photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: lineCapStyle, lineWidth: photoEditorCanvas.lineWidth))
                                                 } else {
-                                                    if textEditorCanvas.lineCap == .round {
-                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
-                                                    } else {
-                                                        photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: photoEditorCanvas.selectedHighlighterColour, lineCap: photoEditorCanvas.lineCap, lineWidth: photoEditorCanvas.lineWidth, isHighlighter: false))
-                                                    }
+                                                    photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: lineColour, lineCap: lineCapStyle, lineWidth: photoEditorCanvas.lineWidth))
                                                 }
                                             } else {
                                                 guard let lastIndex = photoEditorCanvas.lineBuffer.indices.last else { return }

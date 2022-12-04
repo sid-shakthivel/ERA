@@ -116,21 +116,21 @@ struct Help: View {
                         }
                         
                         VStack {
-                            Image("rubber")
+                            Image("play")
                                 .resizable()
                                 .frame(width: 35, height: 35, alignment: .leading)
                                 .invertOnDarkTheme()
                             
-                            Text("Rubber to rub out drawings")
+                            Text("Start text to speech")
                         }
                         
                         VStack {
-                            Image("rubber")
+                            Image("pause")
                                 .resizable()
                                 .frame(width: 35, height: 35, alignment: .leading)
                                 .invertOnDarkTheme()
                             
-                            Text("Rubber to rub out drawings")
+                            Text("Pause text to speech")
                         }
                         
                         VStack {

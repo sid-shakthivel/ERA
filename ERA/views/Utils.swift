@@ -422,7 +422,6 @@ struct WorkingLine {
     public var colour: Color
     public var lineCap: CGLineCap
     public var lineWidth: Double
-    public var isHighlighter: Bool
 }
 
 /*
@@ -437,21 +436,18 @@ class SavedLine: NSObject, NSSecureCoding {
         case colour = "colour"
         case lineCap = "lineCap"
         case lineWidth = "lineWidth"
-        case isHighlighter = "isHighlighter"
     }
     
     public var points: [CGPoint]
     public var colour: Color
     public var lineCap: CGLineCap
     public var lineWidth: Double
-    public var isHighlighter: Bool
     
-    init(points: [CGPoint], colour: Color, lineCap: CGLineCap, lineWidth: Double, isHighlighter: Bool) {
+    init(points: [CGPoint], colour: Color, lineCap: CGLineCap, lineWidth: Double) {
         self.points = points
         self.colour = colour
         self.lineCap = lineCap
         self.lineWidth = lineWidth
-        self.isHighlighter = isHighlighter
     }
     
     public func encode(with coder: NSCoder) {
@@ -462,11 +458,9 @@ class SavedLine: NSObject, NSSecureCoding {
         coder.encode(UIColor(colour).encode(), forKey: CodingKeys.colour.rawValue)
         coder.encode(lineCap.rawValue, forKey: CodingKeys.lineCap.rawValue)
         coder.encode(lineWidth, forKey: CodingKeys.lineWidth.rawValue)
-        coder.encode(isHighlighter, forKey: CodingKeys.isHighlighter.rawValue)
     }
     
     public required convenience init?(coder: NSCoder) {
-        let mIsHighlighter = coder.decodeBool(forKey: CodingKeys.isHighlighter.rawValue)
         let mLineWidth = coder.decodeDouble(forKey: CodingKeys.lineWidth.rawValue)
         let mLineCap = CGLineCap(rawValue: Int32(coder.decodeInteger(forKey: CodingKeys.lineCap.rawValue)))!
         
@@ -475,7 +469,7 @@ class SavedLine: NSObject, NSSecureCoding {
         
         let mPoints: [CGPoint] = (coder.decodeObject(forKey: CodingKeys.points.rawValue) as! [NSValue]).map { $0.cgPointValue }
         
-        self.init(points: mPoints, colour: Color(uiColor: mUiColour!), lineCap: mLineCap, lineWidth: mLineWidth, isHighlighter: mIsHighlighter)
+        self.init(points: mPoints, colour: Color(uiColor: mUiColour!), lineCap: mLineCap, lineWidth: mLineWidth)
     }
 }
 

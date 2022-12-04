@@ -44,12 +44,12 @@ struct EditPencil: View {
                     
                     Spacer()
                     
-                    if canvasSettings.lineCap == .round {
-                        ColorPicker(selection: $canvasSettings.selectedColour) {
+                    if canvasSettings.isUsingHighlighter {
+                        ColorPicker(selection: $canvasSettings.selectedHighlighterColour) {
                         }
                             .font(.title)
                     } else {
-                        ColorPicker(selection: $canvasSettings.selectedHighlighterColour) {
+                        ColorPicker(selection: $canvasSettings.selectedColour) {
                         }
                             .font(.title)
                     }

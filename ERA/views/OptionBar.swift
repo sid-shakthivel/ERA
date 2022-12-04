@@ -49,7 +49,7 @@ struct OptionBar: View {
                     isDrawing = true
                     isUsingPencil = true
                     isUsingHighlighter = false
-                    canvasSettings.lineCap = .round
+                    canvasSettings.isUsingHighlighter = false;
                     canvasSettings.isRubbing = false
                 }, label: {
                     Image(systemName: "pencil.tip")
@@ -78,7 +78,7 @@ struct OptionBar: View {
                     isDrawing = true
                     isUsingHighlighter = true
                     isUsingPencil = false
-                    canvasSettings.lineCap = .butt
+                    canvasSettings.isUsingHighlighter = true;
                     canvasSettings.isRubbing = false
                 }, label: {
                     Image(systemName: "highlighter")
@@ -121,7 +121,6 @@ struct OptionBar: View {
                     canvasSettings.isRubbing = true
                     isUsingHighlighter = false
                     isUsingPencil = false
-                    canvasSettings.lineCap = .square
                 }, label: {
                     Image("rubber")
                         .resizable()
