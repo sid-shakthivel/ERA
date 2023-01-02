@@ -34,26 +34,14 @@ struct OnboardSubView: View {
                 
                 Text(modifyText(state: .Normal, text: data.mainText))
                     .foregroundColor(Color(hex: 0x000000))
+                    .invertOnDarkTheme()
                     .font(.system(size: 24))
                     .multilineTextAlignment(.center)
                     .padding()
-                
-                if (id == 2) {
-                    NavigationLink(destination: FileExplorer()) {
-                        Text("Welcome to ERA")
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .foregroundColor(.white)
-                            .background(Color(hex: 0xCB4E25, alpha: 1))
-                            .font(.system(size: 24, weight: .semibold))
-                            .clipShape(Capsule())
-                    }
-                    .padding()
-                }
-                
                 Spacer()
             }
         }
+        .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
 

@@ -34,10 +34,6 @@ struct FileExplorer: View {
     @State var tooltipConfig = DefaultTooltipConfig()
     
     func initialisation() {
-        if files.count == 0 {
-            showMenu.toggle()
-        }
-        
         tooltipConfig.enableAnimation = true
         tooltipConfig.animationOffset = 10
         tooltipConfig.animationTime = 1
@@ -81,13 +77,13 @@ struct FileExplorer: View {
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
                         .font(.system(size: 24, weight: .semibold))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.leading)
                     
                     ScrollView {                        
                         ZStack {
                             if files.count == 0 {
-                                Text("You have no documents; please click the menu button to get started")
+                                Text("You have no documents; please click the menu button in the bottom left hand corner to get started")
                                     .foregroundColor(.black)
                                     .invertOnDarkTheme()
                                     .font(.system(size: 20, weight: .semibold))
@@ -141,21 +137,6 @@ struct FileExplorer: View {
                                 }
                                 .padding(.trailing)
                                 .padding(.leading)
-                                .onAppear {
-                                    print(files.count)
-                                }
-                            }
-
-                            if isLoading {
-                                if userSettings.isDarkMode {
-                                    ProgressView()
-                                        .scaleEffect(3)
-                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0xf4e0d6, alpha: 1)))
-                                } else {
-                                    ProgressView()
-                                        .scaleEffect(3)
-                                        .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: 0x0B1F29, alpha: 1)))
-                                }
                             }
                         }
                     }

@@ -173,7 +173,7 @@ struct Settings: View {
                         Text("Settings")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: 16, weight: .bold))
                             .textCase(.uppercase)
                     }
                 }

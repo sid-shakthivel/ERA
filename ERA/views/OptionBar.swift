@@ -36,7 +36,7 @@ struct OptionBar: View {
             Button(action: {
                 showDictionary.toggle()
             }, label: {
-                Image("book")
+                Image("dictionary")
                     .resizable()
                     .frame(width: 25, height: 25)
                     .invertOnDarkTheme()
@@ -122,7 +122,7 @@ struct OptionBar: View {
                     isUsingHighlighter = false
                     isUsingPencil = false
                 }, label: {
-                    Image("rubber")
+                    Image("eraser")
                         .resizable()
                         .frame(width: 30, height: 30)
                         .invertOnDarkTheme()

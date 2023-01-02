@@ -81,7 +81,7 @@ struct Menu: View {
                    }
                } label: {
                    HStack {
-                       Image("book")
+                       Image("dictionary")
                            .invertOnDarkTheme()
                        
                        Text("Dictionary")

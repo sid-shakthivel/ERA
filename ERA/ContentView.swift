@@ -20,18 +20,29 @@ extension View {
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
+    @Environment(\.colorScheme) var colorScheme
     
     @StateObject var userSettings = UserPreferences()
     
     var body: some View {
-        if UserDefaults.standard.bool(forKey: "KeyOnBoardingViewShown") == false {
+        if UserDefaults.standard.bool(forKey: "Test") == false {
             OnboardingView()
                 .environmentObject(userSettings)
                 .onAppear() {
-                    // Set the value for next call
-                    UserDefaults.standard.setValue(true, forKey: "KeyOnBoardingViewShown")
+                    // Check for dark mode on initialisation
+                    if (colorScheme == .dark) {
+                        userSettings.isDarkMode = true
+                        userSettings.saveSettings(userPreferences: userSettings)
+                    } else {
+                        userSettings.isDarkMode = false
+                    }
                 }
-                .preferredColorScheme(.light)
+                .if(userSettings.isDarkMode) { view in
+                    view.preferredColorScheme(.dark)
+                }
+                .if(!userSettings.isDarkMode) { view in
+                    view.preferredColorScheme(.light)
+                }
         } else {
             FileExplorer()
                 .environmentObject(userSettings)

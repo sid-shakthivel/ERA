@@ -11,8 +11,6 @@ struct Help: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var userSettings: UserPreferences
     
-    let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 3)
-    
     var body: some View {
         NavigationView {
             VStack {
@@ -28,7 +26,7 @@ struct Help: View {
                         Text("Help")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .font(.system(size: 18, weight: .bold))
+                            .font(.system(size: 16, weight: .bold))
                             .textCase(.uppercase)
                     }
                     
@@ -39,155 +37,13 @@ struct Help: View {
                 
                 Divider()
                 
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        Group {
-                            VStack {
-                                Image("menu")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Main menu")
-                            }
-                            
-                            VStack {
-                                Image("settings")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Settings")
-                            }
-                            
-                            VStack {
-                                Image("export")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Export as PDF")
-                            }
-                            
-                            VStack {
-                                Image("edit-text")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Edit text")
-                            }
-                            
-                            VStack {
-                                Image("save")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Save document")
-                            }
-                            
-                            VStack {
-                                Image("book")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Dictionary")
-                            }
-                            
-                            VStack {
-                                Image("close-canvas")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Stop editing the drawing")
-                            }
-                            
-                            VStack {
-                                Image("rubber")
-                                    .resizable()
-                                    .frame(width: 35, height: 35, alignment: .leading)
-                                    .invertOnDarkTheme()
-                                
-                                Text("Rubber to rub out drawings")
-                            }
-                        }
-                        
-                        VStack {
-                            Image("play")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .invertOnDarkTheme()
-                            
-                            Text("Start text to speech")
-                        }
-                        
-                        VStack {
-                            Image("pause")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .invertOnDarkTheme()
-                            
-                            Text("Pause text to speech")
-                        }
-                        
-                        VStack {
-                            Image("bin")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .invertOnDarkTheme()
-                            
-                            Text("Delete all drawings")
-                        }
-                        
-                        VStack {
-                            Image(systemName: "arrow.uturn.backward")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .foregroundColor(.black)
-                                .invertOnDarkTheme()
-                            
-                            Text("Undo")
-                        }
-                        
-                        VStack {
-                            Image(systemName: "arrow.uturn.forward")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .foregroundColor(.black)
-                                .invertOnDarkTheme()
-                            
-                            Text("Redo")
-                        }
-                        
-                        VStack {
-                            Image(systemName: "pencil.tip")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .foregroundColor(.black)
-                                .invertOnDarkTheme()
-                            
-                            Text("Pen")
-                        }
-                        
-                        VStack {
-                            Image(systemName: "highlighter")
-                                .resizable()
-                                .frame(width: 35, height: 35, alignment: .leading)
-                                .foregroundColor(.black)
-                                .invertOnDarkTheme()
-                            
-                            Text("Highlighter")
-                        }
-                    }
-                    .padding()
-                }
+                HelpWidgets()
             }
-            .invertBackgroundOnDarkTheme(isBase: true)
+                .navigationBarHidden(true)
+                .invertBackgroundOnDarkTheme(isBase: true)
         }
             .navigationBarHidden(true)
+            .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
 

@@ -23,10 +23,31 @@ struct OnboardingView: View {
                     OnboardSubView(data: data, id: data.id)
                         .tag(data.id)
                 }
+                
+                VStack {
+                    HelpWidgets()
+                    
+                    NavigationLink(destination: FileExplorer()) {
+                        Text("Welcome to ERA")
+                            .padding()
+                            .frame(maxWidth: .infinity)
+                            .foregroundColor(.white)
+                            .background(Color(hex: 0xCB4E25, alpha: 1))
+                            .font(.system(size: 24, weight: .semibold))
+                            .clipShape(Capsule())
+                    }
+                        .padding()
+                        .onAppear() {
+                            UserDefaults.standard.setValue(true, forKey: "Test") // Set key for onboarding complete
+                        }
+                    
+                    Spacer()
+                }
+                    .tag(3)
             }
                 .tabViewStyle(PageTabViewStyle())
                 .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
-                .background(Color(.white))
+                .invertBackgroundOnDarkTheme(isBase: true)
         }
     }
 }
