@@ -8,7 +8,6 @@
 import SwiftUI
 import AVFoundation
 import PDFKit
-import SwiftUITooltip
 
 class TempCanvas: ObservableObject {
     @Published var isUsingHighlighter: Bool = false
@@ -33,7 +32,7 @@ struct DocumentEditor: View {
     @State var showDictionary: Bool = false
     @State var showPencilEdit: Bool = false
     @State var pdfDocument: PDFDoc? = nil
-    @State var tooltipConfig = DefaultTooltipConfig()
+
     
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
@@ -70,11 +69,6 @@ struct DocumentEditor: View {
     }
     
     func initialisation() {
-        // Configure the tooltips
-        tooltipConfig.enableAnimation = true
-        tooltipConfig.animationOffset = 10
-        tooltipConfig.animationTime = 1
-        
         // Copy data from the saved buffer into the working bufffer
         guard let lines = (document.textCanvasData as? CanvasData)?.lines else { return }
         for line in lines {
@@ -153,13 +147,6 @@ struct DocumentEditor: View {
                                 .frame(width: 30, height: 35)
                                 .invertOnDarkTheme()
                         })
-                            .if(isShowingHelp) { view in
-                                view
-                                    .tooltip(.left, config: tooltipConfig) {
-                                        Text("Export PDF")
-                                            .font(Font(userSettings.subParagaphFont))
-                                    }
-                            }
                         
                         Button(action: {
                             // Save button which saves data to core data

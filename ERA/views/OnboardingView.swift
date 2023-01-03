@@ -25,6 +25,13 @@ struct OnboardingView: View {
                 }
                 
                 VStack {
+                    Text("Icon List")
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                        .font(.system(size: 22, weight: .regular))
+                        
+                    Spacer()
+                    
                     HelpWidgets()
                     
                     NavigationLink(destination: FileExplorer()) {

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUITooltip
 
 struct FileExplorer: View {
     @Environment(\.managedObjectContext) var moc
@@ -30,15 +29,6 @@ struct FileExplorer: View {
     @State var isLoading: Bool = false
     
     @State var isShowingHelp = false
-    
-    @State var tooltipConfig = DefaultTooltipConfig()
-    
-    func initialisation() {
-        tooltipConfig.enableAnimation = true
-        tooltipConfig.animationOffset = 10
-        tooltipConfig.animationTime = 1
-        tooltipConfig.showArrow = false
-    }
         
     var body: some View {
         NavigationView {
@@ -163,7 +153,6 @@ struct FileExplorer: View {
                     }
                     .padding(.leading)
                 }
-                    .onAppear(perform: initialisation)
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
                         if #available(iOS 16, *) {

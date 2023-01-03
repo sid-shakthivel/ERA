@@ -28,7 +28,6 @@
 		35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BEE0DF2913E2B5006AAD86 /* Utils.swift */; };
 		35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* Menu.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
-		35E6F1B0291A806600E7FBDE /* SwiftUITooltip in Frameworks */ = {isa = PBXBuildFile; productRef = 35E6F1AF291A806600E7FBDE /* SwiftUITooltip */; };
 		35F6B594292AD79D007BE260 /* EditDocumentProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,7 +63,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35E6F1B0291A806600E7FBDE /* SwiftUITooltip in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,7 +148,6 @@
 			);
 			name = ERA;
 			packageProductDependencies = (
-				35E6F1AF291A806600E7FBDE /* SwiftUITooltip */,
 			);
 			productName = BionicReading;
 			productReference = 356A454C28E5C47B0067999E /* ERA.app */;
@@ -376,7 +373,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindcore.era;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -414,7 +411,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.1;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mindcore.era;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -467,14 +464,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		35E6F1AF291A806600E7FBDE /* SwiftUITooltip */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 35E6F1AE291A806600E7FBDE /* XCRemoteSwiftPackageReference "SwiftUI-Tooltip" */;
-			productName = SwiftUITooltip;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */ = {

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUITooltip
 
 struct OptionBar: View {
     @EnvironmentObject var canvasSettings: TempCanvas
@@ -20,14 +19,6 @@ struct OptionBar: View {
     
     @State var isUsingHighlighter: Bool = false
     @State var isUsingPencil: Bool = false
-    
-    @State var tooltipConfig = DefaultTooltipConfig()
-    
-    func setup_tooltips() {
-        tooltipConfig.enableAnimation = true
-        tooltipConfig.animationOffset = 10
-        tooltipConfig.animationTime = 1
-    }
     
     var body: some View {
         HStack {
@@ -168,7 +159,6 @@ struct OptionBar: View {
         }
         .padding(.top)
         .invertBackgroundOnDarkTheme(isBase: false)
-        .onAppear(perform: setup_tooltips)
         .onAppear() {
             if settings.isDarkMode && canvasSettings.selectedColour == .black {
                 canvasSettings.selectedColour = .white

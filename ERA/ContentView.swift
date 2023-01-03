@@ -24,18 +24,28 @@ struct ContentView: View {
     
     @StateObject var userSettings = UserPreferences()
     
+    @State var secondAppear: Bool = false
+    
     var body: some View {
         if UserDefaults.standard.bool(forKey: "Test") == false {
             OnboardingView()
                 .environmentObject(userSettings)
                 .onAppear() {
                     // Check for dark mode on initialisation
+                    
+                    if (secondAppear) {
+                        return;
+                    }
+                    
                     if (colorScheme == .dark) {
                         userSettings.isDarkMode = true
                         userSettings.saveSettings(userPreferences: userSettings)
                     } else {
                         userSettings.isDarkMode = false
+                        userSettings.saveSettings(userPreferences: userSettings)
                     }
+                    
+                    secondAppear = true;
                 }
                 .if(userSettings.isDarkMode) { view in
                     view.preferredColorScheme(.dark)
@@ -54,7 +64,7 @@ struct ContentView: View {
                     view
                         .preferredColorScheme(.dark)
                 }
-        }
+        }        
     }
 }
 
