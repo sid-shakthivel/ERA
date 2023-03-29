@@ -9,6 +9,10 @@ import SwiftUI
 import AVFoundation
 import PDFKit
 
+import MLKit
+import MLKitTranslate
+import Zoomable
+
 class TempCanvas: ObservableObject {
     @Published var isUsingHighlighter: Bool = false
     @Published var selectedColour: Color = .black
@@ -19,6 +23,43 @@ class TempCanvas: ObservableObject {
     @Published var isRubbing: Bool = false
 }
 
+//extension String {
+//    func splitTest(width: CGFloat, font: UIFont) -> [String] {
+//        guard !self.isEmpty else { return [String]() }
+//
+//        var lines = [String]()
+//
+//        // set up range of the split
+//        var splitStart = self.startIndex
+//        var splitEnd = self.startIndex
+//
+//        repeat {
+//            // advance the end range for the split
+//            splitEnd = self.index(after: splitStart)
+//
+//            // initial split to test
+//            var line = String(self[splitStart..<splitEnd])
+//
+//            // while we're before the end test the rendered width
+//            while splitEnd < self.endIndex &&
+//                    line.size(withAttributes: [NSAttributedString.Key.font: font]).width < width {
+//                // add one more character
+//                splitEnd = self.index(after: splitEnd)
+//                line = String(self[splitStart..<splitEnd])
+//            }
+//
+//            // add split to array and set up next split
+//            lines.append(line)
+//            splitStart = splitEnd
+//        } while splitEnd < self.endIndex // don't go past the end of the string
+//
+//
+//        // add remainder of string to array
+//        lines.append(String(self[splitStart..<self.endIndex]))
+//        return lines
+//    }
+//}
+
 struct DocumentEditor: View {
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var userSettings: UserPreferences
@@ -26,24 +67,27 @@ struct DocumentEditor: View {
     
     @State var document: FetchedResults<Document>.Element // Contains all data
     @State var scanResult: ScanResult // Specifically contains just scan data in order to minimise unwrapping/nil
-    @State var images: [Image]
+    @State var images: [UIImage]
     
-    @State var showFileExporter = false
-    @State var showDictionary: Bool = false
-    @State var showPencilEdit: Bool = false
+    @State var showFileExporter: Bool = false
     @State var pdfDocument: PDFDoc? = nil
 
-    
     @State var isEditingText: Bool = false
     @State var isDrawing: Bool = false
     @State var isShowingHelp: Bool = false
+    @State var utilityBarStatus: UtilityBarStatus = .UtilityBar
+    
+    @State var downloadStatus: DownloadStatus = .Off
     
     @StateObject var speaker = Speaker()
     
     @StateObject var textEditorCanvas = TempCanvas()
     @StateObject var photoEditorCanvas = TempCanvas()
-    
+
     @State var isViewingText: Bool = true
+    @State var shouldTranslateText: Bool = false
+    
+    @State var currentTranslator: Translator = Translator.translator(options: TranslatorOptions(sourceLanguage: TranslateLanguage(rawValue: "en"), targetLanguage: TranslateLanguage(rawValue: "fr")))
     
     @GestureState private var scale: CGFloat = 1.0
     
@@ -98,6 +142,7 @@ struct DocumentEditor: View {
             newDocument.id = UUID()
             
             var test: [SavedParagraph] = []
+            
 //          Copy over the attributes maybe in order to save em
             for savedParagraph in scanResult.scannedTextList {
                 test.append(SavedParagraph(text: savedParagraph.text as String, isHeading: savedParagraph.isHeading))
@@ -135,9 +180,9 @@ struct DocumentEditor: View {
                                 .font(.system(size: 14, weight: .bold))
                                 .textCase(.uppercase)
                         }
-                        
+
                         Spacer()
-                        
+
                         Button(action: {
                             pdfDocument = convertScreenToPDF()
                             showFileExporter.toggle()
@@ -147,7 +192,7 @@ struct DocumentEditor: View {
                                 .frame(width: 30, height: 35)
                                 .invertOnDarkTheme()
                         })
-                        
+
                         Button(action: {
                             // Save button which saves data to core data
                             isEditingText = false
@@ -159,7 +204,7 @@ struct DocumentEditor: View {
                                 .frame(width: 20, height: 30)
                                 .invertOnDarkTheme()
                         })
-                            
+
                         if isEditingText {
                             // Needs to save changes
                             Button(action: {
@@ -173,8 +218,10 @@ struct DocumentEditor: View {
                             })
                         } else {
                             Button(action: {
-                                isEditingText = true
-                                isDrawing = false
+                                if utilityBarStatus != .TranslationBar {
+                                    isEditingText = true
+                                    isDrawing = false
+                                }
                             }, label: {
                                 Image("edit-text")
                                     .resizable()
@@ -182,7 +229,7 @@ struct DocumentEditor: View {
                                     .invertOnDarkTheme()
                             })
                         }
-                        
+
                         if speaker.isPlayingAudio {
                             Button(action: {
                                 // Check whether the speaker is paused or not
@@ -210,7 +257,7 @@ struct DocumentEditor: View {
                                     .invertOnDarkTheme()
                             })
                         }
-                        
+
                         NavigationLink(destination: Settings()) {
                             Image("settings")
                                 .resizable()
@@ -228,15 +275,15 @@ struct DocumentEditor: View {
                         // Show the document view in which users can edit text
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
-                                // View generated on scan/imported PDF
+                                //                                 View generated on scan/imported PDF
                                 ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
                                     Group {
-                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, textToEdit: paragraph.text)
+                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, shouldTranslateText: $shouldTranslateText, currentTranslator: $currentTranslator, text: paragraph.text, width: geometryProxy.size.width, sentences: getSentences(text: paragraph.text, width: geometryProxy.size.width, fontWidth: CGFloat(userSettings.paragraphFontSize)))
                                         Text("")
                                     }
                                 }
                             }
-                            
+                                
                             if isDrawing {
                                 Canvas { ctx, size in
                                     for line in textEditorCanvas.lineBuffer {
@@ -253,7 +300,7 @@ struct DocumentEditor: View {
                                             if value.translation == .zero {
                                                 let lineCapStyle: CGLineCap = textEditorCanvas.isUsingHighlighter ? CGLineCap.butt : CGLineCap.round;
                                                 let lineColour: Color = textEditorCanvas.isUsingHighlighter ? textEditorCanvas.selectedHighlighterColour : textEditorCanvas.selectedColour;
-                                                
+
                                                 if textEditorCanvas.isRubbing {
                                                     textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: .round, lineWidth: textEditorCanvas.lineWidth))
                                                 } else {
@@ -263,24 +310,26 @@ struct DocumentEditor: View {
                                                 guard let lastIndex = textEditorCanvas.lineBuffer.indices.last else { return }
                                                 textEditorCanvas.lineBuffer[lastIndex].points.append(position)
                                             }
-                                        })
-                                )
+                                        }))
                             }
                         }
-                            .padding()
-                            .background(userSettings.backgroundColour)
+                        .padding()
+                        .background(userSettings.backgroundColour)
                     } else {
                         // Show photo view
                         ZStack {
                             ScrollView(.vertical, showsIndicators: true) {
                                 ForEach(0..<images.count, id: \.self) { imageIndex in
-                                    images[imageIndex]
-                                       .resizable()
-                                       .frame(width: geometryProxy.size.width, height: geometryProxy.size.height * 0.85)
-                                       .aspectRatio(contentMode: .fit)
+                                    ZoomableView(size: CGSize(width: geometryProxy.size.width, height: geometryProxy.size.height * 0.85), min: 0.5, max: 50.0, showsIndicators: true) {
+                                        Image(uiImage: images[imageIndex])
+                                            .resizable()
+                                            .scaledToFit()
+                                            .background(Color.black)
+                                            .clipped()
+                                    }
                                 }
                             }
-                            
+
                             if isDrawing {
                                 Canvas { ctx, size in
                                     for line in photoEditorCanvas.lineBuffer {
@@ -295,10 +344,10 @@ struct DocumentEditor: View {
                                         .onChanged({ value in
                                             let position = value.location
                                             if value.translation == .zero {
-                                                
+
                                                 let lineCapStyle: CGLineCap = photoEditorCanvas.isUsingHighlighter ? CGLineCap.butt : CGLineCap.round;
                                                 let lineColour: Color = photoEditorCanvas.isUsingHighlighter ? photoEditorCanvas.selectedHighlighterColour : photoEditorCanvas.selectedColour;
-                                                
+
                                                 if photoEditorCanvas.isRubbing {
                                                     photoEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: lineCapStyle, lineWidth: photoEditorCanvas.lineWidth))
                                                 } else {
@@ -316,12 +365,14 @@ struct DocumentEditor: View {
                             .background(userSettings.backgroundColour)
                     }
                     
+                    DownloadBar(downloadStatus: $downloadStatus)
+                    
                     Picker("", selection: $isViewingText) {
                         Text("Document Editor")
                             .tag(true)
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                        
+
                         Text("Photo Editor")
                             .tag(false)
                             .foregroundColor(.black)
@@ -331,17 +382,8 @@ struct DocumentEditor: View {
                         .padding(.leading)
                         .padding(.trailing)
                     
-                    if isViewingText {
-                        OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .environmentObject(userSettings)
-                            .environmentObject(textEditorCanvas)
-                    } else {
-                        OptionBar(showDictionary: $showDictionary, isDrawing: $isDrawing, isEditing: $isEditingText, showPencilEdit: $showPencilEdit, isShowingHelp: $isShowingHelp)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .environmentObject(userSettings)
-                            .environmentObject(photoEditorCanvas)
-                    }
+                    UtilityBar(isDrawing: $isDrawing, isEditing: $isEditingText, utilityBarStatus: $utilityBarStatus, downloadStatus: $downloadStatus, currentTranslator: $currentTranslator, shouldTranslateText: $shouldTranslateText)
+                        .environmentObject(isViewingText ? textEditorCanvas : photoEditorCanvas)
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
             }
@@ -353,43 +395,6 @@ struct DocumentEditor: View {
                 .navigationBarTitle("")
                 .navigationBarBackButtonHidden(true)
                 .navigationBarHidden(true)
-                .sheet(isPresented: $showPencilEdit, content: {
-                    if isViewingText {
-                        // Provide settings for text canvas
-                        let name = textEditorCanvas.isUsingHighlighter == true ? "Highlighter": "Pencil";
-                         
-                        if #available(iOS 16, *) {
-                            EditPencil(drawingToolName: name)
-                                .environmentObject(textEditorCanvas)
-                                .environmentObject(userSettings)
-                                .presentationDetents([.fraction(0.30)])
-                                .presentationDragIndicator(.visible)
-                        } else {
-                            EditPencil(drawingToolName: name)
-                                .environmentObject(textEditorCanvas)
-                                .environmentObject(userSettings)
-                        }
-                    } else {
-                        // Provide settings for photo canvas
-                        let name = textEditorCanvas.isUsingHighlighter == true ? "Highlighter": "Pencil";
-                        
-                        if #available(iOS 16, *) {
-                            EditPencil(drawingToolName: name)
-                                .environmentObject(textEditorCanvas)
-                                .environmentObject(userSettings)
-                                .presentationDetents([.fraction(0.30)])
-                                .presentationDragIndicator(.visible)
-                        } else {
-                            EditPencil(drawingToolName: name)
-                                .environmentObject(textEditorCanvas)
-                                .environmentObject(userSettings)
-                        }
-                    }
-                })
-                .sheet(isPresented: $showDictionary, content: {
-                    DictionaryLookup(wordData: nil)
-                        .environmentObject(userSettings)
-                })
                 .fileExporter(
                    isPresented: $showFileExporter,
                    document: pdfDocument,
@@ -411,10 +416,3 @@ struct DocumentEditor: View {
     }
 }
 
-
-
-//struct Home_Previews: PreviewProvider {
-//    static var previews: some View {
-//        Home(showMenu: false)
-//    }
-//}

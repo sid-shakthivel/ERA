@@ -216,6 +216,29 @@ struct HelpWidgets: View {
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
                 }
+                
+                VStack {
+                    Image("translate")
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                        .invertOnDarkTheme()
+                    
+                    Text("Translate")
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                }
+                
+                VStack {
+                    Image(systemName: "scribble")
+                        .resizable()
+                        .frame(width: 35, height: 35)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                    
+                    Text("Canvas")
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                }
             }
                 .padding(.trailing)
         }

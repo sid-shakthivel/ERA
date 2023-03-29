@@ -1,8 +1,8 @@
 //
-//  Help.swift
+//  Info.swift
 //  ERA
 //
-//  Created by Siddharth Shakthivel Muthu Pandian on 03/12/2022.
+//  Created by Siddharth Shakthivel Muthu Pandian on 25/03/2023.
 //
 
 import SwiftUI

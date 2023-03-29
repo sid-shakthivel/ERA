@@ -90,9 +90,3 @@ extension UIFont {
         return withTraits(traits: .traitBold)
     }
 }
-
-struct FontPickerWrapper_Previews: PreviewProvider {
-    static var previews: some View {
-        FontPickerWrapper(isShowingFontPicker: .constant(true))
-    }
-}

@@ -26,6 +26,10 @@ extension String {
     var withoutSpecialCharacters: String {
         return self.components(separatedBy: CharacterSet.symbols).joined(separator: "")
     }
+    
+    var isAlphanumeric: Bool {
+        return !isEmpty && range(of: "[^a-zA-Z0-9]", options: .regularExpression) == nil
+    }
 }
 
 extension Color {
@@ -126,6 +130,9 @@ extension UIColor {
 func enhanceWord(state: EnhancedReadingStatus, word: String) -> String {
     var mutWord = word
     
+    // Ensure words don't contain special characters which can mess up bionic reading
+//    if (!mutWord.isAlphanumeric) { return word }
+    
     switch(state) {
         case .Skim:
         /*
@@ -138,6 +145,7 @@ func enhanceWord(state: EnhancedReadingStatus, word: String) -> String {
             tagger.string = mutWord
             let tag = tagger.tag(at: mutWord.startIndex, unit: .word, scheme: .lexicalClass)
             
+            // Check word class of word
             if tag.0?.rawValue == "Noun" || tag.0?.rawValue == "Verb" || tag.0?.rawValue == "Adverb" || tag.0?.rawValue == "Adjective" || tag.0?.rawValue == "OtherWord" {
                 let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
                 mutWord.insert("*", at: mutWord.startIndex)
@@ -149,9 +157,11 @@ func enhanceWord(state: EnhancedReadingStatus, word: String) -> String {
         }
             break
         case .Normal:
-            let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
+            var boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
             mutWord.insert("*", at: mutWord.startIndex)
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: 1))
+        
+            if (mutWord[mutWord.index(mutWord.startIndex, offsetBy: boldIndex)] == "-") { boldIndex += 1}
             
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 1))
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 2))
@@ -361,6 +371,15 @@ func convertDataToImages(dataArray: [Data]) -> [Image] {
     return imagesArray
 }
 
+func convertDataToUIImages(dataArray: [Data]) -> [UIImage] {
+    var imagesArray = [UIImage]()
+    for data in dataArray {
+        let uiImage = UIImage(data: data)!
+        imagesArray.append(uiImage)
+    }
+    return imagesArray
+}
+
 func getFirstImageFromData(data: Data) -> Image? {
     let images = getImagesfromData(data: data)
     if !images.isEmpty {
@@ -371,6 +390,18 @@ func getFirstImageFromData(data: Data) -> Image? {
 
 func convertUIImagesToImages(uiImages: [UIImage]) -> [Image] {
     return uiImages.map { Image(uiImage: $0 )}
+}
+
+func getUIImagesFromData(data: Data) -> [UIImage] {
+    do {
+        let dataArray = try NSKeyedUnarchiver.unarchivedObject(ofClasses: [NSArray.self], from: data) as! [Data]
+        let imageArray = convertDataToUIImages(dataArray: dataArray)
+        return imageArray
+    } catch {
+        print("issue")
+    }
+    
+    return []
 }
 
 func getImagesfromData(data: Data) -> [Image] {
@@ -529,4 +560,32 @@ extension UIColor {
      func encode() -> Data? {
           return try? NSKeyedArchiver.archivedData(withRootObject: self, requiringSecureCoding: false)
      }
+}
+
+func getSentences(text: String, width: Double, fontWidth: CGFloat) -> [String] {
+    // Get amount of characters which can be stored on a single line
+//    var fontWidth = userSettings.paragraphFont.xHeight
+//    fontWidth = CGFloat(userSettings.paragraphFontSize)
+
+    let amountOfCharacters = (width / Double(fontWidth)) * 1.5
+
+    // Get amount of lines required
+    let linesRequired = Double(text.count) / amountOfCharacters
+
+    var sentences: [String] = []
+
+    // Generate an array of lines
+    for i in 0...Int(linesRequired) {
+        let startIndex = i * Int(amountOfCharacters - 1)
+        let endIndex = (i+1) * Int(amountOfCharacters - 1)
+
+        if (endIndex > text.count) { break }
+
+        let start = text.index(text.startIndex, offsetBy: startIndex)
+        let end = text.index(text.startIndex, offsetBy: endIndex)
+        
+        sentences.append(String(text[start..<end]))
+    }
+
+    return sentences
 }

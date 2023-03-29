@@ -28,7 +28,7 @@ struct OnboardingView: View {
                     Text("Icon List")
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
-                        .font(.system(size: 22, weight: .regular))
+                        .font(.system(size: 24, weight: .bold))
                         
                     Spacer()
                     
@@ -45,7 +45,7 @@ struct OnboardingView: View {
                     }
                         .padding()
                         .onAppear() {
-                            UserDefaults.standard.setValue(true, forKey: "Test") // Set key for onboarding complete
+                            UserDefaults.standard.setValue(true, forKey: "HasInitallyPurchasedERA")
                         }
                     
                     Spacer()
@@ -56,11 +56,5 @@ struct OnboardingView: View {
                 .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .always))
                 .invertBackgroundOnDarkTheme(isBase: true)
         }
-    }
-}
-
-struct OnboardingView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingView()
     }
 }

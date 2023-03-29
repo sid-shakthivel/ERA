@@ -17,6 +17,8 @@ struct Menu: View {
     @Binding var showDictionary: Bool
     @Binding var showMenu: Bool
     
+    @Binding var fileStatus: FileStatus
+    
     var body: some View {
         Group {
            VStack {
@@ -48,6 +50,7 @@ struct Menu: View {
                    .padding(.horizontal, 30)
                
                Button {
+                   fileStatus = .Loading
                    showMenu = false
                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                        showFileImporter.toggle()
@@ -75,6 +78,7 @@ struct Menu: View {
                    .padding(.horizontal, 30)
                
                Button {
+                   fileStatus = .Loading
                    showMenu = false
                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                        showDictionary.toggle()
@@ -101,11 +105,5 @@ struct Menu: View {
        }
             .frame(maxHeight: .infinity)
             .invertBackgroundOnDarkTheme(isBase: true)
-    }
-}
-
-struct optionView_Previews: PreviewProvider {
-    static var previews: some View {
-        Menu(showDocumentCameraView: .constant(false), showFileImporter: .constant(false), showDictionary: .constant(false), showMenu: .constant(false))
     }
 }

@@ -42,11 +42,6 @@ struct OnboardSubView: View {
             }
         }
         .invertBackgroundOnDarkTheme(isBase: true)
+        
     }
 }
-
-//struct OnboardView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        OnboardSubView()
-//    }
-//}

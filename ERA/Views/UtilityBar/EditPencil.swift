@@ -77,8 +77,3 @@ struct EditPencil: View {
     }
 }
 
-struct EditDraw_Previews: PreviewProvider {
-    static var previews: some View {
-        EditPencil(drawingToolName: "Pencil")
-    }
-}

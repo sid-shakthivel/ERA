@@ -7,6 +7,8 @@
 
 import SwiftUI
 import CoreData
+import MLKit
+import MLKitTranslate
 
 extension View {
     @ViewBuilder func `if`<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
@@ -18,52 +20,42 @@ extension View {
     }
 }
 
+class LanguageTranslator: ObservableObject {
+    @Published var engine: Translator = Translator.translator(options: TranslatorOptions(sourceLanguage: .english, targetLanguage: .french))
+}
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) var moc
     @Environment(\.colorScheme) var colorScheme
     
     @StateObject var userSettings = UserPreferences()
-    
-    @State var secondAppear: Bool = false
+    @StateObject var currentTranslator: LanguageTranslator = LanguageTranslator()
     
     var body: some View {
-        if UserDefaults.standard.bool(forKey: "Test") == false {
+        if UserDefaults.standard.bool(forKey: "HasInitallyPurchasedERA") == false {
             OnboardingView()
                 .environmentObject(userSettings)
                 .onAppear() {
-                    // Check for dark mode on initialisation
+                    // Check whether user is specifically in dark/light mode by default
+                    userSettings.isDarkMode = colorScheme == .dark ? true : false;
+                    userSettings.saveSettings(userPreferences: userSettings)
                     
-                    if (secondAppear) {
-                        return;
+                    // Download english to french conversion by default
+                    let conditions = ModelDownloadConditions(
+                        allowsCellularAccess: false,
+                        allowsBackgroundDownloading: true
+                    )
+                    
+                    currentTranslator.engine.downloadModelIfNeeded(with: conditions) { error in
+                        guard error == nil else { return }
                     }
-                    
-                    if (colorScheme == .dark) {
-                        userSettings.isDarkMode = true
-                        userSettings.saveSettings(userPreferences: userSettings)
-                    } else {
-                        userSettings.isDarkMode = false
-                        userSettings.saveSettings(userPreferences: userSettings)
-                    }
-                    
-                    secondAppear = true;
                 }
-                .if(userSettings.isDarkMode) { view in
-                    view.preferredColorScheme(.dark)
-                }
-                .if(!userSettings.isDarkMode) { view in
-                    view.preferredColorScheme(.light)
-                }
+                .preferredColorScheme(userSettings.isDarkMode ? .dark : .light)
         } else {
             FileExplorer()
                 .environmentObject(userSettings)
-                .if(!userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.light)
-                }
-                .if(userSettings.isDarkMode) { view in
-                    view
-                        .preferredColorScheme(.dark)
-                }
+                .environmentObject(currentTranslator)
+                .preferredColorScheme(userSettings.isDarkMode ? .dark : .light)
         }        
     }
 }

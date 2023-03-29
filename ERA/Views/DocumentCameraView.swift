@@ -35,7 +35,7 @@ class SavedParagraph: NSObject, NSSecureCoding {
     public required convenience init?(coder: NSCoder) {
         let mIsHeading = coder.decodeBool(forKey: CodingKeys.isHeading.rawValue)
         let mText = coder.decodeObject(of: NSString.self, forKey: CodingKeys.text.rawValue) as? String
-        self.init(text: mText ?? "hey yoiung world", isHeading: mIsHeading)
+        self.init(text: mText ?? exampleText, isHeading: mIsHeading)
     }
 }
 
@@ -153,6 +153,8 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([SavedParagraph], String) {
 struct DocumentCameraView: UIViewControllerRepresentable {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.managedObjectContext) var moc
+    
+    @Binding var fileStatus: FileStatus;
 
     func updateUIViewController(_ viewController: VNDocumentCameraViewController, context: Context) {}
 
@@ -206,7 +208,9 @@ struct DocumentCameraView: UIViewControllerRepresentable {
                     let imageDataArray = convertImagesToData(images: savedImages)
                     let colatedImageData = try NSKeyedArchiver.archivedData(withRootObject: imageDataArray, requiringSecureCoding: true)
                     newScanResult.images = colatedImageData
-
+                    
+                    self.parent.fileStatus = .Finished
+                    
                     try? self.parent.moc.save()
                 } catch {}
             }

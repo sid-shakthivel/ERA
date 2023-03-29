@@ -179,13 +179,11 @@ struct DictionaryLookup: View {
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
                             .font(Font(userSettings.headingFont))
-//                            .fontWeight(.bold)
                     case .UnknownWord, .Nothing:
                         Text("Word not found!?")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
                             .font(Font(userSettings.headingFont))
-//                            .fontWeight(.bold)
                     }
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
@@ -196,7 +194,6 @@ struct DictionaryLookup: View {
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
                         .font(Font(userSettings.headingFont))
-//                        .fontWeight(.bold)
                     
                     Text("\(wordData?.phonetic ?? "Unknown")")
                         .foregroundColor(.black)
@@ -276,8 +273,3 @@ struct DictionaryLookup: View {
     }
 }
 
-//struct Lookup_Previews: PreviewProvider {
-//    static var previews: some View {
-//        DictionaryLookup()
-//    }
-//}

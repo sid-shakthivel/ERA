@@ -6,6 +6,13 @@
 //
 
 import SwiftUI
+import MLKit
+import MLKitTranslate
+
+enum FileStatus {
+    case Loading
+    case Finished
+}
 
 struct FileExplorer: View {
     @Environment(\.managedObjectContext) var moc
@@ -26,9 +33,9 @@ struct FileExplorer: View {
     
     @State var currentDocument: Document?
     
-    @State var isLoading: Bool = false
-    
     @State var isShowingHelp = false
+    
+    @State var fileStatus: FileStatus = .Finished
         
     var body: some View {
         NavigationView {
@@ -70,8 +77,9 @@ struct FileExplorer: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.leading)
                     
-                    ScrollView {                        
-                        ZStack {
+                    switch (fileStatus) {
+                    case .Finished:
+                        ScrollView {
                             if files.count == 0 {
                                 Text("You have no documents; please click the menu button in the bottom left hand corner to get started")
                                     .foregroundColor(.black)
@@ -80,11 +88,11 @@ struct FileExplorer: View {
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .padding(.leading)
                                     .padding(.trailing)
-                            } else { 
+                            } else {
                                 LazyVGrid(columns: columns, spacing: 20) {
                                     ForEach(files, id: \.id) { file in
                                         if file.images != nil {
-                                            NavigationLink(destination: DocumentEditor(document: file, scanResult: file.scanResult!, images: getImagesfromData(data: file.images!))) {
+                                            NavigationLink(destination: DocumentEditor(document: file, scanResult: file.scanResult!, images: getUIImagesFromData(data: file.images!))) {
                                                 ZStack {
                                                     if (userSettings.isDarkMode) {
                                                         RoundedRectangle(cornerRadius: 10)
@@ -129,6 +137,15 @@ struct FileExplorer: View {
                                 .padding(.leading)
                             }
                         }
+                    case .Loading:
+                        Spacer()
+                        
+                        ProgressView()
+                            .scaleEffect(7)
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color(hex: userSettings.isDarkMode ? 0xf4e0d6 : 0x0B1F29, alpha: 1)))
+                            .padding()
+                        
+                        Spacer()
                     }
                     
                     HStack() {
@@ -156,18 +173,17 @@ struct FileExplorer: View {
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {
                         if #available(iOS 16, *) {
-                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu, fileStatus: $fileStatus)
                                     .environmentObject(userSettings)
                                     .presentationDetents([.fraction(0.30)])
                                     .presentationDragIndicator(.visible)
                         } else {
-                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu)
+                            Menu(showDocumentCameraView: $showDocumentCameraView, showFileImporter: $showFileImporter, showDictionary: $showDictionary, showMenu: $showMenu, fileStatus: $fileStatus)
                                 .environmentObject(userSettings)
                         }
                     })
                     .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.pdf], onCompletion: { result in
                         do {
-                            isLoading = true
                             let url = try result.get()  // Retrieve exact URL on site
 
                             let images: [UIImage] = convertPDFToImages(url: url) // Use URL to conver the file into an array of photos
@@ -185,12 +201,13 @@ struct FileExplorer: View {
                             newDocument.images = colatedImageData
                             newDocument.textCanvasData = CanvasData(lines: [])
                             
+                            fileStatus = .Finished
+                            
                             try? moc.save()
-                            isLoading = false
                         } catch {}
                     })
                     .sheet(isPresented: $showDocumentCameraView, content: {
-                        DocumentCameraView()
+                        DocumentCameraView( fileStatus: $fileStatus)
                     })
                     .sheet(isPresented: $showEditDocumentProperties) {
                         EditDocumentPropertiesTest(document: $currentDocument)
@@ -211,10 +228,3 @@ struct EditDocumentPropertiesTest: View {
         EditDocumentProperties(document: document!, title: document!.title ?? "Unknown")
     }
 }
-
-//struct FileExplorer_Previews: PreviewProvider {
-//    @available(iOS 16.0, *)
-//    static var previews: some View {
-//        FileExplorer()
-//    }
-//}

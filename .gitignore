@@ -128,4 +128,5 @@ iOSInjectionProject/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+Pods
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode,Cobjective-c,osx

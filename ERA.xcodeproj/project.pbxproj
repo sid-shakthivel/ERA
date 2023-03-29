@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
+		355A159F29CF63ED0038C171 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A159E29CF63ED0038C171 /* Info.swift */; };
+		355A15A629CF66020038C171 /* FontSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A15A529CF66020038C171 /* FontSettings.swift */; };
+		355A15A829CF661E0038C171 /* BackgroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A15A729CF661E0038C171 /* BackgroundSettings.swift */; };
+		355A15AA29CF663E0038C171 /* TTSSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A15A929CF663E0038C171 /* TTSSettings.swift */; };
+		355A15AC29CF664C0038C171 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A15AB29CF664C0038C171 /* AppSettings.swift */; };
 		3562C29929084C51004497D6 /* Paragraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3562C29829084C51004497D6 /* Paragraph.swift */; };
 		356A455028E5C47B0067999E /* ERAApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A454F28E5C47B0067999E /* ERAApp.swift */; };
 		356A455228E5C47B0067999E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356A455128E5C47B0067999E /* ContentView.swift */; };
@@ -17,22 +22,33 @@
 		356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */; };
 		35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35805C4C28FB5E0300217169 /* DocumentEditor.swift */; };
 		3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3585B8B029292A910087BA67 /* FileExplorer.swift */; };
-		3589C591293BDD6700A805F6 /* Help.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3589C590293BDD6700A805F6 /* Help.swift */; };
+		359709F229CFAFBA00794B87 /* ZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359709F129CFAFBA00794B87 /* ZoomableImage.swift */; };
 		3598E739291066FF00F449F6 /* EditPencil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3598E738291066FF00F449F6 /* EditPencil.swift */; };
+		35A536DE29D0D08700CDCD46 /* Zoomable in Frameworks */ = {isa = PBXBuildFile; productRef = 35A536DD29D0D08700CDCD46 /* Zoomable */; };
 		35A63FAD2962FE6D007180EF /* HelpWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35A63FAC2962FE6D007180EF /* HelpWidgets.swift */; };
 		35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */; };
 		35AAB699292A84DC002B0D72 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AAB698292A84DC002B0D72 /* DataController.swift */; };
-		35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57A290AB41C00FC5588 /* OptionBar.swift */; };
+		35AB4A6229D4D6AC00471A74 /* UtilityBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AB4A6129D4D6AC00471A74 /* UtilityBar.swift */; };
+		35AB4A6429D4DD0C00471A74 /* DownloadBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35AB4A6329D4DD0C00471A74 /* DownloadBar.swift */; };
+		35BCD57B290AB41C00FC5588 /* AnnotationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57A290AB41C00FC5588 /* AnnotationBar.swift */; };
 		35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */; };
 		35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BCD57E290ACA4400FC5588 /* OnboardingView.swift */; };
 		35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35BEE0DF2913E2B5006AAD86 /* Utils.swift */; };
 		35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C5FA5B2905E9B20007ABEB /* Menu.swift */; };
 		35D3B9B528F327E800CA578D /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35D3B9B428F327E800CA578D /* Settings.swift */; };
+		35F0327D29D214F900869A9F /* OpenDyslexic3-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35F0327B29D214F900869A9F /* OpenDyslexic3-Regular.ttf */; };
+		35F0327E29D214F900869A9F /* OpenDyslexic3-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 35F0327C29D214F900869A9F /* OpenDyslexic3-Bold.ttf */; };
 		35F6B594292AD79D007BE260 /* EditDocumentProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */; };
+		4849B227CF7B5B496BA0D8A8 /* Pods_ERA.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BCBBBC9959831FEAC0EA0CBC /* Pods_ERA.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		35051C4F28FD551200315407 /* DictionaryLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryLookup.swift; sourceTree = "<group>"; };
+		355A159E29CF63ED0038C171 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
+		355A15A529CF66020038C171 /* FontSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSettings.swift; sourceTree = "<group>"; };
+		355A15A729CF661E0038C171 /* BackgroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSettings.swift; sourceTree = "<group>"; };
+		355A15A929CF663E0038C171 /* TTSSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTSSettings.swift; sourceTree = "<group>"; };
+		355A15AB29CF664C0038C171 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		3562C29829084C51004497D6 /* Paragraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paragraph.swift; sourceTree = "<group>"; };
 		356A454C28E5C47B0067999E /* ERA.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ERA.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		356A454F28E5C47B0067999E /* ERAApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERAApp.swift; sourceTree = "<group>"; };
@@ -43,19 +59,26 @@
 		356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontPickerWrapper.swift; sourceTree = "<group>"; };
 		35805C4C28FB5E0300217169 /* DocumentEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentEditor.swift; sourceTree = "<group>"; };
 		3585B8B029292A910087BA67 /* FileExplorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileExplorer.swift; sourceTree = "<group>"; };
-		3589C590293BDD6700A805F6 /* Help.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Help.swift; sourceTree = "<group>"; };
+		359709F129CFAFBA00794B87 /* ZoomableImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomableImage.swift; sourceTree = "<group>"; };
 		3598E738291066FF00F449F6 /* EditPencil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPencil.swift; sourceTree = "<group>"; };
 		35A63FAC2962FE6D007180EF /* HelpWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpWidgets.swift; sourceTree = "<group>"; };
 		35AAB696292A61FB002B0D72 /* ERA.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ERA.xcdatamodel; sourceTree = "<group>"; };
 		35AAB698292A84DC002B0D72 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		35AB4A6129D4D6AC00471A74 /* UtilityBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityBar.swift; sourceTree = "<group>"; };
+		35AB4A6329D4DD0C00471A74 /* DownloadBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBar.swift; sourceTree = "<group>"; };
 		35B36E9728E639B2009DF703 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		35BCD57A290AB41C00FC5588 /* OptionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionBar.swift; sourceTree = "<group>"; };
+		35BCD57A290AB41C00FC5588 /* AnnotationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationBar.swift; sourceTree = "<group>"; };
 		35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardSubView.swift; sourceTree = "<group>"; };
 		35BCD57E290ACA4400FC5588 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		35BEE0DF2913E2B5006AAD86 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		35C5FA5B2905E9B20007ABEB /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		35D3B9B428F327E800CA578D /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		35F0327B29D214F900869A9F /* OpenDyslexic3-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenDyslexic3-Regular.ttf"; path = "../../../../../Downloads/OpenDyslexic 3 (Beta - Windows, MacOS, Linux TTF)/OpenDyslexic3-Regular.ttf"; sourceTree = "<group>"; };
+		35F0327C29D214F900869A9F /* OpenDyslexic3-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "OpenDyslexic3-Bold.ttf"; path = "../../../../../Downloads/OpenDyslexic 3 (Beta - Windows, MacOS, Linux TTF)/OpenDyslexic3-Bold.ttf"; sourceTree = "<group>"; };
 		35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentProperties.swift; sourceTree = "<group>"; };
+		618B3197F08C3512017340CF /* Pods-ERA.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ERA.release.xcconfig"; path = "Target Support Files/Pods-ERA/Pods-ERA.release.xcconfig"; sourceTree = "<group>"; };
+		8B7D83D8A7909263948DC6BC /* Pods-ERA.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ERA.debug.xcconfig"; path = "Target Support Files/Pods-ERA/Pods-ERA.debug.xcconfig"; sourceTree = "<group>"; };
+		BCBBBC9959831FEAC0EA0CBC /* Pods_ERA.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ERA.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,17 +86,82 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4849B227CF7B5B496BA0D8A8 /* Pods_ERA.framework in Frameworks */,
+				35A536DE29D0D08700CDCD46 /* Zoomable in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A7DB9FD01E747355AC974C6 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8B7D83D8A7909263948DC6BC /* Pods-ERA.debug.xcconfig */,
+				618B3197F08C3512017340CF /* Pods-ERA.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		355A159B29CF622E0038C171 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */,
+				35BCD57E290ACA4400FC5588 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		355A159D29CF63AD0038C171 /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				35A63FAC2962FE6D007180EF /* HelpWidgets.swift */,
+				355A159E29CF63ED0038C171 /* Info.swift */,
+			);
+			path = Help;
+			sourceTree = "<group>";
+		};
+		355A15A029CF640C0038C171 /* UtilityBar */ = {
+			isa = PBXGroup;
+			children = (
+				35BCD57A290AB41C00FC5588 /* AnnotationBar.swift */,
+				35C5FA5B2905E9B20007ABEB /* Menu.swift */,
+				3598E738291066FF00F449F6 /* EditPencil.swift */,
+				35AB4A6129D4D6AC00471A74 /* UtilityBar.swift */,
+				35AB4A6329D4DD0C00471A74 /* DownloadBar.swift */,
+			);
+			path = UtilityBar;
+			sourceTree = "<group>";
+		};
+		355A15A129CF64780038C171 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				35BEE0DF2913E2B5006AAD86 /* Utils.swift */,
+				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
+				359709F129CFAFBA00794B87 /* ZoomableImage.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		355A15A429CF65C90038C171 /* UserPreferences */ = {
+			isa = PBXGroup;
+			children = (
+				35D3B9B428F327E800CA578D /* Settings.swift */,
+				355A15A529CF66020038C171 /* FontSettings.swift */,
+				355A15A729CF661E0038C171 /* BackgroundSettings.swift */,
+				355A15A929CF663E0038C171 /* TTSSettings.swift */,
+				355A15AB29CF664C0038C171 /* AppSettings.swift */,
+			);
+			path = UserPreferences;
+			sourceTree = "<group>";
+		};
 		356A454328E5C47B0067999E = {
 			isa = PBXGroup;
 			children = (
 				356A454E28E5C47B0067999E /* ERA */,
 				356A454D28E5C47B0067999E /* Products */,
+				1A7DB9FD01E747355AC974C6 /* Pods */,
+				CFDC6FA52B5CAC4A01151C7B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -88,8 +176,9 @@
 		356A454E28E5C47B0067999E /* ERA */ = {
 			isa = PBXGroup;
 			children = (
+				35F0327A29D214E400869A9F /* Fonts */,
 				35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */,
-				35805C4B28FB5DE900217169 /* views */,
+				35805C4B28FB5DE900217169 /* Views */,
 				35B36E9728E639B2009DF703 /* Info.plist */,
 				356A454F28E5C47B0067999E /* ERAApp.swift */,
 				356A455128E5C47B0067999E /* ContentView.swift */,
@@ -108,27 +197,39 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		35805C4B28FB5DE900217169 /* views */ = {
+		35805C4B28FB5DE900217169 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				355A15A429CF65C90038C171 /* UserPreferences */,
+				355A15A129CF64780038C171 /* Other */,
+				355A15A029CF640C0038C171 /* UtilityBar */,
+				355A159D29CF63AD0038C171 /* Help */,
+				355A159B29CF622E0038C171 /* Onboarding */,
 				356A456428E5C61A0067999E /* DocumentCameraView.swift */,
-				35D3B9B428F327E800CA578D /* Settings.swift */,
 				35805C4C28FB5E0300217169 /* DocumentEditor.swift */,
 				35051C4F28FD551200315407 /* DictionaryLookup.swift */,
-				35C5FA5B2905E9B20007ABEB /* Menu.swift */,
 				3562C29829084C51004497D6 /* Paragraph.swift */,
-				35BCD57A290AB41C00FC5588 /* OptionBar.swift */,
-				35BCD57C290ACA0300FC5588 /* OnboardSubView.swift */,
-				35BCD57E290ACA4400FC5588 /* OnboardingView.swift */,
-				3598E738291066FF00F449F6 /* EditPencil.swift */,
-				35BEE0DF2913E2B5006AAD86 /* Utils.swift */,
-				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
 				3585B8B029292A910087BA67 /* FileExplorer.swift */,
 				35F6B593292AD79D007BE260 /* EditDocumentProperties.swift */,
-				3589C590293BDD6700A805F6 /* Help.swift */,
-				35A63FAC2962FE6D007180EF /* HelpWidgets.swift */,
 			);
-			path = views;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		35F0327A29D214E400869A9F /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				35F0327C29D214F900869A9F /* OpenDyslexic3-Bold.ttf */,
+				35F0327B29D214F900869A9F /* OpenDyslexic3-Regular.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		CFDC6FA52B5CAC4A01151C7B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BCBBBC9959831FEAC0EA0CBC /* Pods_ERA.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,9 +239,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 356A455F28E5C47E0067999E /* Build configuration list for PBXNativeTarget "ERA" */;
 			buildPhases = (
+				691EA831D6D3497A5AC79BC9 /* [CP] Check Pods Manifest.lock */,
 				356A454828E5C47B0067999E /* Sources */,
 				356A454928E5C47B0067999E /* Frameworks */,
 				356A454A28E5C47B0067999E /* Resources */,
+				460D9D18968FF3DA1449F4C8 /* [CP] Embed Pods Frameworks */,
+				38ABC01210F28FA2DF5B3281 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -148,6 +252,7 @@
 			);
 			name = ERA;
 			packageProductDependencies = (
+				35A536DD29D0D08700CDCD46 /* Zoomable */,
 			);
 			productName = BionicReading;
 			productReference = 356A454C28E5C47B0067999E /* ERA.app */;
@@ -178,8 +283,7 @@
 			);
 			mainGroup = 356A454328E5C47B0067999E;
 			packageReferences = (
-				35E6F1AE291A806600E7FBDE /* XCRemoteSwiftPackageReference "SwiftUI-Tooltip" */,
-				3589C58B293BC71000A805F6 /* XCRemoteSwiftPackageReference "ScrollableImage" */,
+				35A536DC29D0D08700CDCD46 /* XCRemoteSwiftPackageReference "Zoomable" */,
 			);
 			productRefGroup = 356A454D28E5C47B0067999E /* Products */;
 			projectDirPath = "";
@@ -195,12 +299,73 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35F0327D29D214F900869A9F /* OpenDyslexic3-Regular.ttf in Resources */,
 				356A455728E5C47E0067999E /* Preview Assets.xcassets in Resources */,
+				35F0327E29D214F900869A9F /* OpenDyslexic3-Bold.ttf in Resources */,
 				356A455428E5C47E0067999E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		38ABC01210F28FA2DF5B3281 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ERA/Pods-ERA-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ERA/Pods-ERA-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ERA/Pods-ERA-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		460D9D18968FF3DA1449F4C8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ERA/Pods-ERA-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-ERA/Pods-ERA-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-ERA/Pods-ERA-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		691EA831D6D3497A5AC79BC9 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ERA-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		356A454828E5C47B0067999E /* Sources */ = {
@@ -208,24 +373,31 @@
 			buildActionMask = 2147483647;
 			files = (
 				35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */,
+				359709F229CFAFBA00794B87 /* ZoomableImage.swift in Sources */,
 				35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
-				35BCD57B290AB41C00FC5588 /* OptionBar.swift in Sources */,
+				35BCD57B290AB41C00FC5588 /* AnnotationBar.swift in Sources */,
 				356E87B0291826F000CB2F0B /* FontPickerWrapper.swift in Sources */,
-				3589C591293BDD6700A805F6 /* Help.swift in Sources */,
 				3562C29929084C51004497D6 /* Paragraph.swift in Sources */,
 				35AAB699292A84DC002B0D72 /* DataController.swift in Sources */,
 				35805C4D28FB5E0300217169 /* DocumentEditor.swift in Sources */,
+				35AB4A6229D4D6AC00471A74 /* UtilityBar.swift in Sources */,
 				35BEE0E02913E2B5006AAD86 /* Utils.swift in Sources */,
+				355A15A629CF66020038C171 /* FontSettings.swift in Sources */,
 				356A455228E5C47B0067999E /* ContentView.swift in Sources */,
+				35AB4A6429D4DD0C00471A74 /* DownloadBar.swift in Sources */,
+				355A15A829CF661E0038C171 /* BackgroundSettings.swift in Sources */,
 				356A455028E5C47B0067999E /* ERAApp.swift in Sources */,
+				355A15AC29CF664C0038C171 /* AppSettings.swift in Sources */,
 				3585B8B129292A910087BA67 /* FileExplorer.swift in Sources */,
+				355A159F29CF63ED0038C171 /* Info.swift in Sources */,
 				35F6B594292AD79D007BE260 /* EditDocumentProperties.swift in Sources */,
 				35BCD57D290ACA0300FC5588 /* OnboardSubView.swift in Sources */,
 				35A63FAD2962FE6D007180EF /* HelpWidgets.swift in Sources */,
 				35C5FA5C2905E9B20007ABEB /* Menu.swift in Sources */,
 				3598E739291066FF00F449F6 /* EditPencil.swift in Sources */,
+				355A15AA29CF663E0038C171 /* TTSSettings.swift in Sources */,
 				35BCD57F290ACA4400FC5588 /* OnboardingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,6 +521,7 @@
 		};
 		356A456028E5C47E0067999E /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8B7D83D8A7909263948DC6BC /* Pods-ERA.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -387,6 +560,7 @@
 		};
 		356A456128E5C47E0067999E /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 618B3197F08C3512017340CF /* Pods-ERA.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -447,23 +621,23 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3589C58B293BC71000A805F6 /* XCRemoteSwiftPackageReference "ScrollableImage" */ = {
+		35A536DC29D0D08700CDCD46 /* XCRemoteSwiftPackageReference "Zoomable" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gtokman/ScrollableImage.git";
+			repositoryURL = "https://github.com/jasudev/Zoomable.git";
 			requirement = {
 				branch = main;
 				kind = branch;
 			};
 		};
-		35E6F1AE291A806600E7FBDE /* XCRemoteSwiftPackageReference "SwiftUI-Tooltip" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/quassum/SwiftUI-Tooltip.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		35A536DD29D0D08700CDCD46 /* Zoomable */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35A536DC29D0D08700CDCD46 /* XCRemoteSwiftPackageReference "Zoomable" */;
+			productName = Zoomable;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		35AAB695292A61FB002B0D72 /* ERA.xcdatamodeld */ = {

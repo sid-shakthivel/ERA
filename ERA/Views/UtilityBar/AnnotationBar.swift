@@ -7,32 +7,19 @@
 
 import SwiftUI
 
-struct OptionBar: View {
+struct AnnotationBar: View {
     @EnvironmentObject var canvasSettings: TempCanvas
     @EnvironmentObject var settings: UserPreferences
     
-    @Binding var showDictionary: Bool
     @Binding var isDrawing: Bool
-    @Binding var isEditing: Bool
     @Binding var showPencilEdit: Bool
-    @Binding var isShowingHelp: Bool
+    @Binding var utilityBarStatus: UtilityBarStatus
     
     @State var isUsingHighlighter: Bool = false
     @State var isUsingPencil: Bool = false
     
     var body: some View {
         HStack {
-            Spacer()
-            
-            Button(action: {
-                showDictionary.toggle()
-            }, label: {
-                Image("dictionary")
-                    .resizable()
-                    .frame(width: 25, height: 25)
-                    .invertOnDarkTheme()
-            })
-
             Spacer()
             
             Group {
@@ -96,7 +83,6 @@ struct OptionBar: View {
                 
                 Button(action: {
                     isDrawing = false
-                    isEditing = false
                     isUsingHighlighter = false
                     isUsingPencil = false
                 }, label: {
@@ -108,7 +94,6 @@ struct OptionBar: View {
                 
                 Button(action: {
                     isDrawing = true
-                    isEditing = false
                     canvasSettings.isRubbing = true
                     isUsingHighlighter = false
                     isUsingPencil = false
@@ -153,6 +138,18 @@ struct OptionBar: View {
                         .foregroundColor(Color(hex: 0xC24E1C))
                         .invertOnDarkTheme()
                 })
+                
+                
+                Button(action: {
+                    utilityBarStatus = .UtilityBar
+                    isDrawing = false
+                    
+                }, label: {
+                    Image("stop-editing")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .invertOnDarkTheme()
+                })
             }
             
             Spacer()
@@ -170,9 +167,3 @@ struct OptionBar: View {
         }
     }
 }
-
-//struct OptionBar_Previews: PreviewProvider {
-//    static var previews: some View {
-//        OptionBar(showDictionary: .constant(false), isDrawing: .constant(false), isEditing: .constant(false), showPencilEdit: .constant(false), isShowingHelp: .constant(false))
-//    }
-//}

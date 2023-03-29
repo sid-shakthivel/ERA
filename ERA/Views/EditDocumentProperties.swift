@@ -59,9 +59,3 @@ struct EditDocumentProperties: View {
             .invertBackgroundOnDarkTheme(isBase: true)
     }
 }
-
-//struct EditDocumentProperties_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EditDocumentProperties()
-//    }
-//}
