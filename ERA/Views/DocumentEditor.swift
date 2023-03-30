@@ -23,42 +23,46 @@ class TempCanvas: ObservableObject {
     @Published var isRubbing: Bool = false
 }
 
-//extension String {
-//    func splitTest(width: CGFloat, font: UIFont) -> [String] {
-//        guard !self.isEmpty else { return [String]() }
-//
-//        var lines = [String]()
-//
-//        // set up range of the split
-//        var splitStart = self.startIndex
-//        var splitEnd = self.startIndex
-//
-//        repeat {
-//            // advance the end range for the split
-//            splitEnd = self.index(after: splitStart)
-//
-//            // initial split to test
-//            var line = String(self[splitStart..<splitEnd])
-//
-//            // while we're before the end test the rendered width
-//            while splitEnd < self.endIndex &&
-//                    line.size(withAttributes: [NSAttributedString.Key.font: font]).width < width {
-//                // add one more character
-//                splitEnd = self.index(after: splitEnd)
-//                line = String(self[splitStart..<splitEnd])
-//            }
-//
-//            // add split to array and set up next split
-//            lines.append(line)
-//            splitStart = splitEnd
-//        } while splitEnd < self.endIndex // don't go past the end of the string
-//
-//
-//        // add remainder of string to array
-//        lines.append(String(self[splitStart..<self.endIndex]))
-//        return lines
-//    }
-//}
+extension String {
+    func splitTest(width: CGFloat, font: UIFont) -> [String] {
+        print(width)
+        
+        guard !self.isEmpty else { return [String]() }
+
+        var lines = [String]()
+
+        // set up range of the split
+        var splitStart = self.startIndex
+        var splitEnd = self.startIndex
+
+        repeat {
+            // advance the end range for the split
+            splitEnd = self.index(after: splitStart)
+
+            // initial split to test
+            var line = String(self[splitStart..<splitEnd])
+
+            // while we're before the end test the rendered width
+            while splitEnd < self.endIndex &&
+                    line.size(withAttributes: [NSAttributedString.Key.font: font]).width < (width - 25) {
+                // add one more character
+                splitEnd = self.index(after: splitEnd)
+                line = String(self[splitStart..<splitEnd])
+            }
+            
+            print(line)
+
+            // add split to array and set up next split
+            lines.append(line)
+            splitStart = splitEnd
+        } while splitEnd < self.endIndex // don't go past the end of the string
+
+
+        // add remainder of string to array
+        lines.append(String(self[splitStart..<self.endIndex]))
+        return lines
+    }
+}
 
 struct DocumentEditor: View {
     @Environment(\.managedObjectContext) var moc
@@ -274,12 +278,17 @@ struct DocumentEditor: View {
                     if isViewingText {
                         // Show the document view in which users can edit text
                         ZStack {
-                            ScrollView(.vertical, showsIndicators: true) {
-                                //                                 View generated on scan/imported PDF
-                                ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
-                                    Group {
-                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, shouldTranslateText: $shouldTranslateText, currentTranslator: $currentTranslator, text: paragraph.text, width: geometryProxy.size.width, sentences: getSentences(text: paragraph.text, width: geometryProxy.size.width, fontWidth: CGFloat(userSettings.paragraphFontSize)))
-                                        Text("")
+                            GeometryReader { testing in
+                                ScrollView(.vertical, showsIndicators: true) {
+                                    //                                 View generated on scan/imported PDF
+                                    ForEach($scanResult.scannedTextList, id: \.self) { $paragraph in
+                                        Group {
+    //                                        Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, shouldTranslateText: $shouldTranslateText, currentTranslator: $currentTranslator, text: paragraph.text, width: geometryProxy.size.width, sentences: getSentences(text: paragraph.text, width: geometryProxy.size.width, fontWidth: CGFloat(userSettings.paragraphFontSize)))
+                                            
+                                            Paragraph(paragraphFormat: $paragraph, isEditingText: $isEditingText, shouldTranslateText: $shouldTranslateText, currentTranslator: $currentTranslator, text: paragraph.text, width: geometryProxy.size.width, sentences: paragraph.text.trimmingCharacters(in: .whitespacesAndNewlines).splitTest(width: testing.size.width, font: userSettings.paragraphFont))
+                                            
+                                            Text("")
+                                        }
                                     }
                                 }
                             }
@@ -365,25 +374,25 @@ struct DocumentEditor: View {
                             .background(userSettings.backgroundColour)
                     }
                     
-                    DownloadBar(downloadStatus: $downloadStatus)
-                    
-                    Picker("", selection: $isViewingText) {
-                        Text("Document Editor")
-                            .tag(true)
-                            .foregroundColor(.black)
-                            .invertOnDarkTheme()
-
-                        Text("Photo Editor")
-                            .tag(false)
-                            .foregroundColor(.black)
-                            .invertOnDarkTheme()
-                    }
-                        .pickerStyle(.segmented)
-                        .padding(.leading)
-                        .padding(.trailing)
-                    
-                    UtilityBar(isDrawing: $isDrawing, isEditing: $isEditingText, utilityBarStatus: $utilityBarStatus, downloadStatus: $downloadStatus, currentTranslator: $currentTranslator, shouldTranslateText: $shouldTranslateText)
-                        .environmentObject(isViewingText ? textEditorCanvas : photoEditorCanvas)
+//                    DownloadBar(downloadStatus: $downloadStatus)
+//
+//                    Picker("", selection: $isViewingText) {
+//                        Text("Document Editor")
+//                            .tag(true)
+//                            .foregroundColor(.black)
+//                            .invertOnDarkTheme()
+//
+//                        Text("Photo Editor")
+//                            .tag(false)
+//                            .foregroundColor(.black)
+//                            .invertOnDarkTheme()
+//                    }
+//                        .pickerStyle(.segmented)
+//                        .padding(.leading)
+//                        .padding(.trailing)
+//
+//                    UtilityBar(isDrawing: $isDrawing, isEditing: $isEditingText, utilityBarStatus: $utilityBarStatus, downloadStatus: $downloadStatus, currentTranslator: $currentTranslator, shouldTranslateText: $shouldTranslateText)
+//                        .environmentObject(isViewingText ? textEditorCanvas : photoEditorCanvas)
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
             }

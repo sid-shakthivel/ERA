@@ -201,5 +201,8 @@ struct Paragraph: View {
                         text = paragraphFormat.text
                     }
                 }
+                .onChange(of: userSettings.paragraphFont) { _ in
+                    sentences = getSentences(text: text, width: width, fontWidth: CGFloat(userSettings.paragraphFontSize))
+                }
     }
 }
