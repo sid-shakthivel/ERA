@@ -1,0 +1,79 @@
+{
+  "identifier" : "691290E0",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6444321235",
+    "_developerTeamID" : "JK92PA7UX6",
+    "_lastSynchronizedDate" : 703180769.21708298
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21056078",
+      "localizations" : [
+
+      ],
+      "name" : "ERA",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6447764146",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly Subscription",
+              "displayName" : "Monthly",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "com.mindcore.era.premium.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "ERA Monthly Premium ",
+          "subscriptionGroupID" : "21056078",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6447764154",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly Subscription",
+              "displayName" : "Yearly",
+              "locale" : "en_GB"
+            }
+          ],
+          "productID" : "com.mindcore.era.premium.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "ERA Yearly Premium",
+          "subscriptionGroupID" : "21056078",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 2,
+    "minor" : 0
+  }
+}

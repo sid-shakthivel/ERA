@@ -169,30 +169,31 @@ struct Settings: View {
     @EnvironmentObject var settings: UserPreferences
     @EnvironmentObject var canvasSettings: TempCanvas
     
+    @EnvironmentObject private var purchaseManager: PurchaseManager
+    
     var body: some View {
         NavigationView {
             ScrollView {
-                HStack {
-                    Button {
-                        presentationMode.wrappedValue.dismiss()
-                    } label: {
-                        Image("arrow-left")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .invertOnDarkTheme()
-
-                        Text("Settings")
-                            .foregroundColor(.black)
-                            .invertOnDarkTheme()
-                            .font(.system(size: 16, weight: .bold))
-                            .textCase(.uppercase)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.trailing)
-                .padding(.leading)
-
-                Divider()
+//                HStack {
+//                    Button {
+//                        presentationMode.wrappedValue.dismiss()
+//                    } label: {
+//                        Image("arrow-left")
+//                            .resizable()
+//                            .frame(width: 30, height: 30)
+//                            .invertOnDarkTheme()
+//
+//                        Text("Settings")
+//                            .foregroundColor(.black)
+//                            .invertOnDarkTheme()
+//                            .font(.system(size: 16, weight: .bold))
+//                            .textCase(.uppercase)
+//                    }
+//                }
+//                    .padding()
+//                    .frame(maxWidth: .infinity, alignment: .leading)
+//
+//                Divider()
                 
                 VStack {
                     FontSettings(isShowingFontPicker: $isShowingFontPicker)
@@ -237,12 +238,13 @@ struct Settings: View {
                     .padding()
             }
                 .invertBackgroundOnDarkTheme(isBase: true)
+                .edgesIgnoringSafeArea(.all)
                 .sheet(isPresented: $isShowingFontPicker) {
                     FontPickerWrapper(isShowingFontPicker: $isShowingFontPicker)
                 }
         }
             .navigationBarTitle("")
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
+//            .navigationBarBackButtonHidden(true)
+//            .navigationBarHidden(true)
     }
 }

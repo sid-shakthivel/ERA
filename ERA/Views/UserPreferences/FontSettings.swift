@@ -13,6 +13,8 @@ struct FontSettings: View {
     @Binding var isShowingFontPicker: Bool
     @State var oldFontDescriptor = UIFontDescriptor(name: "Helvetica Neue", size: 24.0)
     
+    @EnvironmentObject private var purchaseManager: PurchaseManager
+    
     var body: some View {
         Text("Font Settings")
             .fontWeight(.bold)
@@ -21,54 +23,56 @@ struct FontSettings: View {
             .foregroundColor(.black)
             .invertOnDarkTheme()
 
-        Group {
-            Text("Enhanced Reading")
-                .foregroundColor(.black)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .font(.system(size: 14))
-                .padding(.top)
-                .invertOnDarkTheme()
-
-            Picker("", selection: $settings.enhancedReadingStatus) {
-                Text("Skim Mode")
-                    .tag(EnhancedReadingStatus.Skim)
+        if (purchaseManager.hasUnlockedPremium) {
+            Group {
+                Text("Enhanced Reading")
                     .foregroundColor(.black)
+                    .fontWeight(.bold)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(.system(size: 14))
+                    .padding(.top)
                     .invertOnDarkTheme()
 
-                Text("Normal mode")
-                    .tag(EnhancedReadingStatus.Normal)
-                    .foregroundColor(.black)
-                    .invertOnDarkTheme()
+                Picker("", selection: $settings.enhancedReadingStatus) {
+                    Text("Skim Mode")
+                        .tag(EnhancedReadingStatus.Skim)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
 
-                Text("Off")
-                    .tag(EnhancedReadingStatus.Off)
-                    .foregroundColor(.black)
-                    .invertOnDarkTheme()
+                    Text("Normal mode")
+                        .tag(EnhancedReadingStatus.Normal)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+
+                    Text("Off")
+                        .tag(EnhancedReadingStatus.Off)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                }
+                    .pickerStyle(.segmented)
+
+                switch (settings.enhancedReadingStatus) {
+                case .Off:
+                    Text(modifyText(state: settings.enhancedReadingStatus, text: "This text is just normal"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                case .Normal:
+                    Text(modifyText(state: settings.enhancedReadingStatus, text: "Normal enahnced reading boldens the first half of every word"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                case .Skim:
+                    Text(modifyText(state: settings.enhancedReadingStatus, text: "Skim enhanced reading boldens the first half of each important"))
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.black)
+                        .invertOnDarkTheme()
+                }
             }
-                .pickerStyle(.segmented)
-
-            switch (settings.enhancedReadingStatus) {
-            case .Off:
-                Text(modifyText(state: settings.enhancedReadingStatus, text: "This text is just normal"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.black)
-                    .invertOnDarkTheme()
-            case .Normal:
-                Text(modifyText(state: settings.enhancedReadingStatus, text: "Normal enahnced reading boldens the first half of every word"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.black)
-                    .invertOnDarkTheme()
-            case .Skim:
-                Text(modifyText(state: settings.enhancedReadingStatus, text: "Skim enhanced reading boldens the first half of each important"))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .foregroundColor(.black)
-                    .invertOnDarkTheme()
-            }
+                .onChange(of: settings.enhancedReadingStatus) { _ in
+                    settings.saveSettings(userPreferences: settings)
+                }
         }
-            .onChange(of: settings.enhancedReadingStatus) { _ in
-                settings.saveSettings(userPreferences: settings)
-            }
 
         Group {
             Text("Font Selection")
@@ -239,148 +243,150 @@ struct FontSettings: View {
                 }
         }
         
-        Group {
-            Text("Letter Spacing")
-                .foregroundColor(.black)
-                .invertOnDarkTheme()
-                .font(.system(size: 14, weight: .bold))
-                .frame(maxWidth: .infinity, alignment: .leading)
+        if (purchaseManager.hasUnlockedPremium) {
+            Group {
+                Text("Letter Spacing")
+                    .foregroundColor(.black)
+                    .invertOnDarkTheme()
+                    .font(.system(size: 14, weight: .bold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-            Picker(selection: $settings.letterTracking, content: {
-                ForEach(0...5, id: \.self) { number in
-                    HStack {
-                        Text("\(number)")
-                            .font(.system(size: 14))
-                            .fontWeight(.regular)
+                Picker(selection: $settings.letterTracking, content: {
+                    ForEach(0...5, id: \.self) { number in
+                        HStack {
+                            Text("\(number)")
+                                .font(.system(size: 14))
+                                .fontWeight(.regular)
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
+                                .padding()
+                        }
+                    }
+                }, label: {
+
+                })
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .invertBackgroundOnDarkTheme(isBase: false)
+                    .cornerRadius(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
+                    )
+                    .onChange(of: settings.letterTracking) { _ in
+                        settings.saveSettings(userPreferences: settings)
+                    }
+            }
+            
+            Group {
+                Text("Gradient Reader")
+                    .foregroundColor(.black)
+                    .invertOnDarkTheme()
+                    .font(.system(size: 14, weight: .bold))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                HStack {
+                    Spacer()
+
+                    VStack {
+                        Button(action: {
+                            settings.gradientReaderStatus = .Classic
+                            settings.saveSettings(userPreferences: settings)
+                        }, label: {
+                            Circle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.blue, .black, .red],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                                .frame(width: 50, height: 50)
+                        })
+
+                        Text("Classic")
+                            .tag(GradientReaderStatus.Classic)
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .padding()
                     }
-                }
-            }, label: {
 
-            })
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .invertBackgroundOnDarkTheme(isBase: false)
-                .cornerRadius(10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
-                )
-                .onChange(of: settings.letterTracking) { _ in
-                    settings.saveSettings(userPreferences: settings)
-                }
-        }
-            
-        Group {
-            Text("Gradient Reader")
-                .foregroundColor(.black)
-                .invertOnDarkTheme()
-                .font(.system(size: 14, weight: .bold))
-                .frame(maxWidth: .infinity, alignment: .leading)
+                    Spacer()
 
-            HStack {
-                Spacer()
-
-                VStack {
-                    Button(action: {
-                        settings.gradientReaderStatus = .Classic
-                        settings.saveSettings(userPreferences: settings)
-                    }, label: {
-                        Circle()
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .black, .red],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+                    VStack {
+                        Button(action: {
+                            settings.gradientReaderStatus = .Gray
+                            settings.saveSettings(userPreferences: settings)
+                        }, label: {
+                            Circle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.black, .gray],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
                                 )
-                            )
-                            .frame(width: 50, height: 50)
-                    })
+                                .frame(width: 50, height: 50)
+                        })
 
-                    Text("Classic")
-                        .tag(GradientReaderStatus.Classic)
-                        .foregroundColor(.black)
-                        .invertOnDarkTheme()
-                }
+                        Text("Gray")
+                            .tag(GradientReaderStatus.Gray)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                    }
 
-                Spacer()
-
-                VStack {
-                    Button(action: {
-                        settings.gradientReaderStatus = .Gray
-                        settings.saveSettings(userPreferences: settings)
-                    }, label: {
-                        Circle()
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.black, .gray],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+                    Spacer()
+                    
+                    VStack {
+                        Button(action: {
+                            settings.gradientReaderStatus = .Dark
+                            settings.saveSettings(userPreferences: settings)
+                        }, label: {
+                            Circle()
+                                .foregroundStyle(
+                                    LinearGradient(
+                                        colors: [.blue, .brown],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
                                 )
-                            )
-                            .frame(width: 50, height: 50)
-                    })
+                                .frame(width: 50, height: 50)
+                        })
 
-                    Text("Gray")
-                        .tag(GradientReaderStatus.Gray)
-                        .foregroundColor(.black)
-                        .invertOnDarkTheme()
+                        Text("Dark")
+                            .tag(GradientReaderStatus.Dark)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                    }
+
+                    Spacer()
+
+                    VStack {
+                        Button(action: {
+                            settings.gradientReaderStatus = .Off
+                            settings.saveSettings(userPreferences: settings)
+                        }, label: {
+                            Circle()
+                                .fill(settings.fontColour)
+                                .frame(width: 50, height: 50)
+                        })
+
+                        Text("Off")
+                            .tag(GradientReaderStatus.Off)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                    }
+
+                    Spacer()
                 }
-
-                Spacer()
-                
-                VStack {
-                    Button(action: {
-                        settings.gradientReaderStatus = .Dark
-                        settings.saveSettings(userPreferences: settings)
-                    }, label: {
-                        Circle()
-                            .foregroundStyle(
-                                LinearGradient(
-                                    colors: [.blue, .brown],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .frame(width: 50, height: 50)
-                    })
-
-                    Text("Dark")
-                        .tag(GradientReaderStatus.Dark)
-                        .foregroundColor(.black)
-                        .invertOnDarkTheme()
-                }
-
-                Spacer()
-
-                VStack {
-                    Button(action: {
-                        settings.gradientReaderStatus = .Off
-                        settings.saveSettings(userPreferences: settings)
-                    }, label: {
-                        Circle()
-                            .fill(settings.fontColour)
-                            .frame(width: 50, height: 50)
-                    })
-
-                    Text("Off")
-                        .tag(GradientReaderStatus.Off)
-                        .foregroundColor(.black)
-                        .invertOnDarkTheme()
-                }
-
-                Spacer()
             }
         }
                                     
-            Text("This is a an example sentence.")
-                .foregroundColor(settings.fontColour)
-                .font(Font(settings.paragraphFont))
-                .tracking(CGFloat(settings.letterTracking))
-                .lineSpacing(CGFloat(settings.lineSpacing))
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.top)
+        Text("This is a an example sentence.")
+            .foregroundColor(settings.fontColour)
+            .font(Font(settings.paragraphFont))
+            .tracking(CGFloat(settings.letterTracking))
+            .lineSpacing(CGFloat(settings.lineSpacing))
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.top)
     }
 }
 

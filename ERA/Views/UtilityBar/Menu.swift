@@ -44,7 +44,7 @@ struct Menu: View {
                    }
                    .padding()
                }
-                .frame(maxWidth: .infinity, alignment: .leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                
                Divider()
                    .padding(.horizontal, 30)

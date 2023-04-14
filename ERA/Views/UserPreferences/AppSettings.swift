@@ -24,6 +24,8 @@ struct AppSettings: View {
                 .padding(.bottom)
 
             Group {
+                // Put behind paywall
+                
                 Toggle(isOn: $settings.isDarkMode, label: {
                     Text("Dark Mode")
                         .foregroundColor(.black)

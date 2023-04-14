@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:MainConfiguration.storekit">
+   </FileRef>
+   <FileRef
       location = "group:ERA.xcodeproj">
    </FileRef>
    <FileRef

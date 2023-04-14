@@ -18,6 +18,8 @@ struct FileExplorer: View {
     @Environment(\.managedObjectContext) var moc
     @EnvironmentObject var userSettings: UserPreferences
     
+    @EnvironmentObject private var purchaseManager: PurchaseManager
+    
     let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 2)
     
     /*
@@ -148,6 +150,8 @@ struct FileExplorer: View {
                         Spacer()
                     }
                     
+                    
+                    
                     HStack() {
                         ZStack {
                             Circle()
@@ -166,6 +170,16 @@ struct FileExplorer: View {
                             })
                         }
 
+                        Spacer()
+                        
+                        NavigationLink(destination: Payment()) {
+                            Text("Buy ERA Premium")
+                                .foregroundColor(.black)
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .invertOnDarkTheme()
+                        }
+                        
                         Spacer()
                     }
                     .padding(.leading)

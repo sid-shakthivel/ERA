@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35051C4F28FD551200315407 /* DictionaryLookup.swift */; };
+		354BCCC429E9968200F825A3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354BCCC329E9968200F825A3 /* StoreKit.framework */; };
+		354BCCC629E99BF100F825A3 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354BCCC529E99BF100F825A3 /* Payment.swift */; };
 		355A159F29CF63ED0038C171 /* Info.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A159E29CF63ED0038C171 /* Info.swift */; };
 		355A15A629CF66020038C171 /* FontSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A15A529CF66020038C171 /* FontSettings.swift */; };
 		355A15A829CF661E0038C171 /* BackgroundSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355A15A729CF661E0038C171 /* BackgroundSettings.swift */; };
@@ -44,6 +46,8 @@
 
 /* Begin PBXFileReference section */
 		35051C4F28FD551200315407 /* DictionaryLookup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryLookup.swift; sourceTree = "<group>"; };
+		354BCCC329E9968200F825A3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		354BCCC529E99BF100F825A3 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
 		355A159E29CF63ED0038C171 /* Info.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info.swift; sourceTree = "<group>"; };
 		355A15A529CF66020038C171 /* FontSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontSettings.swift; sourceTree = "<group>"; };
 		355A15A729CF661E0038C171 /* BackgroundSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundSettings.swift; sourceTree = "<group>"; };
@@ -86,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				354BCCC429E9968200F825A3 /* StoreKit.framework in Frameworks */,
 				4849B227CF7B5B496BA0D8A8 /* Pods_ERA.framework in Frameworks */,
 				35A536DE29D0D08700CDCD46 /* Zoomable in Frameworks */,
 			);
@@ -139,6 +144,7 @@
 				35BEE0DF2913E2B5006AAD86 /* Utils.swift */,
 				356E87AF291826F000CB2F0B /* FontPickerWrapper.swift */,
 				359709F129CFAFBA00794B87 /* ZoomableImage.swift */,
+				354BCCC529E99BF100F825A3 /* Payment.swift */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -227,6 +233,7 @@
 		CFDC6FA52B5CAC4A01151C7B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				354BCCC329E9968200F825A3 /* StoreKit.framework */,
 				BCBBBC9959831FEAC0EA0CBC /* Pods_ERA.framework */,
 			);
 			name = Frameworks;
@@ -374,6 +381,7 @@
 			files = (
 				35AAB697292A61FB002B0D72 /* ERA.xcdatamodeld in Sources */,
 				359709F229CFAFBA00794B87 /* ZoomableImage.swift in Sources */,
+				354BCCC629E99BF100F825A3 /* Payment.swift in Sources */,
 				35051C5028FD551200315407 /* DictionaryLookup.swift in Sources */,
 				35D3B9B528F327E800CA578D /* Settings.swift in Sources */,
 				356A456528E5C61A0067999E /* DocumentCameraView.swift in Sources */,
@@ -551,7 +559,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -590,7 +598,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

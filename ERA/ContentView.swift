@@ -30,6 +30,7 @@ struct ContentView: View {
     
     @StateObject var userSettings = UserPreferences()
     @StateObject var currentTranslator: LanguageTranslator = LanguageTranslator()
+    @StateObject var purchaseManager = PurchaseManager()
     
     var body: some View {
         if UserDefaults.standard.bool(forKey: "HasInitallyPurchasedERA") == false {
@@ -55,6 +56,10 @@ struct ContentView: View {
             FileExplorer()
                 .environmentObject(userSettings)
                 .environmentObject(currentTranslator)
+                .environmentObject(purchaseManager)
+                .task {
+                    await purchaseManager.updatePurchasedProducts()
+                }
                 .preferredColorScheme(userSettings.isDarkMode ? .dark : .light)
         }        
     }
