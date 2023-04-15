@@ -150,8 +150,6 @@ struct FileExplorer: View {
                         Spacer()
                     }
                     
-                    
-                    
                     HStack() {
                         ZStack {
                             Circle()
@@ -169,20 +167,10 @@ struct FileExplorer: View {
                                     .invertOnDarkTheme()
                             })
                         }
-
-                        Spacer()
-                        
-                        NavigationLink(destination: Payment()) {
-                            Text("Buy ERA Premium")
-                                .foregroundColor(.black)
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .invertOnDarkTheme()
-                        }
                         
                         Spacer()
                     }
-                    .padding(.leading)
+                        .padding(.leading)
                 }
                     .invertBackgroundOnDarkTheme(isBase: true)
                     .sheet(isPresented: $showMenu, content: {

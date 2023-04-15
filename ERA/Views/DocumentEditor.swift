@@ -164,6 +164,8 @@ struct DocumentEditor: View {
         }
     }
     
+    @EnvironmentObject private var purchaseManager: PurchaseManager
+    
     var body: some View {
         GeometryReader { geometryProxy in
             NavigationView {
@@ -187,51 +189,55 @@ struct DocumentEditor: View {
 
                         Spacer()
 
-                        Button(action: {
-                            pdfDocument = convertScreenToPDF()
-                            showFileExporter.toggle()
-                        }, label: {
-                            Image("export")
-                                .resizable()
-                                .frame(width: 30, height: 35)
-                                .invertOnDarkTheme()
-                        })
-
-                        Button(action: {
-                            // Save button which saves data to core data
-                            isEditingText = false
-                            isDrawing = false
-                            save_document()
-                        }, label: {
-                            Image("save")
-                                .resizable()
-                                .frame(width: 20, height: 30)
-                                .invertOnDarkTheme()
-                        })
-
-                        if isEditingText {
-                            // Needs to save changes
+                        if (purchaseManager.hasUnlockedPremium) {
                             Button(action: {
+                                pdfDocument = convertScreenToPDF()
+                                showFileExporter.toggle()
+                            }, label: {
+                                Image("export")
+                                    .resizable()
+                                    .frame(width: 30, height: 35)
+                                    .invertOnDarkTheme()
+                            })
+                        }
+
+                        if (purchaseManager.hasUnlockedPremium) {
+                            Button(action: {
+                                // Save button which saves data to core data
                                 isEditingText = false
                                 isDrawing = false
+                                save_document()
                             }, label: {
-                                Image("stop-editing")
+                                Image("save")
                                     .resizable()
-                                    .frame(width: 30, height: 30)
+                                    .frame(width: 20, height: 30)
                                     .invertOnDarkTheme()
                             })
-                        } else {
-                            Button(action: {
-                                if utilityBarStatus != .TranslationBar {
-                                    isEditingText = true
+                            
+                            if isEditingText {
+                                // Needs to save changes
+                                Button(action: {
+                                    isEditingText = false
                                     isDrawing = false
-                                }
-                            }, label: {
-                                Image("edit-text")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                    .invertOnDarkTheme()
-                            })
+                                }, label: {
+                                    Image("stop-editing")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .invertOnDarkTheme()
+                                })
+                            } else {
+                                Button(action: {
+                                    if utilityBarStatus != .TranslationBar {
+                                        isEditingText = true
+                                        isDrawing = false
+                                    }
+                                }, label: {
+                                    Image("edit-text")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .invertOnDarkTheme()
+                                })
+                            }
                         }
 
                         if speaker.isPlayingAudio {

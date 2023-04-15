@@ -169,33 +169,51 @@ struct Settings: View {
     @EnvironmentObject var settings: UserPreferences
     @EnvironmentObject var canvasSettings: TempCanvas
     
-    @EnvironmentObject private var purchaseManager: PurchaseManager
+    @State var showPaymentScreen: Bool = false
     
     var body: some View {
         NavigationView {
             ScrollView {
-//                HStack {
-//                    Button {
-//                        presentationMode.wrappedValue.dismiss()
-//                    } label: {
-//                        Image("arrow-left")
-//                            .resizable()
-//                            .frame(width: 30, height: 30)
-//                            .invertOnDarkTheme()
-//
-//                        Text("Settings")
-//                            .foregroundColor(.black)
-//                            .invertOnDarkTheme()
-//                            .font(.system(size: 16, weight: .bold))
-//                            .textCase(.uppercase)
-//                    }
-//                }
-//                    .padding()
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//
-//                Divider()
+                HStack {
+                    Button {
+                        presentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image("arrow-left")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .invertOnDarkTheme()
+
+                        Text("Settings")
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                            .font(.system(size: 16, weight: .bold))
+                            .textCase(.uppercase)
+                    }
+                }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.trailing)
+                    .padding(.leading)
+
+                Divider()
                 
-                VStack {
+                VStack {                    
+                    Button {
+                        showPaymentScreen.toggle()
+                    } label: {
+                        Text("Purchase ERA Premium")
+                            .foregroundColor(Color(hex: 0xc24e1c, alpha: 1.0))
+                            .multilineTextAlignment(.center)
+                            .font(.system(size: 20, weight: .bold))
+                    }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .cornerRadius(10)
+                        .padding()
+                        .invertBackgroundOnDarkTheme(isBase: false)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
+                        )
+                    
                     FontSettings(isShowingFontPicker: $isShowingFontPicker)
                     BackgroundSettings()
                     AppSettings()
@@ -238,13 +256,15 @@ struct Settings: View {
                     .padding()
             }
                 .invertBackgroundOnDarkTheme(isBase: true)
-                .edgesIgnoringSafeArea(.all)
+                .sheet(isPresented: $showPaymentScreen) {
+                    Payment()
+                }
                 .sheet(isPresented: $isShowingFontPicker) {
                     FontPickerWrapper(isShowingFontPicker: $isShowingFontPicker)
                 }
         }
             .navigationBarTitle("")
-//            .navigationBarBackButtonHidden(true)
-//            .navigationBarHidden(true)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
     }
 }

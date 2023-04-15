@@ -89,73 +89,73 @@ struct Payment: View {
     @EnvironmentObject private var purchaseManager: PurchaseManager
     @EnvironmentObject var settings: UserPreferences
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.presentationMode) var testPresentationMode: Binding<PresentationMode>
     
     var body: some View {
         NavigationView {
-            VStack() {
-//                HStack {
-//                    Button {
-//                        presentationMode.wrappedValue.dismiss()
-//                    } label: {
-//                        Image("arrow-left")
-//                            .resizable()
-//                            .frame(width: 30, height: 30)
-//                            .invertOnDarkTheme()
-//
-//                        Text("ERA Premium")
-//                            .foregroundColor(.black)
-//                            .invertOnDarkTheme()
-//                            .font(.system(size: 16, weight: .bold))
-//                            .frame(maxWidth: .infinity, alignment: .leading)
-//                            .textCase(.uppercase)
-//                            .padding()
-//                    }
-//                }
-//                    .frame(maxWidth: .infinity, alignment: .leading)
-//                    .padding(.trailing)
-//                    .padding(.leading)
-                
-                Spacer()
-                
-                Text("ERA Premium")
-                    .foregroundColor(.black)
-                    .invertOnDarkTheme()
-                    .font(.system(size: 16, weight: .bold))
+            ScrollView() {
+                HStack {
+                    Button {
+                        testPresentationMode.wrappedValue.dismiss()
+                    } label: {
+                        Image("arrow-left")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .invertOnDarkTheme()
+
+                        Text("ERA Premium")
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                            .font(.system(size: 16, weight: .bold))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .textCase(.uppercase)
+                            .padding()
+                    }
+                }
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .textCase(.uppercase)
-                    .padding()
                 
-                if purchaseManager.hasUnlockedPremium {
-                    Text("Thank you for purchasing ERA premium!")
+                Divider()
+                
+                VStack {
+                    Text("ERA Premium")
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
-                        .font(.system(size: 20, weight: .regular))
+                        .font(.system(size: 16, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .leading)
-                } else {
-                    ForEach(purchaseManager.products) { product in
-                        Button {
-                            _ = Task<Void, Never> {
-                                do {
-                                    try await purchaseManager.purchase(product)
-                                } catch {
-                                    print(error)
-                                }
-                            }
-                        } label: {
-                            Text("\(product.displayName) - \(product.displayPrice)")
-                                .foregroundColor(.black)
-                                .invertOnDarkTheme()
-                                .font(.system(size: 16, weight: .semibold))
-                        }
+                        .textCase(.uppercase)
+                        .padding()
+                    
+                    if purchaseManager.hasUnlockedPremium {
+                        Text("Thank you for purchasing ERA premium!")
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                            .font(.system(size: 20, weight: .regular))
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .cornerRadius(10)
-                            .padding()
-                            .invertBackgroundOnDarkTheme(isBase: false)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
-                            )
+                    } else {
+                        ForEach(purchaseManager.products) { product in
+                            Button {
+                                _ = Task<Void, Never> {
+                                    do {
+                                        try await purchaseManager.purchase(product)
+                                    } catch {
+                                        print(error)
+                                    }
+                                }
+                            } label: {
+                                Text("\(product.displayName) - \(product.displayPrice)")
+                                    .foregroundColor(.black)
+                                    .invertOnDarkTheme()
+                                    .font(.system(size: 16, weight: .semibold))
+                            }
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .cornerRadius(10)
+                                .padding()
+                                .invertBackgroundOnDarkTheme(isBase: false)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
+                                )
+                        }
                     }
                 }
                 
@@ -203,9 +203,9 @@ struct Payment: View {
         }
             .invertBackgroundOnDarkTheme(isBase: true)
             .edgesIgnoringSafeArea(.all)
-//            .navigationBarTitle("")
-//            .navigationBarBackButtonHidden(true)
-//            .navigationBarHidden(true)
+            .navigationBarTitle("")
+            .navigationBarBackButtonHidden(true)
+            .navigationBarHidden(true)
     }
 }
 

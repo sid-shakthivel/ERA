@@ -24,41 +24,39 @@ struct AppSettings: View {
                 .padding(.bottom)
 
             Group {
-                // Put behind paywall
-                
                 Toggle(isOn: $settings.isDarkMode, label: {
                     Text("Dark Mode")
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
                         .font(.system(size: 14, weight: .bold))
                 })
-                .onChange(of: settings.isDarkMode) { isDarkMode in
-                   do {
-                       if isDarkMode {
-                           // Set other settings to dark mode
-                           let test = try encodeColor(colour: ColourConstants.lightModeBackground)
-                           let best = try decodeColor(from: test)
+                    .onChange(of: settings.isDarkMode) { isDarkMode in
+                       do {
+                           if isDarkMode {
+                               // Set other settings to dark mode
+                               let test = try encodeColor(colour: ColourConstants.lightModeBackground)
+                               let best = try decodeColor(from: test)
 
-                           if best == settings.backgroundColour || ColourConstants.lightModeBackground == settings.backgroundColour {
-                               settings.backgroundColour = ColourConstants.darkModeBackground
-                               settings.fontColour = .white
-                           }
-                       } else {
-                           // Set other settings to light mode
-                           let test = try encodeColor(colour: ColourConstants.darkModeBackground)
-                           let best = try decodeColor(from: test)
+                               if best == settings.backgroundColour || ColourConstants.lightModeBackground == settings.backgroundColour {
+                                   settings.backgroundColour = ColourConstants.darkModeBackground
+                                   settings.fontColour = .white
+                               }
+                           } else {
+                               // Set other settings to light mode
+                               let test = try encodeColor(colour: ColourConstants.darkModeBackground)
+                               let best = try decodeColor(from: test)
 
-                           if best == settings.backgroundColour || ColourConstants.darkModeBackground == settings.backgroundColour {
-                               settings.backgroundColour = ColourConstants.lightModeBackground
-                               settings.fontColour = .black
+                               if best == settings.backgroundColour || ColourConstants.darkModeBackground == settings.backgroundColour {
+                                   settings.backgroundColour = ColourConstants.lightModeBackground
+                                   settings.fontColour = .black
+                               }
                            }
+
+                           settings.saveSettings(userPreferences: settings)
+                       } catch {
+
                        }
-
-                       settings.saveSettings(userPreferences: settings)
-                   } catch {
-
-                   }
-               }
+                    }
             }
             
             Group {
