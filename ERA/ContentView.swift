@@ -32,10 +32,14 @@ struct ContentView: View {
     @StateObject var currentTranslator: LanguageTranslator = LanguageTranslator()
     @StateObject var purchaseManager = PurchaseManager()
     
+    @State var showOnboarding = true
+    
     var body: some View {
-        if UserDefaults.standard.bool(forKey: "HasInitallyPurchasedERA") == false {
-            OnboardingView()
+        if UserDefaults.standard.bool(forKey: "HasInitallyPurchasedERA") == false && showOnboarding {
+            OnboardingView(showThing: $showOnboarding)
                 .environmentObject(userSettings)
+                .environmentObject(currentTranslator)
+                .environmentObject(purchaseManager)
                 .onAppear() {
                     // Check whether user is specifically in dark/light mode by default
                     userSettings.isDarkMode = colorScheme == .dark ? true : false;

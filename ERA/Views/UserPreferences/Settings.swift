@@ -196,7 +196,12 @@ struct Settings: View {
 
                 Divider()
                 
-                VStack {                    
+                VStack {
+                    FontSettings(isShowingFontPicker: $isShowingFontPicker)
+                    BackgroundSettings()
+                    AppSettings()
+                    TTSSettings()
+                    
                     Button {
                         showPaymentScreen.toggle()
                     } label: {
@@ -213,11 +218,6 @@ struct Settings: View {
                             RoundedRectangle(cornerRadius: 10)
                                 .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
                         )
-                    
-                    FontSettings(isShowingFontPicker: $isShowingFontPicker)
-                    BackgroundSettings()
-                    AppSettings()
-                    TTSSettings()
                     
                     Button(action: {
                         // Resets settings back to default
@@ -257,7 +257,7 @@ struct Settings: View {
             }
                 .invertBackgroundOnDarkTheme(isBase: true)
                 .sheet(isPresented: $showPaymentScreen) {
-                    Payment()
+                    Payment(showPaymentScreen: $showPaymentScreen)
                 }
                 .sheet(isPresented: $isShowingFontPicker) {
                     FontPickerWrapper(isShowingFontPicker: $isShowingFontPicker)

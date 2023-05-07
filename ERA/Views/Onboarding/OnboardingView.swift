@@ -16,6 +16,8 @@ struct OnboardingView: View {
     
     @State var currentTab: Int = 0
     
+    @Binding var showThing: Bool
+    
     var body: some View {
         NavigationView {
             TabView(selection: $currentTab) {
@@ -34,7 +36,12 @@ struct OnboardingView: View {
                     
                     HelpWidgets()
                     
-                    NavigationLink(destination: FileExplorer()) {
+                    Button(action: {
+                        DispatchQueue.main.async {
+                            UserDefaults.standard.setValue(true, forKey: "HasInitallyPurchasedERA")
+                            showThing = false;
+                        }
+                    }, label: {
                         Text("Welcome to ERA")
                             .padding()
                             .frame(maxWidth: .infinity)
@@ -42,11 +49,8 @@ struct OnboardingView: View {
                             .background(Color(hex: 0xCB4E25, alpha: 1))
                             .font(.system(size: 24, weight: .semibold))
                             .clipShape(Capsule())
-                    }
+                    })
                         .padding()
-                        .onAppear() {
-                            UserDefaults.standard.setValue(true, forKey: "HasInitallyPurchasedERA")
-                        }
                     
                     Spacer()
                 }

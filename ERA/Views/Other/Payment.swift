@@ -89,14 +89,16 @@ struct Payment: View {
     @EnvironmentObject private var purchaseManager: PurchaseManager
     @EnvironmentObject var settings: UserPreferences
     
-    @Environment(\.presentationMode) var testPresentationMode: Binding<PresentationMode>
+    @Binding var showPaymentScreen: Bool
     
     var body: some View {
         NavigationView {
             ScrollView() {
                 HStack {
                     Button {
-                        testPresentationMode.wrappedValue.dismiss()
+                        DispatchQueue.main.async {
+                            showPaymentScreen = false
+                        }
                     } label: {
                         Image("arrow-left")
                             .resizable()
@@ -120,18 +122,26 @@ struct Payment: View {
                     Text("ERA Premium")
                         .foregroundColor(.black)
                         .invertOnDarkTheme()
-                        .font(.system(size: 16, weight: .bold))
+                        .font(.system(size: 20, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .textCase(.uppercase)
                         .padding()
+                
                     
                     if purchaseManager.hasUnlockedPremium {
                         Text("Thank you for purchasing ERA premium!")
                             .foregroundColor(.black)
                             .invertOnDarkTheme()
-                            .font(.system(size: 20, weight: .regular))
+                            .font(.system(size: 18, weight: .regular))
                             .frame(maxWidth: .infinity, alignment: .leading)
                     } else {
+                        Text("Experiance a superior reading experiance with enhanced reading, letter spacing and gradient reading mode")
+                                .foregroundColor(.black)
+                                .invertOnDarkTheme()
+                                .font(.system(size: 16, weight: .regular))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading)
+                        
                         ForEach(purchaseManager.products) { product in
                             Button {
                                 _ = Task<Void, Never> {
@@ -159,6 +169,12 @@ struct Payment: View {
                     }
                 }
                 
+                HStack {
+                    Link("Privacy Policy", destination: URL(string: "https://sites.google.com/view/easyreadingassistant/home")!)
+                    
+                    Link("Terms of Use", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                }
+                
                 Button {
                     Task {
                         do {
@@ -178,14 +194,15 @@ struct Payment: View {
                         .font(.system(size: 18, weight: .semibold))
                         .frame(maxWidth: .infinity)
                 }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .cornerRadius(10)
+                    .padding(.trailing)
+                    .padding(.leading)
                     .invertBackgroundOnDarkTheme(isBase: false)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
                     )
-                    .cornerRadius(10)
-                    .frame(maxHeight: .infinity, alignment: .bottomLeading)
-                    .padding()
                 
             }
                 .padding()
