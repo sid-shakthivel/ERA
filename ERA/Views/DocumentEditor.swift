@@ -20,13 +20,12 @@ class TempCanvas: ObservableObject {
     @Published var lastLine: WorkingLine? // Stores the last line within the bufer
     @Published var lineBuffer: [WorkingLine] = [] // This is a buffer which holds temporary lines which are being worked upon
     @Published var lineWidth: Double = 2
+    @Published var highlighterLineWidth: Double = 10
     @Published var isRubbing: Bool = false
 }
 
 extension String {
     func splitTest(width: CGFloat, font: UIFont) -> [String] {
-        print(width)
-        
         guard !self.isEmpty else { return [String]() }
 
         var lines = [String]()
@@ -49,8 +48,6 @@ extension String {
                 splitEnd = self.index(after: splitEnd)
                 line = String(self[splitStart..<splitEnd])
             }
-            
-            print(line)
 
             // add split to array and set up next split
             lines.append(line)
@@ -189,7 +186,7 @@ struct DocumentEditor: View {
 
                         Spacer()
 
-                        if (purchaseManager.hasUnlockedPremium) {
+                        if (true) {
                             Button(action: {
                                 pdfDocument = convertScreenToPDF()
                                 showFileExporter.toggle()
@@ -201,7 +198,7 @@ struct DocumentEditor: View {
                             })
                         }
 
-                        if (purchaseManager.hasUnlockedPremium) {
+                        if (true) {
                             Button(action: {
                                 // Save button which saves data to core data
                                 isEditingText = false
@@ -315,9 +312,15 @@ struct DocumentEditor: View {
                                             if value.translation == .zero {
                                                 let lineCapStyle: CGLineCap = textEditorCanvas.isUsingHighlighter ? CGLineCap.butt : CGLineCap.round;
                                                 let lineColour: Color = textEditorCanvas.isUsingHighlighter ? textEditorCanvas.selectedHighlighterColour : textEditorCanvas.selectedColour;
+                                                
+                                                let finalLineWidth = textEditorCanvas.isUsingHighlighter ?
+                                                textEditorCanvas.highlighterLineWidth :
+                                                textEditorCanvas.lineWidth;
 
                                                 if textEditorCanvas.isRubbing {
                                                     textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: userSettings.backgroundColour, lineCap: .round, lineWidth: textEditorCanvas.lineWidth))
+                                                } else if textEditorCanvas.isUsingHighlighter {
+                                                    textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: lineColour, lineCap: lineCapStyle, lineWidth: textEditorCanvas.highlighterLineWidth))
                                                 } else {
                                                     textEditorCanvas.lineBuffer.append(WorkingLine(points: [position], colour: lineColour, lineCap: lineCapStyle, lineWidth: textEditorCanvas.lineWidth))
                                                 }
@@ -380,25 +383,25 @@ struct DocumentEditor: View {
                             .background(userSettings.backgroundColour)
                     }
                     
-//                    DownloadBar(downloadStatus: $downloadStatus)
-//
-//                    Picker("", selection: $isViewingText) {
-//                        Text("Document Editor")
-//                            .tag(true)
-//                            .foregroundColor(.black)
-//                            .invertOnDarkTheme()
-//
-//                        Text("Photo Editor")
-//                            .tag(false)
-//                            .foregroundColor(.black)
-//                            .invertOnDarkTheme()
-//                    }
-//                        .pickerStyle(.segmented)
-//                        .padding(.leading)
-//                        .padding(.trailing)
-//
-//                    UtilityBar(isDrawing: $isDrawing, isEditing: $isEditingText, utilityBarStatus: $utilityBarStatus, downloadStatus: $downloadStatus, currentTranslator: $currentTranslator, shouldTranslateText: $shouldTranslateText)
-//                        .environmentObject(isViewingText ? textEditorCanvas : photoEditorCanvas)
+                    DownloadBar(downloadStatus: $downloadStatus)
+
+                    Picker("", selection: $isViewingText) {
+                        Text("Document Editor")
+                            .tag(true)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+
+                        Text("Photo Editor")
+                            .tag(false)
+                            .foregroundColor(.black)
+                            .invertOnDarkTheme()
+                    }
+                        .pickerStyle(.segmented)
+                        .padding(.leading)
+                        .padding(.trailing)
+
+                    UtilityBar(isDrawing: $isDrawing, isEditing: $isEditingText, utilityBarStatus: $utilityBarStatus, downloadStatus: $downloadStatus, currentTranslator: $currentTranslator, shouldTranslateText: $shouldTranslateText)
+                        .environmentObject(isViewingText ? textEditorCanvas : photoEditorCanvas)
                 }
                 .invertBackgroundOnDarkTheme(isBase: true)
             }

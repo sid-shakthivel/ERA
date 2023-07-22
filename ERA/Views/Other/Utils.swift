@@ -147,6 +147,7 @@ func enhanceWord(state: EnhancedReadingStatus, word: String) -> String {
             
             // Check word class of word
             if tag.0?.rawValue == "Noun" || tag.0?.rawValue == "Verb" || tag.0?.rawValue == "Adverb" || tag.0?.rawValue == "Adjective" || tag.0?.rawValue == "OtherWord" {
+                
                 let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
                 mutWord.insert("*", at: mutWord.startIndex)
                 mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: 1))
@@ -156,15 +157,14 @@ func enhanceWord(state: EnhancedReadingStatus, word: String) -> String {
             }
         }
             break
-        case .Normal:
-            var boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
+        case .Normal:        
+            let boldIndex = Int(ceil(Double(mutWord.count) / 2)) + 1
             mutWord.insert("*", at: mutWord.startIndex)
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: 1))
-        
-            if (mutWord[mutWord.index(mutWord.startIndex, offsetBy: boldIndex)] == "-") { boldIndex += 1}
             
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 1))
             mutWord.insert("*", at: mutWord.index(mutWord.startIndex, offsetBy: boldIndex + 2))
+            
             break
         default:
             break

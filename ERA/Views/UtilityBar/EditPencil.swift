@@ -56,15 +56,30 @@ struct EditPencil: View {
                 }
                 
                 HStack {
-                    Slider(value: $canvasSettings.lineWidth, in: 0...20)
-                        .padding(.bottom)
-                        .padding(.leading)
-                        .padding(.trailing)
                     
-                    Text("\(Int(canvasSettings.lineWidth)) pt")
-                        .foregroundColor(.black)
-                        .fontWeight(.bold)
-                        .padding()
+                    if (canvasSettings.isUsingHighlighter) {
+                        Slider(value: $canvasSettings.highlighterLineWidth, in: 0...20)
+                            .padding(.bottom)
+                            .padding(.leading)
+                            .padding(.trailing)
+                        
+                        Text("\(Int(canvasSettings.highlighterLineWidth)) pt")
+                            .foregroundColor(.black)
+                            .fontWeight(.bold)
+                            .padding()
+                    } else {
+                        Slider(value: $canvasSettings.lineWidth, in: 0...20)
+                            .padding(.bottom)
+                            .padding(.leading)
+                            .padding(.trailing)
+                        
+                        Text("\(Int(canvasSettings.lineWidth)) pt")
+                            .foregroundColor(.black)
+                            .fontWeight(.bold)
+                            .padding()
+                    }
+                    
+                    
                 }
             }
             .padding()

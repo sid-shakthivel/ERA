@@ -23,7 +23,7 @@ struct FontSettings: View {
             .foregroundColor(.black)
             .invertOnDarkTheme()
 
-        if (purchaseManager.hasUnlockedPremium) {
+        if (true) {
             Group {
                 Text("Enhanced Reading")
                     .foregroundColor(.black)
@@ -126,7 +126,7 @@ struct FontSettings: View {
                    settings.subParagaphFont = UIFont(name: "OpenDyslexicThree-Regular", size: CGFloat(Double(settings.paragraphFontSize) * 0.75))!
                } else {
                    settings.paragraphFont = UIFont(descriptor: oldFontDescriptor, size: CGFloat(settings.paragraphFontSize))
-                   settings.headingFont = UIFont(descriptor: oldFontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.5)).bold()
+                   settings.headingFont = UIFont(descriptor: oldFontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.5))
                    settings.subheadingFont = UIFont(descriptor: oldFontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 1.25))
                    settings.subParagaphFont = UIFont(descriptor: oldFontDescriptor, size: CGFloat(Double(settings.paragraphFontSize) * 0.75))
                }
@@ -243,7 +243,7 @@ struct FontSettings: View {
                 }
         }
         
-        if (purchaseManager.hasUnlockedPremium) {
+        if (true) {
             Group {
                 Text("Letter Spacing")
                     .foregroundColor(.black)
@@ -379,14 +379,25 @@ struct FontSettings: View {
                 }
             }
         }
-                                    
-        Text("This is a an example sentence.")
-            .foregroundColor(settings.fontColour)
-            .font(Font(settings.paragraphFont))
-            .tracking(CGFloat(settings.letterTracking))
-            .lineSpacing(CGFloat(settings.lineSpacing))
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.top)
+        
+        if #available(iOS 16.0, *) {
+            Text("This is an example sentence.")
+                .foregroundColor(settings.fontColour)
+                .background(settings.backgroundColour)
+                .font(Font(settings.paragraphFont))
+                .tracking(CGFloat(settings.letterTracking))
+                .lineSpacing(CGFloat(settings.lineSpacing))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top)
+        } else {
+            Text("This is an example sentence.")
+                .foregroundColor(settings.fontColour)
+                .background(settings.backgroundColour)
+                .font(Font(settings.paragraphFont))
+                .lineSpacing(CGFloat(settings.lineSpacing))
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.top)
+        }
     }
 }
 

@@ -78,7 +78,6 @@ struct Menu: View {
                    .padding(.horizontal, 30)
                
                Button {
-                   fileStatus = .Loading
                    showMenu = false
                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                        showDictionary.toggle()

@@ -133,6 +133,7 @@ struct Paragraph: View {
                     if userSettings.gradientReaderStatus == .Off {
                         if #available(iOS 16.0, *) {
                             Text(modifyText(state: userSettings.enhancedReadingStatus, text: text))
+                                .foregroundColor(userSettings.fontColour)
                                 .font(Font(userSettings.paragraphFont))
                                 .lineSpacing(CGFloat(userSettings.lineSpacing))
                                 .tracking(CGFloat(userSettings.letterTracking))

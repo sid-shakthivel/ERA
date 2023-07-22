@@ -152,7 +152,7 @@ struct Payment: View {
                                     }
                                 }
                             } label: {
-                                Text("\(product.displayName) - \(product.displayPrice)")
+                                Text("\(product.displayPrice == "$0.99" ? "Monthly" : "Yearly") - \(product.displayPrice)")
                                     .foregroundColor(.black)
                                     .invertOnDarkTheme()
                                     .font(.system(size: 16, weight: .semibold))

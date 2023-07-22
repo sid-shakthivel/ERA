@@ -127,6 +127,10 @@ func convertPhotosToParagraphs(scan: [UIImage]) -> ([SavedParagraph], String) {
     request.recognitionLevel = .accurate
     request.usesLanguageCorrection = true
     
+    if #available(iOS 16, *) {
+        request.automaticallyDetectsLanguage = true
+    }
+    
     let requests = [request]
     
     // For each photo within the scanned images, analyse and collate all the text together

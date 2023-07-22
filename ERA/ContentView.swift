@@ -43,6 +43,10 @@ struct ContentView: View {
                 .onAppear() {
                     // Check whether user is specifically in dark/light mode by default
                     userSettings.isDarkMode = colorScheme == .dark ? true : false;
+                    if (userSettings.isDarkMode) {
+                        userSettings.fontColour = Color(hex: 0xFFFFFF, alpha: 1)
+                        userSettings.backgroundColour = Color(hex: 0x0B1F29, alpha: 1)
+                    }
                     userSettings.saveSettings(userPreferences: userSettings)
                     
                     // Download english to french conversion by default

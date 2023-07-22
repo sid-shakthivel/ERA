@@ -76,7 +76,7 @@ class UserPreferences: ObservableObject, Codable {
         try container.encode(enhancedReadingStatus, forKey: .enhancedReadingStatus)
         try container.encode(isDarkMode, forKey: .isDarkMode)
         try container.encode(gradientReaderStatus, forKey: .gradientReaderStatus)
-
+        
         try container.encode(paragraphFont.fontName, forKey: .paragraphFontName)
         
         try container.encode(voice, forKey: .voice)
@@ -117,6 +117,7 @@ class UserPreferences: ObservableObject, Codable {
             subParagaphFont = UIFont.systemFont(ofSize: CGFloat(Double(paragraphFontSize) * 0.75))
         } else {
             paragraphFont = UIFont(name: fontName, size: CGFloat(paragraphFontSize))!
+            
             headingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.5))!
             subheadingFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 1.25))!
             subParagaphFont = UIFont(name: fontName, size: CGFloat(Double(paragraphFontSize) * 0.75))!
@@ -202,22 +203,22 @@ struct Settings: View {
                     AppSettings()
                     TTSSettings()
                     
-                    Button {
-                        showPaymentScreen.toggle()
-                    } label: {
-                        Text("Purchase ERA Premium")
-                            .foregroundColor(Color(hex: 0xc24e1c, alpha: 1.0))
-                            .multilineTextAlignment(.center)
-                            .font(.system(size: 20, weight: .bold))
-                    }
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .cornerRadius(10)
-                        .padding()
-                        .invertBackgroundOnDarkTheme(isBase: false)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
-                        )
+//                    Button {
+//                        showPaymentScreen.toggle()
+//                    } label: {
+//                        Text("Purchase ERA Premium")
+//                            .foregroundColor(Color(hex: 0xc24e1c, alpha: 1.0))
+//                            .multilineTextAlignment(.center)
+//                            .font(.system(size: 20, weight: .bold))
+//                    }
+//                        .frame(maxWidth: .infinity, alignment: .leading)
+//                        .cornerRadius(10)
+//                        .padding()
+//                        .invertBackgroundOnDarkTheme(isBase: false)
+//                        .overlay(
+//                            RoundedRectangle(cornerRadius: 10)
+//                                .stroke(Color(hex: settings.isDarkMode ? 0xAB9D96 : 0xF2EDE4, alpha: 1), lineWidth: 1)
+//                        )
                     
                     Button(action: {
                         // Resets settings back to default

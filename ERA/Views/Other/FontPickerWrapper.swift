@@ -67,12 +67,26 @@ struct CustomFontPicker: UIViewControllerRepresentable {
         }
         
         public func fontPickerViewControllerDidPickFont(_ viewController: UIFontPickerViewController) {
+            
             guard let descriptor = viewController.selectedFontDescriptor else { return }
             
+//            DispatchQueue.main.async {
+//                self.parent.settings.paragraphFont = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.paragraphFontSize))
+//                self.parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.5))
+//                self.parent.settings.subheadingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.25))
+//                self.parent.settings.subParagaphFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 0.75))
+//
+//                self.parent.presentationMode.wrappedValue.dismiss()
+//            }
+            
+            guard let descriptor = viewController.selectedFontDescriptor else { return }
+
             parent.settings.paragraphFont = UIFont(descriptor: descriptor, size: CGFloat(parent.settings.paragraphFontSize))
-            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.5)).bold()
+            parent.settings.headingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.5))
             parent.settings.subheadingFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 1.25))
             parent.settings.subParagaphFont = UIFont(descriptor: descriptor, size: CGFloat(Double(parent.settings.paragraphFontSize) * 0.75))
+
+            parent.settings.saveSettings(userPreferences: parent.settings)
             parent.presentationMode.wrappedValue.dismiss()
         }
     }
@@ -86,7 +100,14 @@ extension UIFont {
         return UIFont(descriptor: descriptor!, size: 0) //size 0 means keep the size as it is
     }
 
-    func bold() -> UIFont {
-        return withTraits(traits: .traitBold)
+    func bold() -> UIFont? {
+        guard let boldDescriptor = fontDescriptor.withSymbolicTraits(.traitBold) else {
+            return nil
+        }
+
+        return UIFont(descriptor: boldDescriptor, size: pointSize)
+        
+        
+//        return withTraits(traits: .traitBold)
     }
 }
